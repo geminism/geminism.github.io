@@ -13,8 +13,10 @@ export function PortfolioHome() {
   const shellRef = useRef<HTMLDivElement>(null);
   const curtainRef = useRef<HTMLDivElement>(null);
   const rotationTarget = useRef(0);
+  const rotationCurrent = useRef(0);
+  const dragVelocity = useRef(0);
   const didDrag = useRef(false);
-  const pointerStart = useRef<{ x: number; rotation: number } | null>(null);
+  const pointerStart = useRef<{ x: number; lastX: number } | null>(null);
   const [activeId, setActiveId] = useState<SectionId | null>(null);
   const [focusId, setFocusId] = useState<SectionId | null>(null);
   const activeSection = sections.find((section) => section.id === activeId);
@@ -26,19 +28,32 @@ export function PortfolioHome() {
   }, []);
 
   const selectSection = (id: SectionId) => {
-    if (focusId || didDrag.current) return;
+    if (didDrag.current) return;
+    if (focusId !== id) {
+      rotationTarget.current = rotationCurrent.current;
+      dragVelocity.current = 0;
+      setFocusId(id);
+      setActiveId(id);
+      return;
+    }
+
     const section = sections.find((item) => item.id === id)!;
-    setFocusId(id);
-    setActiveId(id);
     if (!curtainRef.current) return;
     curtainRef.current.style.background = section.color;
     gsap.to(curtainRef.current, {
       scaleY: 1,
       duration: 0.58,
-      delay: 0.52,
+      delay: 0.08,
       ease: "power3.inOut",
       onComplete: () => router.push(section.href),
     });
+  };
+
+  const exitFocus = () => {
+    if (!focusId) return;
+    document.body.style.cursor = "default";
+    setFocusId(null);
+    setActiveId(null);
   };
 
   return (
@@ -47,19 +62,25 @@ export function PortfolioHome() {
       aria-label="设计作品集首页"
       onPointerDown={(event) => {
         if ((event.target as HTMLElement).tagName !== "CANVAS" || focusId) return;
-        pointerStart.current = { x: event.clientX, rotation: rotationTarget.current };
+        pointerStart.current = { x: event.clientX, lastX: event.clientX };
+        dragVelocity.current = 0;
         didDrag.current = false;
       }}
       onPointerMove={(event) => {
         if (!pointerStart.current || focusId) return;
         const distance = event.clientX - pointerStart.current.x;
+        const movement = event.clientX - pointerStart.current.lastX;
         if (Math.abs(distance) > 4) didDrag.current = true;
-        rotationTarget.current = pointerStart.current.rotation + distance * 0.006;
+        rotationTarget.current += movement * 0.0045;
+        dragVelocity.current = movement * 0.0045;
+        pointerStart.current.lastX = event.clientX;
       }}
       onPointerUp={() => {
         if (!pointerStart.current) return;
-        const step = (Math.PI * 2) / 5;
-        if (didDrag.current) rotationTarget.current = Math.round(rotationTarget.current / step) * step;
+        if (didDrag.current) {
+          const momentum = Math.max(-0.12, Math.min(0.12, dragVelocity.current));
+          rotationTarget.current += momentum * 5;
+        }
         pointerStart.current = null;
         window.setTimeout(() => { didDrag.current = false; }, 0);
       }}
@@ -71,14 +92,18 @@ export function PortfolioHome() {
             activeId={activeId}
             focusId={focusId}
             rotationTarget={rotationTarget}
+            rotationCurrent={rotationCurrent}
             didDrag={didDrag}
             onActive={(id) => { if (!focusId && !didDrag.current) setActiveId(id); }}
             onSelect={selectSection}
+            onExitFocus={exitFocus}
           />
         </Suspense>
       </div>
 
-      <p className="gesture-hint">Drag to rotate · Select a sign</p>
+      <p className="gesture-hint">
+        {focusId ? "Click again to enter · Click blank to exit" : "Drag to rotate · Select a sign"}
+      </p>
       <div className={`active-caption ${activeSection ? "is-visible" : ""}`} aria-live="polite">
         {activeSection ? `${activeSection.zh} / ${activeSection.en}` : ""}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
 import { ContactShadows, Environment, useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -10,9 +10,11 @@ type SceneProps = {
   activeId: SectionId | null;
   focusId: SectionId | null;
   rotationTarget: React.MutableRefObject<number>;
+  rotationCurrent: React.MutableRefObject<number>;
   didDrag: React.MutableRefObject<boolean>;
   onActive: (id: SectionId | null) => void;
   onSelect: (id: SectionId) => void;
+  onExitFocus: () => void;
 };
 
 type SignConfig = {
@@ -27,11 +29,11 @@ type SignConfig = {
 };
 
 const configs: SignConfig[] = [
-  { id: "about", y: 3.48, angle: 0, side: 0, arm: 0.5, width: 2.55, height: 2.46, shape: "triangle" },
-  { id: "brand", y: 1.08, angle: -0.1, side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
-  { id: "packaging", y: -0.86, angle: 0.14, side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
-  { id: "event", y: -2.3, angle: -0.16, side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
-  { id: "other", y: -4.15, angle: 0.12, side: -1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
+  { id: "about", y: 3.62, angle: -0.04, side: 0, arm: 0.5, width: 2.55, height: 2.46, shape: "triangle" },
+  { id: "brand", y: 1.34, angle: -0.22, side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
+  { id: "packaging", y: -0.58, angle: 0.34, side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
+  { id: "event", y: -2.18, angle: -0.42, side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
+  { id: "other", y: -4.08, angle: 0.25, side: -1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
 ];
 
 function makeShape(kind: SignConfig["shape"], width: number, height: number) {
@@ -82,7 +84,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   const signRef = useRef<THREE.Group>(null);
   const shape = useMemo(() => makeShape(config.shape, config.width, config.height), [config]);
   const geometry = useMemo(
-    () => new THREE.ExtrudeGeometry(shape, { depth: 0.13, bevelEnabled: true, bevelSize: 0.045, bevelThickness: 0.035, bevelSegments: 3 }),
+    () => new THREE.ExtrudeGeometry(shape, { depth: 0.075, bevelEnabled: true, bevelSize: 0.022, bevelThickness: 0.018, bevelSegments: 2 }),
     [shape],
   );
 
@@ -96,7 +98,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
     if (!signRef.current) return;
     const targetScale = focused ? 1.08 : active ? 1.045 : 1;
     const baseZ = config.side === 0 ? config.arm : 0;
-    const targetZ = baseZ + (focused ? 0.34 : active ? 0.16 : 0);
+    const targetZ = baseZ + (focused ? 0.22 : active ? 0.1 : 0);
     const damping = 1 - Math.exp(-delta * 8);
     signRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), damping);
     signRef.current.position.z = THREE.MathUtils.lerp(signRef.current.position.z, targetZ, damping);
@@ -129,7 +131,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
       >
         <mesh
           geometry={geometry}
-          position={[0, 0, -0.065]}
+          position={[0, 0, -0.0375]}
           onPointerEnter={activate}
           onPointerMove={activate}
           onPointerLeave={(event) => {
@@ -142,9 +144,9 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
             if (!didDrag.current) onSelect(config.id);
           }}
         >
-          <meshStandardMaterial color="#e7e7e4" roughness={0.33} metalness={0.08} />
+          <meshStandardMaterial color="#cfd0cd" roughness={0.34} metalness={0.58} />
         </mesh>
-        <mesh position={[0, 0, 0.155]} raycast={() => null} renderOrder={2}>
+        <mesh position={[0, 0, 0.09]} raycast={() => null} renderOrder={2}>
           <planeGeometry args={[config.width, config.height]} />
           <meshBasicMaterial map={texture} transparent alphaTest={0.02} toneMapped={false} />
         </mesh>
@@ -153,31 +155,60 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   );
 }
 
-function CameraRig({ activeId, focusId }: Pick<SceneProps, "activeId" | "focusId">) {
+function CameraRig({
+  activeId,
+  focusId,
+  rotationCurrent,
+  rootOffsetX,
+}: Pick<SceneProps, "activeId" | "focusId" | "rotationCurrent"> & {
+  rootOffsetX: React.MutableRefObject<number>;
+}) {
+  const lookTarget = useRef(new THREE.Vector3(0, 0, 0));
+
   useFrame(({ camera }, delta) => {
-    const focusY = configs.find((item) => item.id === focusId)?.y ?? 0;
     const activeY = configs.find((item) => item.id === activeId)?.y ?? 0;
-    const targetZ = focusId ? 9.4 : activeId ? 14.35 : 15.2;
-    const targetY = focusId ? focusY + 0.68 : activeId ? 1.42 + activeY * 0.035 : 1.42;
-    const damping = 1 - Math.exp(-delta * (focusId ? 3.2 : 5));
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, damping);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, damping);
-    camera.lookAt(0, focusId ? focusY : 0, 0);
+    const focusConfig = configs.find((item) => item.id === focusId);
+    const targetPosition = new THREE.Vector3(0, activeId ? 1.42 + activeY * 0.035 : 1.42, activeId ? 14.35 : 15.2);
+    const targetLook = new THREE.Vector3(0, 0, 0);
+
+    if (focusConfig) {
+      const totalAngle = rotationCurrent.current + focusConfig.angle;
+      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2);
+      const center = focusConfig.side === 0
+        ? new THREE.Vector3(
+            rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm,
+            focusConfig.y,
+            Math.cos(totalAngle) * focusConfig.arm,
+          )
+        : new THREE.Vector3(
+            rootOffsetX.current + Math.cos(totalAngle) * sideDistance,
+            focusConfig.y,
+            -Math.sin(totalAngle) * sideDistance,
+          );
+      const normal = new THREE.Vector3(Math.sin(totalAngle), 0, Math.cos(totalAngle));
+      const distance = Math.max(focusConfig.width, focusConfig.height) * 1.15 + 4.8;
+      targetPosition.copy(center).addScaledVector(normal, distance);
+      targetLook.copy(center);
+    }
+
+    const damping = 1 - Math.exp(-delta * (focusConfig ? 3.7 : 4.8));
+    camera.position.lerp(targetPosition, damping);
+    lookTarget.current.lerp(targetLook, damping);
+    camera.lookAt(lookTarget.current);
   });
   return null;
 }
 
 function PoleScene(props: SceneProps) {
   const rootRef = useRef<THREE.Group>(null);
-  const [settledFocus, setSettledFocus] = useState<SectionId | null>(null);
-
-  useEffect(() => setSettledFocus(props.focusId), [props.focusId]);
+  const rootOffsetX = useRef(0);
 
   useFrame((_, delta) => {
     if (!rootRef.current) return;
-    const focusConfig = configs.find((item) => item.id === settledFocus);
-    const target = focusConfig ? -focusConfig.angle : props.rotationTarget.current;
-    rootRef.current.rotation.y = THREE.MathUtils.damp(rootRef.current.rotation.y, target, focusConfig ? 4 : 7, delta);
+    rootRef.current.rotation.y = THREE.MathUtils.damp(rootRef.current.rotation.y, props.rotationTarget.current, props.focusId ? 7 : 5.4, delta);
+    rootRef.current.position.x = THREE.MathUtils.damp(rootRef.current.position.x, props.focusId ? -1.05 : 0, 4.2, delta);
+    props.rotationCurrent.current = rootRef.current.rotation.y;
+    rootOffsetX.current = rootRef.current.position.x;
   });
 
   return (
@@ -191,11 +222,19 @@ function PoleScene(props: SceneProps) {
           <cylinderGeometry args={[0.145, 0.175, 11.2, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
-        {[-4.85, -3.45, -2.05, -0.65, 0.75, 2.15, 3.55, 4.95].map((y) => (
-          <mesh key={y} position={[0, y, 0]}>
-            <torusGeometry args={[0.155, 0.018, 8, 28]} />
-            <meshStandardMaterial color="#727272" metalness={0.72} roughness={0.28} />
-          </mesh>
+        {[...configs.map((config) => config.y), 5.05, -5.05].map((y) => (
+          <group key={y} position={[0, y, 0]}>
+            <mesh>
+              <cylinderGeometry args={[0.205, 0.205, 0.12, 24]} />
+              <meshStandardMaterial color="#858987" metalness={0.82} roughness={0.22} />
+            </mesh>
+            {[-0.06, 0.06].map((edge) => (
+              <mesh key={edge} position={[0, edge, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                <torusGeometry args={[0.198, 0.012, 8, 30]} />
+                <meshStandardMaterial color="#b7bab7" metalness={0.9} roughness={0.16} />
+              </mesh>
+            ))}
+          </group>
         ))}
         {configs.map((config) => (
           <Sign
@@ -211,14 +250,24 @@ function PoleScene(props: SceneProps) {
       </group>
       <ContactShadows position={[0, -5.58, 0]} opacity={0.22} scale={14} blur={2.8} far={7} />
       <Environment preset="studio" environmentIntensity={0.4} />
-      <CameraRig activeId={props.activeId} focusId={props.focusId} />
+      <CameraRig
+        activeId={props.activeId}
+        focusId={props.focusId}
+        rotationCurrent={props.rotationCurrent}
+        rootOffsetX={rootOffsetX}
+      />
     </>
   );
 }
 
 export function SignScene(props: SceneProps) {
   return (
-    <Canvas camera={{ position: [0, 1.42, 15.2], fov: 42, near: 0.1, far: 60 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: true }}>
+    <Canvas
+      camera={{ position: [0, 1.42, 15.2], fov: 42, near: 0.1, far: 60 }}
+      dpr={[1, 1.6]}
+      gl={{ antialias: true, alpha: true }}
+      onPointerMissed={() => props.onExitFocus()}
+    >
       <PoleScene {...props} />
     </Canvas>
   );
