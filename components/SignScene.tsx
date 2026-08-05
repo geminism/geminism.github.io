@@ -29,7 +29,7 @@ type SignConfig = {
 };
 
 const configs: SignConfig[] = [
-  { id: "about", y: 3.62, angle: 0, side: 0, arm: 0.5, width: 2.55, height: 2.46, shape: "triangle" },
+  { id: "about", y: 3.62, angle: 0, side: 1, arm: 0.46, width: 2.55, height: 2.46, shape: "triangle" },
   { id: "brand", y: 1.34, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
   { id: "packaging", y: -0.58, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
   { id: "event", y: -2.18, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
@@ -170,7 +170,7 @@ function CameraRig({
   useFrame(({ camera }, delta) => {
     const activeY = configs.find((item) => item.id === activeId)?.y ?? 0;
     const focusConfig = configs.find((item) => item.id === focusId);
-    const targetPosition = new THREE.Vector3(0, activeId ? 1.32 + activeY * 0.035 : 1.32, activeId ? 15.4 : 16.3);
+    const targetPosition = new THREE.Vector3(0, activeId ? 2.45 + activeY * 0.035 : 2.45, activeId ? 15.4 : 18.6);
     const targetLook = new THREE.Vector3(0, 0, 0);
 
     if (focusConfig) {
@@ -275,7 +275,7 @@ function PoleScene(props: SceneProps) {
 export function SignScene(props: SceneProps) {
   return (
     <Canvas
-      camera={{ position: [0, 1.32, 16.3], fov: 42, near: 0.1, far: 60 }}
+      camera={{ position: [0, 2.45, 18.6], fov: 42, near: 0.1, far: 60 }}
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
       onPointerMissed={() => props.onExitFocus()}
