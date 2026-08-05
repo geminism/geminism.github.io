@@ -33,7 +33,9 @@ const configs: SignConfig[] = [
   { id: "brand", y: 1.34, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
   { id: "packaging", y: -0.58, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
   { id: "event", y: -2.18, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
-  { id: "other", y: -4.08, angle: THREE.MathUtils.degToRad(314), side: -1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
+  // Keep the sign's radial position at the same 314° beat, but mount the
+  // opposite end so the arrow tail—not its tip—meets the pole.
+  { id: "other", y: -4.08, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
 ];
 
 function makeShape(kind: SignConfig["shape"], width: number, height: number) {
