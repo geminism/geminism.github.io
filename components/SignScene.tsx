@@ -29,11 +29,11 @@ type SignConfig = {
 };
 
 const configs: SignConfig[] = [
-  { id: "about", y: 3.62, angle: -0.04, side: 0, arm: 0.5, width: 2.55, height: 2.46, shape: "triangle" },
-  { id: "brand", y: 1.34, angle: -0.22, side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
-  { id: "packaging", y: -0.58, angle: 0.34, side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
-  { id: "event", y: -2.18, angle: -0.42, side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
-  { id: "other", y: -4.08, angle: 0.25, side: -1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
+  { id: "about", y: 3.62, angle: 0, side: 0, arm: 0.5, width: 2.55, height: 2.46, shape: "triangle" },
+  { id: "brand", y: 1.34, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
+  { id: "packaging", y: -0.58, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
+  { id: "event", y: -2.18, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
+  { id: "other", y: -4.08, angle: THREE.MathUtils.degToRad(314), side: -1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
 ];
 
 function makeShape(kind: SignConfig["shape"], width: number, height: number) {
