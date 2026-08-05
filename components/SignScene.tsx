@@ -168,7 +168,7 @@ function CameraRig({
   useFrame(({ camera }, delta) => {
     const activeY = configs.find((item) => item.id === activeId)?.y ?? 0;
     const focusConfig = configs.find((item) => item.id === focusId);
-    const targetPosition = new THREE.Vector3(0, activeId ? 1.42 + activeY * 0.035 : 1.42, activeId ? 14.35 : 15.2);
+    const targetPosition = new THREE.Vector3(0, activeId ? 1.32 + activeY * 0.035 : 1.32, activeId ? 15.4 : 16.3);
     const targetLook = new THREE.Vector3(0, 0, 0);
 
     if (focusConfig) {
@@ -218,11 +218,11 @@ function PoleScene(props: SceneProps) {
       <directionalLight position={[4, 7, 6]} intensity={2.8} color="#ffffff" />
       <directionalLight position={[-5, 1, 3]} intensity={0.8} color="#e6eef4" />
       <group ref={rootRef}>
-        <mesh>
-          <cylinderGeometry args={[0.145, 0.175, 11.2, 24]} />
+        <mesh position={[0, -0.4, 0]}>
+          <cylinderGeometry args={[0.145, 0.175, 12, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
-        {[...configs.map((config) => config.y), 5.05, -5.05].map((y) => (
+        {[...configs.map((config) => config.y), 5.05, -5.35, -6.18].map((y) => (
           <group key={y} position={[0, y, 0]}>
             <mesh>
               <cylinderGeometry args={[0.205, 0.205, 0.12, 24]} />
@@ -236,6 +236,16 @@ function PoleScene(props: SceneProps) {
             ))}
           </group>
         ))}
+        <group position={[0, -5.35, 0]}>
+          <mesh position={[0.28, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.56, 12]} />
+            <meshStandardMaterial color="#171717" roughness={0.5} metalness={0.5} />
+          </mesh>
+          <mesh position={[0.58, 0, 0]}>
+            <sphereGeometry args={[0.075, 14, 10]} />
+            <meshStandardMaterial color="#858987" metalness={0.82} roughness={0.22} />
+          </mesh>
+        </group>
         {configs.map((config) => (
           <Sign
             key={config.id}
@@ -248,7 +258,7 @@ function PoleScene(props: SceneProps) {
           />
         ))}
       </group>
-      <ContactShadows position={[0, -5.58, 0]} opacity={0.22} scale={14} blur={2.8} far={7} />
+      <ContactShadows position={[0, -6.38, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />
       <Environment preset="studio" environmentIntensity={0.4} />
       <CameraRig
         activeId={props.activeId}
@@ -263,7 +273,7 @@ function PoleScene(props: SceneProps) {
 export function SignScene(props: SceneProps) {
   return (
     <Canvas
-      camera={{ position: [0, 1.42, 15.2], fov: 42, near: 0.1, far: 60 }}
+      camera={{ position: [0, 1.32, 16.3], fov: 42, near: 0.1, far: 60 }}
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true }}
       onPointerMissed={() => props.onExitFocus()}
