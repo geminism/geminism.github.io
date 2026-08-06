@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SectionPage } from "@/components/SectionPage";
+import { BrandDesignPage } from "@/components/BrandDesignPage";
 
 export const metadata: Metadata = { title: "品牌设计" };
-export default function Page() { return <SectionPage id="brand" />; }
+export default function Page() { return <BrandDesignPage />; }

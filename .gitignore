@@ -44,3 +44,4 @@ next-env.d.ts
 # local source references (optimized copies live in public/signs)
 /REFERENCE/
 /路牌/
+/品牌设计/
