@@ -327,7 +327,7 @@ button {
   height: clamp(148px, 17svh, 196px);
   margin: 7px auto 15px;
   perspective: 900px;
-  transform: translateY(-18px) rotateX(5deg);
+  transform: translateY(-38px) rotateX(5deg);
   transform-origin: 50% 0;
 }
 
@@ -384,6 +384,7 @@ button {
 }
 
 .brand-sign-button::before {
+  display: none;
   position: absolute;
   z-index: -2;
   inset: -0.35%;
@@ -408,6 +409,8 @@ button {
   display: block;
   width: 100%;
   height: auto;
+  clip-path: inset(1.8% round 5%);
+  filter: brightness(1.045) saturate(0.82) contrast(0.96);
   user-select: none;
 }
 
@@ -433,7 +436,7 @@ button {
   height: 24px;
   border: 1px solid #626563;
   border-radius: 2px;
-  background: linear-gradient(90deg, #d0d2cf 0%, #818582 24%, #aeb1ae 54%, #686c69 82%, #b9bcb9 100%);
+  background: linear-gradient(90deg, #e2e4df 0%, #a6aaa6 24%, #d0d3ce 54%, #929691 82%, #d8dad6 100%);
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2), inset 1px 0 1px rgba(255, 255, 255, 0.36);
   transform: translateX(-50%);
 }
@@ -545,7 +548,7 @@ button {
   }
 
   .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
-  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-10px) rotateX(5deg); }
+  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-28px) rotateX(5deg); }
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
