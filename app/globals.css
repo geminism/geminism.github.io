@@ -327,7 +327,7 @@ button {
   height: clamp(148px, 17svh, 196px);
   margin: 7px auto 15px;
   perspective: 900px;
-  transform: rotateX(5deg);
+  transform: translateY(-18px) rotateX(5deg);
   transform-origin: 50% 0;
 }
 
@@ -545,7 +545,7 @@ button {
   }
 
   .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
-  .brand-sign-rail { height: 151px; margin-top: 8px; }
+  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-10px) rotateX(5deg); }
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
