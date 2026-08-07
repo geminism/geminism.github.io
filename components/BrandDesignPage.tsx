@@ -107,17 +107,18 @@ export function BrandDesignPage() {
         <div className="brand-rail" />
         <div className="brand-sign-list">
           {projects.map((project) => (
-            <button
-              key={project.id}
-              type="button"
-              className={`brand-sign-button ${project.id === activeId ? "is-active" : ""}`}
-              aria-pressed={project.id === activeId}
-              onClick={() => selectProject(project.id)}
-            >
+            <div className="brand-sign-mount" key={project.id}>
               <span className="brand-sign-arm" />
               <span className="brand-sign-collar" aria-hidden="true" />
-              <img src={project.sign} alt={`${project.title} 项目路牌`} />
-            </button>
+              <button
+                type="button"
+                className={`brand-sign-button ${project.id === activeId ? "is-active" : ""}`}
+                aria-pressed={project.id === activeId}
+                onClick={() => selectProject(project.id)}
+              >
+                <img src={project.sign} alt={`${project.title} 项目路牌`} />
+              </button>
+            </div>
           ))}
         </div>
       </header>

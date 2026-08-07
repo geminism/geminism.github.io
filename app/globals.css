@@ -365,10 +365,16 @@ button {
   transform: translateZ(3px);
 }
 
+.brand-sign-mount {
+  position: relative;
+  width: clamp(88px, 8.2vw, 122px);
+}
+
 .brand-sign-button {
   position: relative;
   display: block;
-  width: clamp(88px, 8.2vw, 122px);
+  width: 100%;
+  margin-top: 24px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -388,15 +394,15 @@ button {
   transform: translateY(1px);
 }
 
-.brand-sign-button:nth-child(1) { transform: rotate(-1.2deg); }
-.brand-sign-button:nth-child(2) { transform: rotate(1.1deg); }
-.brand-sign-button:nth-child(3) { transform: rotate(-0.7deg); }
+.brand-sign-mount:nth-child(1) .brand-sign-button { transform: rotate(-1.2deg); }
+.brand-sign-mount:nth-child(2) .brand-sign-button { transform: rotate(1.1deg); }
+.brand-sign-mount:nth-child(3) .brand-sign-button { transform: rotate(-0.7deg); }
 .brand-sign-button:hover,
 .brand-sign-button:focus-visible,
 .brand-sign-button.is-active { filter: drop-shadow(0 20px 15px rgba(0, 0, 0, 0.17)); }
 .brand-sign-button:focus-visible { outline: 2px solid rgba(25, 25, 24, 0.55); outline-offset: 4px; }
 .brand-sign-button.is-active { transform: rotate(0deg) scale(1.025); }
-.brand-sign-button:nth-child(2).is-active { transform: rotate(0deg) scale(1.025); }
+.brand-sign-mount:nth-child(2) .brand-sign-button.is-active { transform: rotate(0deg) scale(1.025); }
 
 .brand-sign-button img {
   display: block;
@@ -408,10 +414,10 @@ button {
 .brand-sign-arm {
   position: absolute;
   z-index: -1;
-  top: 9px;
+  top: 10px;
   left: 50%;
   width: 5px;
-  height: 24px;
+  height: 25px;
   border-radius: 2px;
   background: linear-gradient(90deg, #4f5250 0%, #171817 46%, #383a39 100%);
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.24), inset 1px 0 1px rgba(255, 255, 255, 0.12);
@@ -421,28 +427,31 @@ button {
 .brand-sign-collar {
   position: absolute;
   z-index: 2;
-  top: -5px;
+  top: -4px;
   left: 50%;
-  width: 13px;
-  height: 25px;
-  border: 1px solid #777a77;
-  border-radius: 46%;
-  background: linear-gradient(90deg, #aeb1ad 0%, #6e726f 27%, #b9bcb8 57%, #777b78 100%);
-  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2), inset 1px 0 1px rgba(255, 255, 255, 0.35);
+  width: 12px;
+  height: 24px;
+  border: 1px solid #626563;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d0d2cf 0%, #818582 24%, #aeb1ae 54%, #686c69 82%, #b9bcb9 100%);
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2), inset 1px 0 1px rgba(255, 255, 255, 0.36);
   transform: translateX(-50%);
 }
 
+.brand-sign-collar::before,
 .brand-sign-collar::after {
   position: absolute;
-  top: 2px;
-  left: 1px;
-  width: 9px;
-  height: 18px;
-  border: 1px solid rgba(220, 222, 218, 0.42);
-  border-radius: 45%;
-  background: transparent;
+  top: -2px;
+  width: 2px;
+  height: 26px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #dfe1dd 0%, #777b78 48%, #c8cbc7 100%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   content: "";
 }
+
+.brand-sign-collar::before { left: -2px; }
+.brand-sign-collar::after { right: -2px; }
 
 .brand-content {
   position: relative;
@@ -540,9 +549,9 @@ button {
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
-  .brand-sign-button { width: 27%; }
-  .brand-sign-arm { top: 9px; height: 22px; }
-  .brand-sign-collar { top: -5px; }
+  .brand-sign-mount { width: 27%; }
+  .brand-sign-arm { top: 10px; height: 24px; }
+  .brand-sign-collar { top: -4px; }
   .brand-content { height: auto; min-height: 0; grid-template-columns: 1fr; gap: 15px; }
   .brand-content.is-empty { min-height: 0; }
   .brand-panel { min-height: 52svh; max-height: 62svh; }
