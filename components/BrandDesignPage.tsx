@@ -115,6 +115,7 @@ export function BrandDesignPage() {
               onClick={() => selectProject(project.id)}
             >
               <span className="brand-sign-arm" />
+              <span className="brand-sign-collar" aria-hidden="true" />
               <img src={project.sign} alt={`${project.title} 项目路牌`} />
             </button>
           ))}
@@ -122,12 +123,7 @@ export function BrandDesignPage() {
       </header>
 
       <section className={`brand-content ${!active ? "is-empty" : ""} ${transitioning ? "is-transitioning" : ""}`} aria-live="polite">
-        {!active ? (
-          <div className="brand-empty-state">
-            <p>Select a sign to enter a project</p>
-            <span>选择上方路牌查看品牌设计</span>
-          </div>
-        ) : (
+        {active ? (
           <>
             <div className="brand-panel brand-image-panel" ref={leftRef}>
               <div className="brand-image-stack">
@@ -152,10 +148,10 @@ export function BrandDesignPage() {
               </div>
             </div>
           </>
-        )}
+        ) : null}
       </section>
 
-      <p className="brand-footer-note">Selected identity studies · 2024—25</p>
+      {active ? <p className="brand-footer-note">Selected identity studies · 2024—25</p> : null}
     </main>
   );
 }

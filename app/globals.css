@@ -335,13 +335,14 @@ button {
 .brand-rail-shadow {
   position: absolute;
   top: 46px;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  width: 100vw;
   height: 17px;
   border: 1px solid #080908;
   border-radius: 4px;
   background: linear-gradient(180deg, #737774 0%, #292b2a 17%, #0f1010 51%, #454846 82%, #161817 100%);
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.28), 0 8px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.24);
+  transform: translateX(-50%);
 }
 
 .brand-rail-shadow {
@@ -349,7 +350,7 @@ button {
   height: 24px;
   background: rgba(23, 23, 22, 0.16);
   filter: blur(8px);
-  transform: scaleX(0.97);
+  transform: translateX(-50%) scaleX(1.02);
 }
 
 .brand-sign-list {
@@ -357,8 +358,8 @@ button {
   top: 49px;
   left: 7.2%;
   display: flex;
-  width: 47%;
-  min-width: 420px;
+  width: 40%;
+  min-width: 340px;
   justify-content: space-between;
   gap: clamp(10px, 2.6vw, 40px);
   transform: translateZ(3px);
@@ -367,7 +368,7 @@ button {
 .brand-sign-button {
   position: relative;
   display: block;
-  width: clamp(108px, 10.5vw, 156px);
+  width: clamp(88px, 8.2vw, 122px);
   padding: 0;
   border: 0;
   background: transparent;
@@ -379,23 +380,23 @@ button {
 .brand-sign-button::before {
   position: absolute;
   z-index: -2;
-  inset: -1.5%;
+  inset: -0.35%;
   border-radius: 9%;
-  background: linear-gradient(135deg, #f0f1ee 0%, #a6aaa6 43%, #e2e4df 68%, #858a86 100%);
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.78);
+  background: linear-gradient(135deg, #d9dbd7 0%, #b7bab6 48%, #d0d2ce 72%, #a9aca8 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   content: "";
-  transform: translateY(3px);
+  transform: translateY(1px);
 }
 
 .brand-sign-button:nth-child(1) { transform: rotate(-1.2deg); }
-.brand-sign-button:nth-child(2) { transform: translateY(13px) rotate(1.1deg); }
+.brand-sign-button:nth-child(2) { transform: rotate(1.1deg); }
 .brand-sign-button:nth-child(3) { transform: rotate(-0.7deg); }
 .brand-sign-button:hover,
 .brand-sign-button:focus-visible,
 .brand-sign-button.is-active { filter: drop-shadow(0 20px 15px rgba(0, 0, 0, 0.17)); }
 .brand-sign-button:focus-visible { outline: 2px solid rgba(25, 25, 24, 0.55); outline-offset: 4px; }
-.brand-sign-button.is-active { transform: translateY(-5px) rotate(0deg) scale(1.035); }
-.brand-sign-button:nth-child(2).is-active { transform: translateY(7px) rotate(0deg) scale(1.035); }
+.brand-sign-button.is-active { transform: rotate(0deg) scale(1.025); }
+.brand-sign-button:nth-child(2).is-active { transform: rotate(0deg) scale(1.025); }
 
 .brand-sign-button img {
   display: block;
@@ -407,38 +408,39 @@ button {
 .brand-sign-arm {
   position: absolute;
   z-index: -1;
-  top: -56px;
+  top: 9px;
   left: 50%;
-  width: 8px;
-  height: 67px;
+  width: 5px;
+  height: 24px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #c9ccc8 0%, #747875 22%, #202221 49%, #9da19d 78%, #d8dad6 100%);
-  box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.28), inset 1px 0 1px rgba(255, 255, 255, 0.55);
+  background: linear-gradient(90deg, #4f5250 0%, #171817 46%, #383a39 100%);
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.24), inset 1px 0 1px rgba(255, 255, 255, 0.12);
   transform: translateX(-50%);
 }
 
 .brand-sign-collar {
   position: absolute;
   z-index: 2;
-  top: -7px;
+  top: -5px;
   left: 50%;
-  width: 19px;
-  height: 11px;
-  border: 2px solid #9b9e9b;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #d8dad6 0%, #777b78 48%, #c3c6c2 100%);
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  width: 13px;
+  height: 25px;
+  border: 1px solid #777a77;
+  border-radius: 46%;
+  background: linear-gradient(90deg, #aeb1ad 0%, #6e726f 27%, #b9bcb8 57%, #777b78 100%);
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2), inset 1px 0 1px rgba(255, 255, 255, 0.35);
   transform: translateX(-50%);
 }
 
 .brand-sign-collar::after {
   position: absolute;
   top: 2px;
-  left: 2px;
-  width: 11px;
-  height: 2px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.58);
+  left: 1px;
+  width: 9px;
+  height: 18px;
+  border: 1px solid rgba(220, 222, 218, 0.42);
+  border-radius: 45%;
+  background: transparent;
   content: "";
 }
 
@@ -455,22 +457,7 @@ button {
 }
 
 .brand-content.is-transitioning { opacity: 0; transform: translateY(8px); }
-.brand-content.is-empty { display: block; }
-
-.brand-empty-state {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  min-height: 420px;
-  place-content: center;
-  justify-items: center;
-  border: 1px solid rgba(31, 31, 30, 0.26);
-  background: rgba(252, 252, 250, 0.52);
-  box-shadow: 0 8px 18px rgba(44, 44, 40, 0.075), 0 2px 4px rgba(44, 44, 40, 0.05);
-}
-
-.brand-empty-state p { margin: 0 0 9px; font-size: clamp(18px, 2.1vw, 30px); letter-spacing: -0.035em; }
-.brand-empty-state span { color: rgba(30, 30, 29, 0.48); font-size: 11px; letter-spacing: 0.08em; }
+.brand-content.is-empty { display: block; height: 0; min-height: 0; margin: 0; }
 
 .brand-panel {
   min-height: 0;
@@ -553,11 +540,11 @@ button {
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
-  .brand-sign-button { width: 31%; }
-  .brand-sign-arm { top: -47px; height: 58px; }
-  .brand-sign-collar { top: -7px; }
+  .brand-sign-button { width: 27%; }
+  .brand-sign-arm { top: 9px; height: 22px; }
+  .brand-sign-collar { top: -5px; }
   .brand-content { height: auto; min-height: 0; grid-template-columns: 1fr; gap: 15px; }
-  .brand-content.is-empty { min-height: 52svh; }
+  .brand-content.is-empty { min-height: 0; }
   .brand-panel { min-height: 52svh; max-height: 62svh; }
   .brand-copy-panel { min-height: 38svh; }
   .brand-footer-note { position: relative; right: auto; bottom: auto; margin-top: 17px; }
