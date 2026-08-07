@@ -20,7 +20,7 @@ const projects: BrandProject[] = [
     subtitle: "Visual identity / 2024",
     sign: "/brand/sign-1.png",
     color: "#d4d5d1",
-    images: ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"],
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
     description: [
       "Verge is a visual identity study built around the quiet tension between structure and movement.",
       "The system uses a restrained wordmark, generous space and a small set of sharp graphic gestures to make each application feel related without becoming repetitive.",
@@ -33,7 +33,7 @@ const projects: BrandProject[] = [
     subtitle: "Editorial identity / Selected work",
     sign: "/brand/sign-2.png",
     color: "#d5d6d2",
-    images: ["2.png", "4.png", "6.png"],
+    images: ["2.jpg", "4.jpg", "6.jpg"],
     description: [
       "Margin Notes is a placeholder case study for the second brand direction.",
       "The visual language will be developed from the sign artwork, with room for printed matter, editorial systems and campaign applications.",
@@ -46,7 +46,7 @@ const projects: BrandProject[] = [
     subtitle: "Independent identity / Selected work",
     sign: "/brand/sign-3.png",
     color: "#d5d6d2",
-    images: ["3.png", "5.png", "1.png"],
+    images: ["3.jpg", "5.jpg", "1.jpg"],
     description: [
       "be studio is a placeholder case study for the third brand direction.",
       "The identity is treated as a flexible mark: warm, tactile and able to move between a quiet studio space and a more expressive public touchpoint.",
@@ -56,12 +56,12 @@ const projects: BrandProject[] = [
 ];
 
 export function BrandDesignPage() {
-  const [activeId, setActiveId] = useState(projects[0].id);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [transitioning, setTransitioning] = useState(false);
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
-  const active = projects.find((project) => project.id === activeId)!;
+  const active = activeId ? projects.find((project) => project.id === activeId) ?? null : null;
 
   const syncScroll = (nextProgress: number) => {
     const next = Math.max(0, Math.min(1, nextProgress));
@@ -99,7 +99,7 @@ export function BrandDesignPage() {
   };
 
   return (
-    <main className="brand-page" style={{ "--brand-accent": active.color } as React.CSSProperties}>
+    <main className="brand-page" style={{ "--brand-accent": active?.color ?? "#d5d6d2" } as React.CSSProperties}>
       <Link className="brand-back" href="/" aria-label="返回路牌首页">← Index</Link>
 
       <header className="brand-sign-rail" aria-label="品牌设计项目导航">
@@ -121,29 +121,38 @@ export function BrandDesignPage() {
         </div>
       </header>
 
-      <section className={`brand-content ${transitioning ? "is-transitioning" : ""}`} aria-live="polite">
-        <div className="brand-panel brand-image-panel" ref={leftRef}>
-          <div className="brand-image-stack">
-            {active.images.map((image, index) => (
-              <img
-                key={`${active.id}-${image}`}
-                src={`/brand/verge/${image}`}
-                alt={`${active.title} 项目图 ${index + 1}`}
-                draggable="false"
-              />
-            ))}
+      <section className={`brand-content ${!active ? "is-empty" : ""} ${transitioning ? "is-transitioning" : ""}`} aria-live="polite">
+        {!active ? (
+          <div className="brand-empty-state">
+            <p>Select a sign to enter a project</p>
+            <span>选择上方路牌查看品牌设计</span>
           </div>
-        </div>
-        <div className="brand-panel brand-copy-panel" ref={rightRef}>
-          <div className="brand-copy-inner">
-            <p className="brand-kicker">Brand design / {active.id}</p>
-            <h1>{active.title}</h1>
-            <p className="brand-subtitle">{active.subtitle}</p>
-            <div className="brand-copy-rule" />
-            {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            <p className="brand-scroll-note">Scroll to explore · 01—06</p>
-          </div>
-        </div>
+        ) : (
+          <>
+            <div className="brand-panel brand-image-panel" ref={leftRef}>
+              <div className="brand-image-stack">
+                {active.images.map((image, index) => (
+                  <img
+                    key={`${active.id}-${image}`}
+                    src={`/brand/verge/${image}`}
+                    alt={`${active.title} 项目图 ${index + 1}`}
+                    draggable="false"
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="brand-panel brand-copy-panel" ref={rightRef}>
+              <div className="brand-copy-inner">
+                <p className="brand-kicker">Brand design / {active.id}</p>
+                <h1>{active.title}</h1>
+                <p className="brand-subtitle">{active.subtitle}</p>
+                <div className="brand-copy-rule" />
+                {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                <p className="brand-scroll-note">Scroll to explore · 01—06</p>
+              </div>
+            </div>
+          </>
+        )}
       </section>
 
       <p className="brand-footer-note">Selected identity studies · 2024—25</p>
