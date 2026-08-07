@@ -303,7 +303,7 @@ button {
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  padding: 20px 4.05vw 22px;
+  padding: 20px 4.05vw 44px;
   background: #f7f7f5 url("/brand/background.png") center / cover no-repeat;
   color: #262625;
 }
@@ -324,7 +324,7 @@ button {
 .brand-sign-rail {
   position: relative;
   z-index: 4;
-  height: clamp(164px, 19svh, 224px);
+  height: clamp(148px, 17svh, 196px);
   margin: 7px auto 15px;
   perspective: 900px;
 }
@@ -354,8 +354,8 @@ button {
   top: 49px;
   left: 7.2%;
   display: flex;
-  width: 51%;
-  min-width: 480px;
+  width: 47%;
+  min-width: 420px;
   justify-content: space-between;
   gap: clamp(10px, 2.6vw, 40px);
 }
@@ -363,7 +363,7 @@ button {
 .brand-sign-button {
   position: relative;
   display: block;
-  width: clamp(124px, 13.2vw, 194px);
+  width: clamp(108px, 10.5vw, 156px);
   padding: 0;
   border: 0;
   background: transparent;
@@ -372,12 +372,24 @@ button {
   transition: filter 300ms ease, transform 500ms cubic-bezier(.22, 1, .36, 1);
 }
 
+.brand-sign-button::before {
+  position: absolute;
+  z-index: -2;
+  inset: -1.5%;
+  border-radius: 9%;
+  background: linear-gradient(135deg, #f0f1ee 0%, #a6aaa6 43%, #e2e4df 68%, #858a86 100%);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.78);
+  content: "";
+  transform: translateY(3px);
+}
+
 .brand-sign-button:nth-child(1) { transform: rotate(-1.2deg); }
 .brand-sign-button:nth-child(2) { transform: translateY(13px) rotate(1.1deg); }
 .brand-sign-button:nth-child(3) { transform: rotate(-0.7deg); }
 .brand-sign-button:hover,
 .brand-sign-button:focus-visible,
 .brand-sign-button.is-active { filter: drop-shadow(0 20px 15px rgba(0, 0, 0, 0.17)); }
+.brand-sign-button:focus-visible { outline: 2px solid rgba(25, 25, 24, 0.55); outline-offset: 4px; }
 .brand-sign-button.is-active { transform: translateY(-5px) rotate(0deg) scale(1.035); }
 .brand-sign-button:nth-child(2).is-active { transform: translateY(7px) rotate(0deg) scale(1.035); }
 
@@ -401,11 +413,26 @@ button {
   transform: translateX(-50%);
 }
 
+.brand-sign-collar {
+  position: absolute;
+  z-index: 2;
+  top: -7px;
+  left: 50%;
+  width: 19px;
+  height: 11px;
+  border: 2px solid #9b9e9b;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #d8dad6 0%, #777b78 48%, #c3c6c2 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  transform: translateX(-50%);
+}
+
 .brand-content {
   position: relative;
   z-index: 3;
   display: grid;
-  height: calc(81svh - 50px);
+  height: calc(78svh - 54px);
+  margin-bottom: 26px;
   min-height: 420px;
   grid-template-columns: minmax(0, 2.08fr) minmax(260px, 0.78fr);
   gap: clamp(18px, 3.25vw, 56px);
@@ -506,13 +533,14 @@ button {
     grid-row: 2;
   }
 
-  .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 26px; }
-  .brand-sign-rail { height: 165px; margin-top: 8px; }
+  .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
+  .brand-sign-rail { height: 151px; margin-top: 8px; }
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
   .brand-sign-button { width: 31%; }
   .brand-sign-arm { top: -35px; height: 35px; }
+  .brand-sign-collar { top: -7px; }
   .brand-content { height: auto; min-height: 0; grid-template-columns: 1fr; gap: 15px; }
   .brand-content.is-empty { min-height: 52svh; }
   .brand-panel { min-height: 52svh; max-height: 62svh; }
