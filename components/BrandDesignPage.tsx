@@ -9,6 +9,7 @@ type BrandProject = {
   subtitle: string;
   sign: string;
   color: string;
+  assetDir: string;
   images: string[];
   description: string[];
 };
@@ -20,6 +21,7 @@ const projects: BrandProject[] = [
     subtitle: "Visual identity / 2024",
     sign: "/brand/sign-1.png",
     color: "#d4d5d1",
+    assetDir: "verge",
     images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
     description: [
       "Verge is a visual identity study built around the quiet tension between structure and movement.",
@@ -33,7 +35,8 @@ const projects: BrandProject[] = [
     subtitle: "Editorial identity / Selected work",
     sign: "/brand/sign-2.png",
     color: "#d5d6d2",
-    images: ["2.jpg", "4.jpg", "6.jpg"],
+    assetDir: "margin",
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
     description: [
       "Margin Notes is a placeholder case study for the second brand direction.",
       "The visual language will be developed from the sign artwork, with room for printed matter, editorial systems and campaign applications.",
@@ -46,7 +49,8 @@ const projects: BrandProject[] = [
     subtitle: "Independent identity / Selected work",
     sign: "/brand/sign-3.png",
     color: "#d5d6d2",
-    images: ["3.jpg", "5.jpg", "1.jpg"],
+    assetDir: "studio",
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"],
     description: [
       "be studio is a placeholder case study for the third brand direction.",
       "The identity is treated as a flexible mark: warm, tactile and able to move between a quiet studio space and a more expressive public touchpoint.",
@@ -131,7 +135,7 @@ export function BrandDesignPage() {
                 {active.images.map((image, index) => (
                   <img
                     key={`${active.id}-${image}`}
-                    src={`/brand/verge/${image}`}
+                    src={`/brand/${active.assetDir}/${image}`}
                     alt={`${active.title} 项目图 ${index + 1}`}
                     draggable="false"
                   />

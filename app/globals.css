@@ -311,7 +311,7 @@ button {
 .brand-back {
   position: absolute;
   z-index: 8;
-  top: 22px;
+  top: 14px;
   left: 4.05vw;
   padding: 7px 0;
   color: rgba(22, 22, 21, 0.68);
@@ -327,7 +327,7 @@ button {
   height: clamp(148px, 17svh, 196px);
   margin: 7px auto 15px;
   perspective: 900px;
-  transform: translateY(-38px) rotateX(5deg);
+  transform: translateY(-24px) rotateX(5deg);
   transform-origin: 50% 0;
 }
 
@@ -336,18 +336,18 @@ button {
   position: absolute;
   top: 46px;
   left: 50%;
-  width: 100vw;
-  height: 17px;
+  width: calc(100vw + 32px);
+  height: 13px;
   border: 1px solid #080908;
-  border-radius: 4px;
+  border-radius: 0;
   background: linear-gradient(180deg, #737774 0%, #292b2a 17%, #0f1010 51%, #454846 82%, #161817 100%);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.28), 0 8px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.24);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.28), 0 7px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.24);
   transform: translateX(-50%);
 }
 
 .brand-rail-shadow {
-  top: 53px;
-  height: 24px;
+  top: 51px;
+  height: 18px;
   background: rgba(23, 23, 22, 0.16);
   filter: blur(8px);
   transform: translateX(-50%) scaleX(1.02);
@@ -548,7 +548,7 @@ button {
   }
 
   .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
-  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-28px) rotateX(5deg); }
+  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-16px) rotateX(5deg); }
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
