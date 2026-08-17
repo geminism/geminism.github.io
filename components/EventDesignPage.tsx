@@ -151,16 +151,18 @@ export function EventDesignPage() {
             <div className="brand-panel brand-image-panel">
               <div className="brand-panel-scroll brand-image-scroll" ref={imageRef}>
                 <div className="brand-image-stack event-image-stack">
-                  <video
-                    ref={videoRef}
-                    src={`/event/${active.assetDir}/1.mp4`}
-                    aria-label={`${active.title} 项目动态展示`}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                  />
+                  <div className="event-video-stage">
+                    <video
+                      ref={videoRef}
+                      src={`/event/${active.assetDir}/1.mp4`}
+                      aria-label={`${active.title} 项目动态展示`}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                    />
+                  </div>
                   {active.images.map((image, index) => (
                     <img
                       key={`${active.id}-${image}`}
