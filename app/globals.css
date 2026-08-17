@@ -311,8 +311,8 @@ button {
 .brand-back {
   position: absolute;
   z-index: 8;
-  top: 14px;
-  left: 4.05vw;
+  top: 16px;
+  left: 104px;
   padding: 7px 0;
   color: rgba(22, 22, 21, 0.68);
   font-size: 10px;
@@ -322,59 +322,65 @@ button {
 }
 
 .brand-sign-rail {
-  position: relative;
+  position: absolute;
   z-index: 4;
-  height: clamp(132px, 15svh, 176px);
-  margin: 7px auto 15px;
-  perspective: 900px;
-  transform: translateY(-24px) rotateX(5deg);
-  transform-origin: 50% 0;
+  top: 0;
+  left: 0;
+  width: 156px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
 .brand-rail,
 .brand-rail-shadow {
   position: absolute;
-  top: 46px;
-  left: 50%;
-  width: calc(100vw + 32px);
-  height: 9px;
+  top: 50%;
+  left: 52px;
+  width: 9px;
+  height: calc(100% + 32px);
   border: 1px solid #080908;
-  border-radius: 0;
+  border-radius: 5px;
   background: linear-gradient(180deg, #737774 0%, #292b2a 17%, #0f1010 51%, #454846 82%, #161817 100%);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.26), 0 5px 7px rgba(0, 0, 0, 0.13), inset 0 1px 1px rgba(255, 255, 255, 0.22);
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 
 .brand-rail-shadow {
-  top: 49px;
-  height: 13px;
+  top: 50%;
+  left: 55px;
+  width: 16px;
+  height: calc(100% + 40px);
   background: rgba(23, 23, 22, 0.16);
   filter: blur(8px);
-  transform: translateX(-50%) scaleX(1.02);
+  transform: translate(-50%, -50%);
 }
 
 .brand-sign-list {
   position: absolute;
-  top: 49px;
-  left: 7.2%;
+  top: 13%;
+  left: 0;
   display: flex;
-  width: 40%;
-  min-width: 340px;
-  justify-content: space-between;
-  gap: clamp(10px, 2.6vw, 40px);
-  transform: translateZ(3px);
+  width: 156px;
+  height: 74%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: 0;
 }
 
 .brand-sign-mount {
   position: relative;
-  width: clamp(78px, 7vw, 105px);
+  width: 142px;
+  height: 112px;
+  margin-left: 2px;
 }
 
 .brand-sign-button {
   position: relative;
   display: block;
-  width: 100%;
-  margin-top: 24px;
+  width: 98px;
+  margin: 0 0 0 66px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -417,54 +423,55 @@ button {
 .brand-sign-arm {
   position: absolute;
   z-index: -1;
-  top: 10px;
-  left: 50%;
-  width: 4px;
-  height: 22px;
+  top: 50%;
+  left: 50px;
+  width: 28px;
+  height: 4px;
   border-radius: 2px;
   background: linear-gradient(90deg, #4f5250 0%, #171817 46%, #383a39 100%);
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.24), inset 1px 0 1px rgba(255, 255, 255, 0.12);
-  transform: translateX(-50%);
+  transform: translateY(-50%);
 }
 
 .brand-sign-collar {
   position: absolute;
   z-index: 2;
-  top: -4px;
-  left: 50%;
-  width: 10px;
-  height: 20px;
+  top: 50%;
+  left: 50px;
+  width: 22px;
+  height: 11px;
   border: 1px solid #626563;
   border-radius: 2px;
   background: linear-gradient(90deg, #e2e4df 0%, #a6aaa6 24%, #d0d3ce 54%, #929691 82%, #d8dad6 100%);
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2), inset 1px 0 1px rgba(255, 255, 255, 0.36);
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 
 .brand-sign-collar::before,
 .brand-sign-collar::after {
   position: absolute;
-  top: -2px;
-  width: 2px;
-  height: 22px;
+  left: -2px;
+  width: 26px;
+  height: 2px;
   border-radius: 1px;
-  background: linear-gradient(180deg, #dfe1dd 0%, #777b78 48%, #c8cbc7 100%);
+  background: linear-gradient(90deg, #dfe1dd 0%, #777b78 48%, #c8cbc7 100%);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   content: "";
 }
 
-.brand-sign-collar::before { left: -2px; }
-.brand-sign-collar::after { right: -2px; }
+.brand-sign-collar::before { top: -2px; }
+.brand-sign-collar::after { top: 11px; }
 
 .brand-content {
   position: relative;
   z-index: 3;
   display: grid;
-  height: calc(82svh - 50px);
-  margin-bottom: 26px;
-  min-height: 420px;
-  grid-template-columns: minmax(0, 2.8fr) minmax(220px, 0.68fr);
-  gap: clamp(14px, 2.2vw, 34px);
+  height: calc(100svh - 54px);
+  margin: 32px 0 22px 170px;
+  min-height: 520px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(150px, 0.34fr);
+  gap: 18px;
   transition: opacity 220ms ease, transform 420ms cubic-bezier(.22, 1, .36, 1);
 }
 
@@ -547,18 +554,22 @@ button {
     grid-row: 2;
   }
 
-  .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
-  .brand-sign-rail { height: 139px; margin-top: 8px; transform: translateY(-16px) rotateX(5deg); }
-  .brand-rail { top: 42px; }
-  .brand-rail-shadow { top: 49px; }
-  .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
-  .brand-sign-mount { width: 24%; }
-  .brand-sign-arm { top: 10px; height: 21px; }
-  .brand-sign-collar { top: -4px; }
-  .brand-content { height: auto; min-height: 0; grid-template-columns: 1fr; gap: 15px; }
+  .brand-page { min-height: 100svh; overflow: auto; padding: 16px 10px 38px 0; }
+  .brand-back { top: 12px; left: 78px; }
+  .brand-sign-rail { top: 0; left: 0; width: 112px; height: 100%; margin: 0; transform: none; }
+  .brand-rail { top: 50%; left: 38px; width: 7px; height: calc(100% + 20px); }
+  .brand-rail-shadow { top: 50%; left: 41px; width: 12px; height: calc(100% + 28px); }
+  .brand-sign-list { top: 12%; left: 0; width: 112px; height: 76%; min-width: 0; gap: 0; }
+  .brand-sign-mount { width: 104px; height: 88px; margin-left: 0; }
+  .brand-sign-button { width: 76px; margin-left: 49px; }
+  .brand-sign-arm { top: 50%; left: 36px; width: 18px; height: 3px; }
+  .brand-sign-collar { top: 50%; left: 36px; width: 17px; height: 9px; }
+  .brand-sign-collar::before,
+  .brand-sign-collar::after { width: 21px; }
+  .brand-content { height: calc(100svh - 44px); min-height: 440px; margin: 24px 10px 20px 122px; grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(140px, 0.4fr); gap: 14px; }
   .brand-content.is-empty { min-height: 0; }
-  .brand-panel { min-height: 52svh; max-height: 62svh; }
-  .brand-copy-panel { min-height: 38svh; }
+  .brand-panel { min-height: 0; max-height: none; }
+  .brand-copy-panel { min-height: 0; }
   .brand-footer-note { position: relative; right: auto; bottom: auto; margin-top: 17px; }
 }
 
