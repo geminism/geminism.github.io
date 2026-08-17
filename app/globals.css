@@ -505,6 +505,7 @@ button {
 .brand-image-scroll { background: #ffffff; }
 .brand-image-stack { display: grid; gap: 0; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
+.event-image-stack video { display: block; width: 100%; height: auto; background: #111; }
 
 .brand-copy-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3px; }
 .brand-copy-scroll { padding: clamp(18px, 2.15vw, 32px) clamp(16px, 1.85vw, 28px); background: #ffffff; }
