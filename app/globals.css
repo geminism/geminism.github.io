@@ -324,7 +324,7 @@ button {
 .brand-sign-rail {
   position: relative;
   z-index: 4;
-  height: clamp(148px, 17svh, 196px);
+  height: clamp(132px, 15svh, 176px);
   margin: 7px auto 15px;
   perspective: 900px;
   transform: translateY(-24px) rotateX(5deg);
@@ -337,17 +337,17 @@ button {
   top: 46px;
   left: 50%;
   width: calc(100vw + 32px);
-  height: 13px;
+  height: 9px;
   border: 1px solid #080908;
   border-radius: 0;
   background: linear-gradient(180deg, #737774 0%, #292b2a 17%, #0f1010 51%, #454846 82%, #161817 100%);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.28), 0 7px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.24);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.26), 0 5px 7px rgba(0, 0, 0, 0.13), inset 0 1px 1px rgba(255, 255, 255, 0.22);
   transform: translateX(-50%);
 }
 
 .brand-rail-shadow {
-  top: 51px;
-  height: 18px;
+  top: 49px;
+  height: 13px;
   background: rgba(23, 23, 22, 0.16);
   filter: blur(8px);
   transform: translateX(-50%) scaleX(1.02);
@@ -367,7 +367,7 @@ button {
 
 .brand-sign-mount {
   position: relative;
-  width: clamp(88px, 8.2vw, 122px);
+  width: clamp(78px, 7vw, 105px);
 }
 
 .brand-sign-button {
@@ -419,8 +419,8 @@ button {
   z-index: -1;
   top: 10px;
   left: 50%;
-  width: 5px;
-  height: 25px;
+  width: 4px;
+  height: 22px;
   border-radius: 2px;
   background: linear-gradient(90deg, #4f5250 0%, #171817 46%, #383a39 100%);
   box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.24), inset 1px 0 1px rgba(255, 255, 255, 0.12);
@@ -432,8 +432,8 @@ button {
   z-index: 2;
   top: -4px;
   left: 50%;
-  width: 12px;
-  height: 24px;
+  width: 10px;
+  height: 20px;
   border: 1px solid #626563;
   border-radius: 2px;
   background: linear-gradient(90deg, #e2e4df 0%, #a6aaa6 24%, #d0d3ce 54%, #929691 82%, #d8dad6 100%);
@@ -446,7 +446,7 @@ button {
   position: absolute;
   top: -2px;
   width: 2px;
-  height: 26px;
+  height: 22px;
   border-radius: 1px;
   background: linear-gradient(180deg, #dfe1dd 0%, #777b78 48%, #c8cbc7 100%);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
@@ -460,7 +460,7 @@ button {
   position: relative;
   z-index: 3;
   display: grid;
-  height: calc(78svh - 54px);
+  height: calc(82svh - 50px);
   margin-bottom: 26px;
   min-height: 420px;
   grid-template-columns: minmax(0, 2.08fr) minmax(260px, 0.78fr);
@@ -548,12 +548,12 @@ button {
   }
 
   .brand-page { min-height: 100svh; overflow: auto; padding: 16px 15px 38px; }
-  .brand-sign-rail { height: 151px; margin-top: 8px; transform: translateY(-16px) rotateX(5deg); }
+  .brand-sign-rail { height: 139px; margin-top: 8px; transform: translateY(-16px) rotateX(5deg); }
   .brand-rail { top: 42px; }
   .brand-rail-shadow { top: 49px; }
   .brand-sign-list { left: 4%; width: 92%; min-width: 0; gap: 8px; }
-  .brand-sign-mount { width: 27%; }
-  .brand-sign-arm { top: 10px; height: 24px; }
+  .brand-sign-mount { width: 24%; }
+  .brand-sign-arm { top: 10px; height: 21px; }
   .brand-sign-collar { top: -4px; }
   .brand-content { height: auto; min-height: 0; grid-template-columns: 1fr; gap: 15px; }
   .brand-content.is-empty { min-height: 0; }
