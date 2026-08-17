@@ -7,6 +7,7 @@ type BrandCopyBlock = string | {
   text: string;
   centered?: boolean;
   bold?: boolean;
+  compact?: boolean;
 };
 
 type BrandProject = {
@@ -38,7 +39,7 @@ const projects: BrandProject[] = [
       "The visual identity is built around breath, openness, fluidity and nature. A rounded sans-serif wordmark creates a soft, continuous rhythm, while generous spacing and the diagonal interruption introduce a subtle pause within the logo itself.",
       "The palette is drawn from volcanic rock, moss, snow and glacier ice, combining contrasts of rough and soft, dark and transparent, stillness and movement.",
       "Moss on Stone is the first fragrance series by VERGE, inspired by moss slowly growing across volcanic rock. The contrast between ancient stone and gradual organic growth reflects the quiet passage of time in nature, shaped by damp air, mineral surfaces and cold green notes.",
-      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true },
+      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true, compact: true },
       "Transparent glass and streamlined forms reinforce the brand’s sense of clarity and breathability. Deep charcoal caps and outer packaging reference volcanic stone, while preserved moss introduces a tactile organic contrast.",
       "An irregular, subtly raised layer of moss is applied to each cap, creating slight variations between products and extending the experience from sight and scent into touch. The outer box continues this idea through a green organic texture that appears to slowly spread across the dark surface.",
     ],
@@ -50,7 +51,7 @@ const projects: BrandProject[] = [
       "Logo采用现代感的圆角无衬线字形，以柔和连续的笔画弱化过于正式的气质，并赋予字标更加流动、可呼吸的视觉感受。字母之间的空间与中央的斜线形成一段短暂的“间隙”，回应品牌所强调的 space between breaths，同时呼应“临”所代表的靠近而未完全抵达的状态。",
       "品牌色彩取自荒原中的自然元素：深色火山岩、苔藓、积雪与冰川。粗粝与柔软、深色与透明、静止与流动之间的反差，共同构成 VERGE 冷冽而安静的视觉世界。",
       "Moss on Stone 是 VERGE 的第一个香氛系列，灵感来自生长在火山岩上的苔藓。坚硬、古老的岩石与柔软而缓慢生长的苔藓形成对比，记录自然中几乎难以察觉的时间变化。湿润空气、岩石、绿色植物与冷冽气息共同构成这一系列的感官想象。",
-      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true },
+      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true, compact: true },
       "产品采用透明玻璃与圆润流线型轮廓，瓶盖与外包装采用取自火山岩的深炭色，并加入绿色苔藓元素，使包装本身形成“苔藓生长于岩石之上”的微型自然景观。瓶盖局部手工覆盖一片不规则的稳定化苔藓，略带厚度的触感打破工业化包装的统一性。自然形成的边缘与触觉差异使每件产品保留细微的独特性，也让视觉、嗅觉与触觉共同参与品牌体验。外包装则通过从边缘缓慢蔓延的绿色肌理延续这一概念，在深色矿物基底上留下自然生长的痕迹。",
     ],
   },
@@ -103,9 +104,18 @@ function renderCopyBlocks(blocks: BrandCopyBlock[]) {
       "brand-copy-block",
       content.centered ? "is-centered" : "",
       content.bold ? "is-bold" : "",
+      content.compact ? "is-compact" : "",
     ].filter(Boolean).join(" ");
 
-    return <p className={className} key={`${content.text}-${index}`}>{content.text}</p>;
+    return (
+      <p className={className} key={`${content.text}-${index}`}>
+        {content.centered
+          ? content.text.split("\n").map((line, lineIndex) => (
+              <span className="brand-copy-line" key={`${line}-${lineIndex}`}>{line}</span>
+            ))
+          : content.text}
+      </p>
+    );
   });
 }
 
