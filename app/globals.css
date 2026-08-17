@@ -499,7 +499,7 @@ button {
 .brand-image-stack { position: relative; z-index: 1; display: grid; gap: 0; overflow: hidden; border-radius: 13px; background: #f2f2ef; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
 
-.brand-copy-panel { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); }
+.brand-copy-panel { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); background: #ffffff; }
 .brand-copy-inner { position: relative; z-index: 1; min-height: 100%; padding-bottom: 30px; }
 .brand-kicker,
 .brand-scroll-note,
