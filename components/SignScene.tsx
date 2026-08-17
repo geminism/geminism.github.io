@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
-import { ContactShadows, Environment, useTexture } from "@react-three/drei";
+import { ContactShadows, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { sections, SectionId } from "@/lib/sections";
 
@@ -474,7 +474,6 @@ function PoleScene(props: SceneProps) {
         <PortfolioTitleSign />
       </group>
       <ContactShadows position={[0, -6.38, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />
-      <Environment preset="studio" environmentIntensity={0.4} />
       <CameraRig
         activeId={props.activeId}
         focusId={props.focusId}
