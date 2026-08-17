@@ -523,7 +523,13 @@ button {
 .brand-design-page .brand-copy-block.is-bold { color: rgba(30, 30, 29, 0.9); font-weight: 700; }
 .brand-design-page .brand-copy-block.is-centered.is-bold { margin-block: 28px; line-height: 1.58; }
 .brand-design-page .brand-copy-line { display: block; }
-.brand-design-page .brand-copy-block.is-compact { font-size: clamp(11.5px, 1vw, 13.5px) !important; letter-spacing: -0.02em; }
+.brand-design-page .brand-copy-block.is-compact {
+  max-width: none !important;
+  margin-inline: -8%;
+  padding-inline: 0;
+  font-size: 14.5px !important;
+  letter-spacing: -0.045em;
+}
 .brand-design-page .brand-copy-block.is-compact .brand-copy-line { white-space: nowrap; }
 .brand-scroll-note { padding-top: 62px; }
 .brand-footer-note { position: absolute; right: 4.05vw; bottom: 22px; z-index: 5; }
@@ -601,7 +607,7 @@ button {
   .brand-design-page .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { margin-bottom: 15px; font-size: 12.5px; line-height: 1.7; }
   .brand-copy-inner-zh p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { line-height: 1.76; }
   .brand-design-page .brand-copy-block.is-centered.is-bold { margin-block: 20px; }
-  .brand-design-page .brand-copy-block.is-compact { font-size: 10px !important; }
+  .brand-design-page .brand-copy-block.is-compact { font-size: 12.5px !important; }
   .brand-scroll-note { padding-top: 32px; font-size: 8px; }
   .brand-footer-note { position: relative; right: auto; bottom: auto; margin-top: 17px; }
 }
