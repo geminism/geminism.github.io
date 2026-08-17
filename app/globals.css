@@ -483,23 +483,30 @@ button {
   isolation: isolate;
   min-height: 0;
   overflow: hidden;
+  padding: 5px;
   border: 1px solid rgba(118, 123, 120, 0.62);
   border-radius: 21px;
   background: #fbfbf8;
   box-shadow: 0 12px 24px rgba(44, 44, 40, 0.1), 0 2px 5px rgba(44, 44, 40, 0.06), inset 0 0 0 3px rgba(201, 204, 200, 0.72), inset 0 0 0 4px rgba(255, 255, 255, 0.58);
+}
+
+.brand-panel-scroll {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 15px;
+  overscroll-behavior: contain;
   scrollbar-width: none;
 }
 
-.brand-panel::before {
-  display: none;
-}
-
-.brand-panel::-webkit-scrollbar { display: none; }
-.brand-image-panel { padding: clamp(9px, 0.85vw, 13px); }
-.brand-image-stack { position: relative; z-index: 1; display: grid; gap: 0; overflow: hidden; border-radius: 7px; background: #ffffff; }
+.brand-panel-scroll::-webkit-scrollbar { display: none; }
+.brand-image-scroll { background: #ffffff; }
+.brand-image-stack { display: grid; gap: 0; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
 
-.brand-copy-panel { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); background: #ffffff; }
+.brand-copy-scroll { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); background: #ffffff; }
 .brand-copy-inner { position: relative; z-index: 1; min-height: 100%; padding-bottom: 30px; }
 .brand-kicker,
 .brand-scroll-note,

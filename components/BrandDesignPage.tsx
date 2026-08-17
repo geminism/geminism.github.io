@@ -130,26 +130,30 @@ export function BrandDesignPage() {
       <section className={`brand-content ${!active ? "is-empty" : ""} ${transitioning ? "is-transitioning" : ""}`} aria-live="polite">
         {active ? (
           <>
-            <div className="brand-panel brand-image-panel" ref={leftRef}>
-              <div className="brand-image-stack">
-                {active.images.map((image, index) => (
-                  <img
-                    key={`${active.id}-${image}`}
-                    src={`/brand/${active.assetDir}/${image}`}
-                    alt={`${active.title} 项目图 ${index + 1}`}
-                    draggable="false"
-                  />
-                ))}
+            <div className="brand-panel brand-image-panel">
+              <div className="brand-panel-scroll brand-image-scroll" ref={leftRef}>
+                <div className="brand-image-stack">
+                  {active.images.map((image, index) => (
+                    <img
+                      key={`${active.id}-${image}`}
+                      src={`/brand/${active.assetDir}/${image}`}
+                      alt={`${active.title} 项目图 ${index + 1}`}
+                      draggable="false"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="brand-panel brand-copy-panel" ref={rightRef}>
-              <div className="brand-copy-inner">
-                <p className="brand-kicker">Brand design / {active.id}</p>
-                <h1>{active.title}</h1>
-                <p className="brand-subtitle">{active.subtitle}</p>
-                <div className="brand-copy-rule" />
-                {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                <p className="brand-scroll-note">Scroll to explore · 01—06</p>
+            <div className="brand-panel brand-copy-panel">
+              <div className="brand-panel-scroll brand-copy-scroll" ref={rightRef}>
+                <div className="brand-copy-inner">
+                  <p className="brand-kicker">Brand design / {active.id}</p>
+                  <h1>{active.title}</h1>
+                  <p className="brand-subtitle">{active.subtitle}</p>
+                  <div className="brand-copy-rule" />
+                  {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  <p className="brand-scroll-note">Scroll to explore · 01—06</p>
+                </div>
               </div>
             </div>
           </>
