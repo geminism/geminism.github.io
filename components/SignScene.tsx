@@ -29,13 +29,13 @@ type SignConfig = {
 };
 
 const configs: SignConfig[] = [
-  { id: "about", y: 3.42, angle: 0, side: 1, arm: 0.46, width: 2.55, height: 2.46, shape: "triangle" },
-  { id: "brand", y: 1.34, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.46, width: 4.2, height: 1.84, shape: "wide" },
-  { id: "packaging", y: -0.58, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.46, width: 2.0, height: 2.52, shape: "vertical" },
-  { id: "event", y: -2.18, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.46, width: 2.65, height: 2.65, shape: "octagon" },
+  { id: "about", y: 1.9, angle: 0, side: 1, arm: 0.42, width: 2.22, height: 2.12, shape: "triangle" },
+  { id: "brand", y: 0, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.42, width: 3.65, height: 1.58, shape: "wide" },
+  { id: "packaging", y: -1.65, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.42, width: 1.72, height: 2.17, shape: "vertical" },
+  { id: "event", y: -3.25, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.42, width: 2.28, height: 2.28, shape: "octagon" },
   // Keep the sign's radial position at the same 314° beat, but mount the
   // opposite end so the arrow tail—not its tip—meets the pole.
-  { id: "other", y: -4.08, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.46, width: 4.12, height: 1.54, shape: "wide" },
+  { id: "other", y: -4.77, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.42, width: 3.55, height: 1.32, shape: "wide" },
 ];
 
 type PortfolioTextures = {
@@ -187,8 +187,8 @@ function PortfolioTitleSign() {
 
     [leftPupilRef.current, rightPupilRef.current].forEach((pupil) => {
       if (!pupil) return;
-      const targetX = reduceMotion.current ? 0 : pointer.x * 0.018;
-      const targetY = reduceMotion.current ? 0 : pointer.y * 0.014;
+      const targetX = reduceMotion.current ? 0 : pointer.x * 0.03;
+      const targetY = reduceMotion.current ? 0 : pointer.y * 0.024;
       pupil.position.x = THREE.MathUtils.damp(pupil.position.x, targetX, 11, delta);
       pupil.position.y = THREE.MathUtils.damp(pupil.position.y, targetY, 11, delta);
     });
@@ -196,30 +196,30 @@ function PortfolioTitleSign() {
 
   if (!textures) return null;
 
-  const width = 4.35;
+  const width = 7.3;
   const height = width * (702 / 1238);
 
   const eye = (ref: React.RefObject<THREE.Group | null>, pupilRef: React.RefObject<THREE.Mesh | null>, x: number) => (
-    <group ref={ref} position={[x, -0.045, 0.085]}>
+    <group ref={ref} position={[x, -0.075, 0.085]}>
       <mesh>
-        <circleGeometry args={[0.067, 28]} />
+        <circleGeometry args={[0.112, 28]} />
         <meshStandardMaterial color="#fbfbf8" roughness={0.55} metalness={0.02} side={THREE.FrontSide} />
       </mesh>
       <mesh position={[0, 0, 0.006]}>
-        <ringGeometry args={[0.059, 0.067, 28]} />
+        <ringGeometry args={[0.099, 0.112, 28]} />
         <meshBasicMaterial color="#292929" side={THREE.FrontSide} />
       </mesh>
       <mesh ref={pupilRef} position={[0, 0, 0.012]}>
-        <circleGeometry args={[0.029, 24]} />
+        <circleGeometry args={[0.049, 24]} />
         <meshBasicMaterial color="#101010" side={THREE.FrontSide} />
       </mesh>
     </group>
   );
 
   return (
-    <group position={[0, 5.95, 0.2]}>
+    <group position={[0, 4.85, 0.2]}>
       <mesh position={[0, -0.05, -0.16]}>
-        <boxGeometry args={[3.2, 0.07, 0.1]} />
+        <boxGeometry args={[5.4, 0.07, 0.1]} />
         <meshStandardMaterial color="#4e5250" metalness={0.76} roughness={0.28} />
       </mesh>
       <mesh position={[0, 0, -0.1]} renderOrder={0}>
@@ -243,9 +243,9 @@ function PortfolioTitleSign() {
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial map={textures.face} transparent alphaTest={0.015} toneMapped={false} side={THREE.FrontSide} />
       </mesh>
-      {eye(leftEyeRef, leftPupilRef, 1.62)}
-      {eye(rightEyeRef, rightPupilRef, 1.71)}
-      <pointLight ref={signalLightRef} position={[1.25, -0.02, 0.42]} color="#ffd331" intensity={0.12} distance={2.1} decay={2} />
+      {eye(leftEyeRef, leftPupilRef, 2.72)}
+      {eye(rightEyeRef, rightPupilRef, 2.87)}
+      <pointLight ref={signalLightRef} position={[2.1, -0.03, 0.52]} color="#ffd331" intensity={0.12} distance={3.2} decay={2} />
     </group>
   );
 }
