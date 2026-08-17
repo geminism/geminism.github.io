@@ -7,11 +7,13 @@ type BrandProject = {
   id: string;
   title: string;
   subtitle: string;
+  subtitleZh: string;
   sign: string;
   color: string;
   assetDir: string;
   images: string[];
   description: string[];
+  descriptionZh: string[];
 };
 
 const projects: BrandProject[] = [
@@ -19,6 +21,7 @@ const projects: BrandProject[] = [
     id: "verge",
     title: "Verge",
     subtitle: "Visual identity / 2024",
+    subtitleZh: "视觉识别 / 2024",
     sign: "/brand/sign-1.png",
     color: "#d4d5d1",
     assetDir: "verge",
@@ -28,11 +31,17 @@ const projects: BrandProject[] = [
       "The system uses a restrained wordmark, generous space and a small set of sharp graphic gestures to make each application feel related without becoming repetitive.",
       "This page is a first content pass. Project notes, process images and final specifications can be added here as the case study develops.",
     ],
+    descriptionZh: [
+      "Verge 是一项围绕“结构与移动之间的安静张力”展开的视觉识别练习。它不试图用强烈的姿态抢占视线，而是在清晰秩序里保留细微的变化。",
+      "系统从克制的字标、充足的留白和少量锐利的图形动作出发，让不同媒介中的应用彼此关联，同时保持各自的呼吸感。",
+      "这里暂时放入示例文案。后续可以补充项目背景、设计过程、印刷细节与最终应用，让它成为完整的项目档案。",
+    ],
   },
   {
     id: "margin",
     title: "Margin Notes",
     subtitle: "Editorial identity / Selected work",
+    subtitleZh: "编辑识别 / 精选项目",
     sign: "/brand/sign-2.png",
     color: "#d5d6d2",
     assetDir: "margin",
@@ -42,11 +51,17 @@ const projects: BrandProject[] = [
       "The visual language will be developed from the sign artwork, with room for printed matter, editorial systems and campaign applications.",
       "More images and a final project statement will be added in the next content pass.",
     ],
+    descriptionZh: [
+      "Margin Notes 是第二个品牌方向的示例项目。它从书页边缘的批注感出发，尝试让阅读、记录和个人判断在同一个视觉系统里并置。",
+      "版式以安静的网格作为骨架，再以局部的手写感、裁切和密度变化制造节奏；它可以延展到出版物、海报与系列活动物料。",
+      "当前文字用于展示页面结构。正式案例完成后，可在这里加入委托背景、视觉策略与各阶段的设计决策。",
+    ],
   },
   {
     id: "studio",
     title: "be studio",
     subtitle: "Independent identity / Selected work",
+    subtitleZh: "独立工作室识别 / 精选项目",
     sign: "/brand/sign-3.png",
     color: "#d5d6d2",
     assetDir: "studio",
@@ -56,32 +71,40 @@ const projects: BrandProject[] = [
       "The identity is treated as a flexible mark: warm, tactile and able to move between a quiet studio space and a more expressive public touchpoint.",
       "Project context, outcomes and supporting images can be replaced here when the final case study is ready.",
     ],
+    descriptionZh: [
+      "be studio 是一个偏温暖、具触感的工作室身份设想。视觉语言在安静的制作现场与更开放的公共表达之间来回切换。",
+      "标识被视为一套可伸缩的工具：它可以在小尺寸上保持亲近，也能在更大尺度的展览、海报和物件上变得更加有力。",
+      "这部分仍为示例内容。未来可替换为真实合作背景、成果说明和更多与项目相关的文字材料。",
+    ],
   },
 ];
 
 export function BrandDesignPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const chineseRef = useRef<HTMLDivElement>(null);
+  const englishRef = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
   const active = activeId ? projects.find((project) => project.id === activeId) ?? null : null;
+
+  const scrollPanels = () => [imageRef.current, chineseRef.current, englishRef.current].filter(
+    (panel): panel is HTMLDivElement => panel !== null,
+  );
 
   const syncScroll = (nextProgress: number) => {
     const next = Math.max(0, Math.min(1, nextProgress));
     progress.current = next;
-    const left = leftRef.current;
-    const right = rightRef.current;
-    if (left) left.scrollTop = next * Math.max(0, left.scrollHeight - left.clientHeight);
-    if (right) right.scrollTop = next * Math.max(0, right.scrollHeight - right.clientHeight);
+    scrollPanels().forEach((panel) => {
+      panel.scrollTop = next * Math.max(0, panel.scrollHeight - panel.clientHeight);
+    });
   };
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
-      if (!leftRef.current || !rightRef.current) return;
-      const maxLeft = Math.max(1, leftRef.current.scrollHeight - leftRef.current.clientHeight);
-      const maxRight = Math.max(1, rightRef.current.scrollHeight - rightRef.current.clientHeight);
-      const longest = Math.max(maxLeft, maxRight);
+      const panels = scrollPanels();
+      if (panels.length !== 3) return;
+      const longest = Math.max(...panels.map((panel) => Math.max(1, panel.scrollHeight - panel.clientHeight)));
       event.preventDefault();
       syncScroll(progress.current + event.deltaY / longest);
     };
@@ -96,8 +119,7 @@ export function BrandDesignPage() {
     window.setTimeout(() => {
       setActiveId(id);
       progress.current = 0;
-      if (leftRef.current) leftRef.current.scrollTop = 0;
-      if (rightRef.current) rightRef.current.scrollTop = 0;
+      scrollPanels().forEach((panel) => { panel.scrollTop = 0; });
       requestAnimationFrame(() => setTransitioning(false));
     }, 220);
   };
@@ -131,7 +153,7 @@ export function BrandDesignPage() {
         {active ? (
           <>
             <div className="brand-panel brand-image-panel">
-              <div className="brand-panel-scroll brand-image-scroll" ref={leftRef}>
+              <div className="brand-panel-scroll brand-image-scroll" ref={imageRef}>
                 <div className="brand-image-stack">
                   {active.images.map((image, index) => (
                     <img
@@ -145,7 +167,17 @@ export function BrandDesignPage() {
               </div>
             </div>
             <div className="brand-panel brand-copy-panel">
-              <div className="brand-panel-scroll brand-copy-scroll" ref={rightRef}>
+              <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-zh" ref={chineseRef} lang="zh-CN">
+                <div className="brand-copy-inner brand-copy-inner-zh">
+                  <p className="brand-kicker">品牌设计 / {active.id}</p>
+                  <h1>{active.title}</h1>
+                  <p className="brand-subtitle">{active.subtitleZh}</p>
+                  <div className="brand-copy-rule" />
+                  {active.descriptionZh.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  <p className="brand-scroll-note">滚动浏览 · 01—06</p>
+                </div>
+              </div>
+              <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-en" ref={englishRef} lang="en">
                 <div className="brand-copy-inner">
                   <p className="brand-kicker">Brand design / {active.id}</p>
                   <h1>{active.title}</h1>

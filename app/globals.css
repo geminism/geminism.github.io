@@ -506,16 +506,18 @@ button {
 .brand-image-stack { display: grid; gap: 0; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
 
-.brand-copy-scroll { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); background: #ffffff; }
+.brand-copy-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3px; }
+.brand-copy-scroll { padding: clamp(18px, 2.15vw, 32px) clamp(16px, 1.85vw, 28px); background: #ffffff; }
 .brand-copy-inner { position: relative; z-index: 1; min-height: 100%; padding-bottom: 30px; }
 .brand-kicker,
 .brand-scroll-note,
 .brand-footer-note { margin: 0; color: rgba(30, 30, 29, 0.5); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; }
-.brand-copy-panel h1 { margin: 24px 0 10px; font-size: clamp(46px, 6vw, 100px); font-weight: 400; letter-spacing: -0.075em; line-height: 0.86; }
+.brand-copy-panel h1 { margin: 18px 0 9px; font-size: clamp(30px, 3.5vw, 58px); font-weight: 400; letter-spacing: -0.065em; line-height: 0.92; }
 .brand-subtitle { margin: 0; color: rgba(30, 30, 29, 0.64); font-size: 12px; line-height: 1.45; }
-.brand-copy-rule { width: 100%; height: 1px; margin: 31px 0 25px; background: rgba(30, 30, 29, 0.2); }
-.brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { max-width: 350px; margin: 0 0 24px; color: rgba(30, 30, 29, 0.7); font-size: 14px; line-height: 1.72; }
-.brand-scroll-note { padding-top: 100px; }
+.brand-copy-rule { width: 100%; height: 1px; margin: 24px 0 20px; background: rgba(30, 30, 29, 0.2); }
+.brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { max-width: 100%; margin: 0 0 18px; color: rgba(30, 30, 29, 0.7); font-size: 13px; line-height: 1.72; }
+.brand-copy-inner-zh p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { line-height: 1.86; }
+.brand-scroll-note { padding-top: 62px; }
 .brand-footer-note { position: absolute; right: 4.05vw; bottom: 22px; z-index: 5; }
 
 @media (max-width: 720px) {
@@ -584,6 +586,12 @@ button {
   .brand-content.is-empty { min-height: 0; }
   .brand-panel { min-height: 0; max-height: none; }
   .brand-copy-panel { min-height: 0; }
+  .brand-copy-scroll { padding: 14px 11px; }
+  .brand-copy-panel h1 { margin-top: 13px; font-size: clamp(20px, 7vw, 30px); }
+  .brand-copy-rule { margin: 16px 0 14px; }
+  .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { margin-bottom: 13px; font-size: 11px; line-height: 1.65; }
+  .brand-copy-inner-zh p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { line-height: 1.76; }
+  .brand-scroll-note { padding-top: 32px; font-size: 8px; }
   .brand-footer-note { position: relative; right: auto; bottom: auto; margin-top: 17px; }
 }
 
