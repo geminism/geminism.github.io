@@ -69,7 +69,6 @@ function renderCopyBlocks(blocks: EventCopyBlock[]) {
 export function EventDesignPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  const [imageViewportHeight, setImageViewportHeight] = useState(0);
   const imageRef = useRef<HTMLDivElement>(null);
   const chineseRef = useRef<HTMLDivElement>(null);
   const englishRef = useRef<HTMLDivElement>(null);
@@ -108,18 +107,6 @@ export function EventDesignPage() {
       videoRef.current?.play().catch(() => undefined);
     });
     return () => cancelAnimationFrame(frame);
-  }, [activeId]);
-
-  useEffect(() => {
-    const panel = imageRef.current;
-    if (!panel) return;
-
-    const updateViewportHeight = () => setImageViewportHeight(panel.clientHeight);
-    updateViewportHeight();
-
-    const observer = new ResizeObserver(updateViewportHeight);
-    observer.observe(panel);
-    return () => observer.disconnect();
   }, [activeId]);
 
   const selectProject = (id: string) => {
@@ -164,13 +151,10 @@ export function EventDesignPage() {
             <div className="brand-panel brand-image-panel">
               <div className="brand-panel-scroll brand-image-scroll" ref={imageRef}>
                 <div className="brand-image-stack event-image-stack">
-                  <div
-                    className="event-video-stage"
-                    style={imageViewportHeight ? { height: `${imageViewportHeight}px` } : undefined}
-                  >
+                  <div className="event-video-stage">
                     <video
                       ref={videoRef}
-                      src={`/event/${active.assetDir}/1.mp4?v=original`}
+                      src={`/event/${active.assetDir}/1.mp4?v=portrait`}
                       aria-label={`${active.title} 项目动态展示`}
                       autoPlay
                       loop
