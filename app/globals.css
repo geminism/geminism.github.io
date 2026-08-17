@@ -495,8 +495,8 @@ button {
 }
 
 .brand-panel::-webkit-scrollbar { display: none; }
-.brand-image-panel { padding: clamp(17px, 1.5vw, 24px); }
-.brand-image-stack { position: relative; z-index: 1; display: grid; gap: 0; overflow: hidden; border-radius: 13px; background: #f2f2ef; }
+.brand-image-panel { padding: clamp(9px, 0.85vw, 13px); }
+.brand-image-stack { position: relative; z-index: 1; display: grid; gap: 0; overflow: hidden; border-radius: 7px; background: #ffffff; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
 
 .brand-copy-panel { padding: clamp(27px, 3vw, 48px) clamp(24px, 2.8vw, 42px); background: #ffffff; }
