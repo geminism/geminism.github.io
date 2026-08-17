@@ -296,6 +296,10 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   const section = sections.find((item) => item.id === config.id)!;
   const texture = useTexture(section.image);
   const signRef = useRef<THREE.Group>(null);
+  // A triangular sign is only half as wide at its vertical midpoint as its
+  // bounding box. Anchor it by that real edge so the mounting arm meets the
+  // plate instead of stopping in the transparent corner of the texture.
+  const mountHalfWidth = config.shape === "triangle" ? config.width / 4 : config.width / 2;
   const shape = useMemo(() => makeShape(config.shape, config.width, config.height), [config]);
   const geometry = useMemo(
     () => new THREE.ExtrudeGeometry(shape, { depth: 0.075, bevelEnabled: true, bevelSize: 0.022, bevelThickness: 0.018, bevelSegments: 2 }),
@@ -341,7 +345,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
         ref={signRef}
         position={config.side === 0
           ? [0, 0, config.arm]
-          : [config.side * (config.arm + config.width / 2), 0, 0]}
+          : [config.side * (config.arm + mountHalfWidth), 0, 0]}
       >
         <mesh
           geometry={geometry}
@@ -387,7 +391,8 @@ function CameraRig({
 
     if (focusConfig) {
       const totalAngle = rotationCurrent.current + focusConfig.angle;
-      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2);
+      const focusMountHalfWidth = focusConfig.shape === "triangle" ? focusConfig.width / 4 : focusConfig.width / 2;
+      const sideDistance = focusConfig.side * (focusConfig.arm + focusMountHalfWidth);
       const center = focusConfig.side === 0
         ? new THREE.Vector3(
             rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm,
