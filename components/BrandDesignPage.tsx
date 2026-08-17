@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+type BrandCopyBlock = string | {
+  text: string;
+  centered?: boolean;
+  bold?: boolean;
+};
+
 type BrandProject = {
   id: string;
   title: string;
@@ -12,8 +18,8 @@ type BrandProject = {
   color: string;
   assetDir: string;
   images: string[];
-  description: string[];
-  descriptionZh: string[];
+  description: BrandCopyBlock[];
+  descriptionZh: BrandCopyBlock[];
 };
 
 const projects: BrandProject[] = [
@@ -28,23 +34,23 @@ const projects: BrandProject[] = [
     images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"],
     description: [
       "VERGE is a natural fragrance brand inspired by open landscapes, cold air and the quiet rhythms of nature. It explores the space between movement and stillness, the familiar and the unknown, the everyday and the wilderness. Through clear, restrained and fluid scents, VERGE creates a quiet interval for the senses to slow down and reconnect with the natural world.",
-      "For the space between breaths.",
+      { text: "For the space between breaths.", centered: true, bold: true },
       "The visual identity is built around breath, openness, fluidity and nature. A rounded sans-serif wordmark creates a soft, continuous rhythm, while generous spacing and the diagonal interruption introduce a subtle pause within the logo itself.",
       "The palette is drawn from volcanic rock, moss, snow and glacier ice, combining contrasts of rough and soft, dark and transparent, stillness and movement.",
       "Moss on Stone is the first fragrance series by VERGE, inspired by moss slowly growing across volcanic rock. The contrast between ancient stone and gradual organic growth reflects the quiet passage of time in nature, shaped by damp air, mineral surfaces and cold green notes.",
-      "On cold stone, moss keeps the memory of rain. A scent of slow time and quiet earth.",
+      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true },
       "Transparent glass and streamlined forms reinforce the brand’s sense of clarity and breathability. Deep charcoal caps and outer packaging reference volcanic stone, while preserved moss introduces a tactile organic contrast.",
       "An irregular, subtly raised layer of moss is applied to each cap, creating slight variations between products and extending the experience from sight and scent into touch. The outer box continues this idea through a green organic texture that appears to slowly spread across the dark surface.",
     ],
     descriptionZh: [
       "VERGE / 临 是一个从荒原、冷空气与自然景观中汲取灵感的自然香氛品牌。",
       "“临”不是抵达，而是一种靠近的状态。临近风，临近水，临近旷野，也临近身体重新安静下来的瞬间。品牌试图捕捉自然与感官相遇时那些轻微而流动的痕迹，在一呼一吸之间，为日常留下一段短暂的空白。",
-      "For the space between breaths. 呼吸之间。",
+      { text: "For the space between breaths.\n呼吸之间。", centered: true, bold: true },
       "VERGE 的视觉语言围绕呼吸、留白、流动与自然展开。",
       "Logo采用现代感的圆角无衬线字形，以柔和连续的笔画弱化过于正式的气质，并赋予字标更加流动、可呼吸的视觉感受。字母之间的空间与中央的斜线形成一段短暂的“间隙”，回应品牌所强调的 space between breaths，同时呼应“临”所代表的靠近而未完全抵达的状态。",
       "品牌色彩取自荒原中的自然元素：深色火山岩、苔藓、积雪与冰川。粗粝与柔软、深色与透明、静止与流动之间的反差，共同构成 VERGE 冷冽而安静的视觉世界。",
       "Moss on Stone 是 VERGE 的第一个香氛系列，灵感来自生长在火山岩上的苔藓。坚硬、古老的岩石与柔软而缓慢生长的苔藓形成对比，记录自然中几乎难以察觉的时间变化。湿润空气、岩石、绿色植物与冷冽气息共同构成这一系列的感官想象。",
-      "On cold stone, moss keeps the memory of rain. A scent of slow time and quiet earth.",
+      { text: "On cold stone, moss keeps the memory of rain.\nA scent of slow time and quiet earth.", centered: true, bold: true },
       "产品采用透明玻璃与圆润流线型轮廓，瓶盖与外包装采用取自火山岩的深炭色，并加入绿色苔藓元素，使包装本身形成“苔藓生长于岩石之上”的微型自然景观。瓶盖局部手工覆盖一片不规则的稳定化苔藓，略带厚度的触感打破工业化包装的统一性。自然形成的边缘与触觉差异使每件产品保留细微的独特性，也让视觉、嗅觉与触觉共同参与品牌体验。外包装则通过从边缘缓慢蔓延的绿色肌理延续这一概念，在深色矿物基底上留下自然生长的痕迹。",
     ],
   },
@@ -89,6 +95,19 @@ const projects: BrandProject[] = [
     ],
   },
 ];
+
+function renderCopyBlocks(blocks: BrandCopyBlock[]) {
+  return blocks.map((block, index) => {
+    const content = typeof block === "string" ? { text: block } : block;
+    const className = [
+      "brand-copy-block",
+      content.centered ? "is-centered" : "",
+      content.bold ? "is-bold" : "",
+    ].filter(Boolean).join(" ");
+
+    return <p className={className} key={`${content.text}-${index}`}>{content.text}</p>;
+  });
+}
 
 export function BrandDesignPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -136,7 +155,7 @@ export function BrandDesignPage() {
   };
 
   return (
-    <main className="brand-page" style={{ "--brand-accent": active?.color ?? "#d5d6d2" } as React.CSSProperties}>
+    <main className="brand-page brand-design-page" style={{ "--brand-accent": active?.color ?? "#d5d6d2" } as React.CSSProperties}>
       <Link className="brand-back" href="/" aria-label="返回路牌首页">← Index</Link>
 
       <header className="brand-sign-rail" aria-label="品牌设计项目导航">
@@ -180,30 +199,18 @@ export function BrandDesignPage() {
             <div className="brand-panel brand-copy-panel">
               <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-zh" ref={chineseRef} lang="zh-CN">
                 <div className="brand-copy-inner brand-copy-inner-zh">
-                  <p className="brand-kicker">品牌设计 / {active.id}</p>
-                  <h1>{active.title}</h1>
-                  <p className="brand-subtitle">{active.subtitleZh}</p>
-                  <div className="brand-copy-rule" />
-                  {active.descriptionZh.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                  <p className="brand-scroll-note">滚动浏览 · 01—06</p>
+                  {renderCopyBlocks(active.descriptionZh)}
                 </div>
               </div>
               <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-en" ref={englishRef} lang="en">
                 <div className="brand-copy-inner">
-                  <p className="brand-kicker">Brand design / {active.id}</p>
-                  <h1>{active.title}</h1>
-                  <p className="brand-subtitle">{active.subtitle}</p>
-                  <div className="brand-copy-rule" />
-                  {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                  <p className="brand-scroll-note">Scroll to explore · 01—06</p>
+                  {renderCopyBlocks(active.description)}
                 </div>
               </div>
             </div>
           </>
         ) : null}
       </section>
-
-      {active ? <p className="brand-footer-note">Selected identity studies · 2024—25</p> : null}
     </main>
   );
 }

@@ -508,6 +508,7 @@ button {
 
 .brand-copy-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3px; }
 .brand-copy-scroll { padding: clamp(18px, 2.15vw, 32px) clamp(16px, 1.85vw, 28px); background: #ffffff; }
+.brand-design-page .brand-copy-scroll-en { font-family: Arial, Helvetica, sans-serif; }
 .brand-copy-inner { position: relative; z-index: 1; min-height: 100%; padding-bottom: 30px; }
 .brand-kicker,
 .brand-scroll-note,
@@ -516,7 +517,11 @@ button {
 .brand-subtitle { margin: 0; color: rgba(30, 30, 29, 0.64); font-size: 12px; line-height: 1.45; }
 .brand-copy-rule { width: 100%; height: 1px; margin: 24px 0 20px; background: rgba(30, 30, 29, 0.2); }
 .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { max-width: 100%; margin: 0 0 18px; color: rgba(30, 30, 29, 0.7); font-size: 13px; line-height: 1.72; }
+.brand-design-page .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { margin-bottom: 20px; color: rgba(30, 30, 29, 0.78); font-size: 14.5px; line-height: 1.75; }
 .brand-copy-inner-zh p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { line-height: 1.86; }
+.brand-design-page .brand-copy-block.is-centered { padding-inline: 4%; text-align: center; white-space: pre-line; }
+.brand-design-page .brand-copy-block.is-bold { color: rgba(30, 30, 29, 0.9); font-weight: 700; }
+.brand-design-page .brand-copy-block.is-centered.is-bold { margin-block: 28px; line-height: 1.58; }
 .brand-scroll-note { padding-top: 62px; }
 .brand-footer-note { position: absolute; right: 4.05vw; bottom: 22px; z-index: 5; }
 
@@ -590,7 +595,9 @@ button {
   .brand-copy-panel h1 { margin-top: 13px; font-size: clamp(20px, 7vw, 30px); }
   .brand-copy-rule { margin: 16px 0 14px; }
   .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { margin-bottom: 13px; font-size: 11px; line-height: 1.65; }
+  .brand-design-page .brand-copy-panel p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { margin-bottom: 15px; font-size: 12.5px; line-height: 1.7; }
   .brand-copy-inner-zh p:not(.brand-kicker):not(.brand-subtitle):not(.brand-scroll-note) { line-height: 1.76; }
+  .brand-design-page .brand-copy-block.is-centered.is-bold { margin-block: 20px; }
   .brand-scroll-note { padding-top: 32px; font-size: 8px; }
   .brand-footer-note { position: relative; right: auto; bottom: auto; margin-top: 17px; }
 }
