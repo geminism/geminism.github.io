@@ -15,6 +15,7 @@ type EventProject = {
   titleZh: string;
   sign: string;
   assetDir: string;
+  video?: string;
   images: string[];
   description: EventCopyBlock[];
   descriptionZh: EventCopyBlock[];
@@ -27,6 +28,7 @@ const projects: EventProject[] = [
     titleZh: "Trash Shop",
     sign: "/event/sign-1.png",
     assetDir: "trash-shop",
+    video: "1.mp4",
     images: ["2.jpg", "3.jpg", "4.jpg", "5.jpg"],
     description: [
       "Trash Shop is a temporary creative event built around rejected ideas: unfinished drafts, abandoned directions and concepts that never found their final form. Instead of treating them as waste, the event invites people to look again and give them a second chance.",
@@ -41,6 +43,28 @@ const projects: EventProject[] = [
       "视觉系统从垃圾笼、手绘告示和临时街头标牌中提取语言。高明度的蓝、黄、红、绿构成充满能量的配色；不规则描边与撕纸般的轮廓，则让整体保持直接、幽默且刻意未经修饰的状态。",
       "活动海报以巨大的垃圾筐、飞散的纸团与突然出现的 UFO 共同建立项目世界。导视系统沿用相同的图形语言，将活动信息转化为不同方向的异形路牌，让观众在辨认空间路径的同时，也持续进入 Trash Shop 的叙事。",
       "工作人员胸牌、Trash 标签与贴纸套装把视觉识别延伸为可以佩戴、交换和收藏的活动物料。通过平面、空间与动态影像，这套设计把“废稿”从失败的结果，重新定义为下一次创作的原材料。",
+    ],
+  },
+  {
+    id: "nothing-happens",
+    title: "Nothing Happens Park",
+    titleZh: "无事发生公园",
+    sign: "/event/sign-2.png",
+    assetDir: "nothing-happens",
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg"],
+    description: [
+      "Nothing Happens Park is an outdoor event that makes room for idleness. With no timetable to follow and no task to complete, visitors are invited to lie on the grass, slow down and spend an afternoon without turning rest into another form of productivity.",
+      { text: "Nothing is scheduled today.\nCome lie down on the grass.", centered: true, bold: true },
+      "The identity turns the event’s relaxed posture into a soft yellow figure stretched across a picnic mat. Sky blue, lawn green and sunlit yellow create an open, optimistic palette, while blurred edges and handwritten lettering keep the visual language loose and unhurried.",
+      "The online experience begins with an overloaded daily schedule before gradually opening into the park. It introduces the event through a long-form mobile page, picnic products and simple activity prompts, shifting the rhythm from constant switching to deliberate pause.",
+      "Offline materials extend the same atmosphere across entrance signs, fabric banners, picnic mats and small achievement cards. Together they create a temporary park where choosing to do nothing becomes a shared and visible activity.",
+    ],
+    descriptionZh: [
+      "无事发生公园是一场为“无所事事”留出空间的户外活动。这里没有必须遵循的时间表，也没有需要完成的任务；观众可以躺在草地上、放慢速度，度过一个不必把休息再次变成效率指标的下午。",
+      { text: "今天没有安排。\n来草地躺一下。", centered: true, bold: true },
+      "视觉识别把活动中松弛的身体状态转化为躺在野餐垫上的柔软黄色人形。天空蓝、草地绿与日光黄构成明亮开放的色彩关系；带有模糊边缘的图形和手写字体，则让整体保持随意、缓慢且没有压力的节奏。",
+      "线上体验从被日程占满的一天开始，随后逐渐进入公园。移动端长页面依次介绍活动概念、野餐系列物料和轻量互动，引导阅读节奏从频繁切换转向有意识的停顿。",
+      "线下物料将相同氛围延伸到入口标识、布面横幅、野餐垫和小型成就卡中。它们共同建立出一个临时公园，让“今天成功什么也没做”成为可以被分享、被看见的活动体验。",
     ],
   },
 ];
@@ -150,19 +174,21 @@ export function EventDesignPage() {
           <>
             <div className="brand-panel brand-image-panel">
               <div className="brand-panel-scroll brand-image-scroll" ref={imageRef}>
-                <div className="brand-image-stack event-image-stack">
-                  <div className="event-video-stage">
-                    <video
-                      ref={videoRef}
-                      src={`/event/${active.assetDir}/1.mp4?v=portrait`}
-                      aria-label={`${active.title} 项目动态展示`}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                    />
-                  </div>
+                <div className={`brand-image-stack event-image-stack ${active.video ? "has-video" : ""}`}>
+                  {active.video ? (
+                    <div className="event-video-stage">
+                      <video
+                        ref={videoRef}
+                        src={`/event/${active.assetDir}/${active.video}?v=hd`}
+                        aria-label={`${active.title} 项目动态展示`}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                      />
+                    </div>
+                  ) : null}
                   {active.images.map((image, index) => (
                     <img
                       key={`${active.id}-${image}`}

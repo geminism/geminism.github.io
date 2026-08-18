@@ -505,7 +505,7 @@ button {
 .brand-image-scroll { background: #ffffff; }
 .brand-image-stack { display: grid; gap: 0; }
 .brand-image-stack img { display: block; width: 100%; height: auto; user-select: none; }
-.event-image-stack { display: block; height: 100%; }
+.event-image-stack.has-video { display: block; height: 100%; }
 .event-video-stage {
   position: relative;
   display: grid;
