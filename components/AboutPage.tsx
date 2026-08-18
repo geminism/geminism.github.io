@@ -14,19 +14,6 @@ export function AboutPage() {
         <span className="about-rail" />
         <span className="about-rail-collar about-rail-collar-a" />
         <span className="about-rail-collar about-rail-collar-b" />
-
-        <span className="about-gull about-gull-a">
-          <span className="about-gull-body" />
-          <span className="about-gull-head" />
-          <span className="about-gull-beak" />
-          <span className="about-gull-leg" />
-        </span>
-        <span className="about-gull about-gull-b">
-          <span className="about-gull-body" />
-          <span className="about-gull-head" />
-          <span className="about-gull-beak" />
-          <span className="about-gull-leg" />
-        </span>
       </div>
 
       <div className="about-layout">
@@ -52,18 +39,12 @@ export function AboutPage() {
             </div>
           </div>
 
-          <div className="about-barrier" aria-hidden="true">
-            <span className="about-barrier-board">
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
+          <div className="about-traffic-cone" aria-hidden="true">
+            <span className="about-cone-body">
+              <i className="about-cone-band" />
             </span>
-            <span className="about-barrier-post about-barrier-post-left" />
-            <span className="about-barrier-post about-barrier-post-right" />
-            <span className="about-barrier-foot about-barrier-foot-left" />
-            <span className="about-barrier-foot about-barrier-foot-right" />
+            <span className="about-cone-base" />
+            <span className="about-cone-shadow" />
           </div>
         </section>
 
