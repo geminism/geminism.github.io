@@ -7,57 +7,87 @@ type PackagingProject = {
   id: string;
   title: string;
   titleZh: string;
-  subtitle: string;
-  subtitleZh: string;
   sign: string;
   assetDir: string;
   images: string[];
-  description: string[];
-  descriptionZh: string[];
+  description: PackagingCopyBlock[];
+  descriptionZh: PackagingCopyBlock[];
+};
+
+type PackagingCopySegment = string | {
+  text: string;
+  bold?: boolean;
+};
+
+type PackagingCopyBlock = string | {
+  text?: string;
+  segments?: PackagingCopySegment[];
 };
 
 const projects: PackagingProject[] = [
   {
     id: "focus",
-    title: "Pink Blur",
+    title: "Focus",
     titleZh: "失焦",
-    subtitle: "Fruit cocktail packaging / 2024",
-    subtitleZh: "果味预调酒包装 / 2024",
     sign: "/packaging/sign-1.png",
     assetDir: "focus",
     images: ["1.jpg", "2.jpg", "3.jpg"],
     description: [
-      "Pink Blur is a packaging direction for a fruit-led ready-to-drink cocktail. The label begins with a deliberately softened wordmark: a small visual pause before the flavour comes into focus.",
-      "Bright pink and orange fields create a hazy, sun-warmed atmosphere, while the surrounding information stays crisp enough for the can to read quickly at a distance.",
-      "This is sample project copy for the page layout. Brand story, flavour range, materials and production notes can replace it when the case study is ready.",
+      "“FOCUS” takes the hazy, relaxed sensory experience of being slightly tipsy as its visual starting point. Through expansive diffused gradients and blurred typography, the packaging translates the gradual dissolution of boundaries between colour and information into a visual language. This responds directly to the concept “out of focus” while evoking the dreamy state between clarity and mild intoxication. Each flavour is distinguished through colours derived from its key ingredients, allowing colour to function both as an emotional device and as a cue for flavour recognition.",
+      {
+        segments: [
+          "In terms of information hierarchy, the design deliberately creates a contrast between ",
+          { text: "clarity and blur", bold: true },
+          ". Enlarged, blurred typography conveys mood and visual impact, while essential information such as flavour names and product categories remains clear, forming a secondary reading layer. Variations in scale, sharpness, placement and negative space extend the visual idea of “out of focus” while maintaining the readability of key product information.",
+        ],
+      },
     ],
     descriptionZh: [
-      "失焦是一套以果味预调酒为主题的包装方向。标签从一个刻意柔化的字标开始，让视线在识别风味之前，先经历一瞬间的朦胧停顿。",
-      "明亮的粉与橙构成带有日晒感的雾化氛围；围绕它的产品信息则保持清晰，使包装在陈列距离中依然能够被快速阅读。",
-      "此处为展示页面结构而写的示例文案。正式案例完成后，可替换为品牌背景、口味系列、材质和打样记录。",
+      "“失焦”以微醺状态下朦胧、松弛的感官体验作为视觉出发点。包装通过大面积弥散渐变与模糊文字，将色彩和信息逐渐失去边界的状态转化为视觉语言，呼应“失焦”这一名称，也呈现介于清醒与微醺之间的迷离感。不同口味以原料本身的色彩印象建立系列区分，使色彩同时承担情绪表达与风味识别的功能。",
+      "在信息层级上，设计刻意建立“清晰”与“模糊”的对比：放大的模糊文字承担情绪表达与视觉吸引力，口味名称、产品类别等核心信息则保持清晰，形成第二阅读层级。通过字号、清晰度、位置与留白的变化，包装在保持基本信息可读性的同时，也延续了“失焦”的视觉体验。",
     ],
   },
   {
     id: "trace",
     title: "Trace",
     titleZh: "Trace",
-    subtitle: "Skincare packaging / 2024",
-    subtitleZh: "护肤精华包装 / 2024",
     sign: "/packaging/sign-2.png",
     assetDir: "trace",
     images: ["1.jpg", "2.jpg", "3.jpg"],
     description: [
-      "Trace is a skincare packaging study built around the feeling of a botanical ingredient leaving a gentle mark. The identity gives rosemary room to appear as both an active component and a quiet visual gesture.",
-      "The paper-toned palette and handwritten botanical forms keep the system tactile, while the product data follows a disciplined hierarchy for everyday use.",
-      "This is provisional copy for the portfolio view. It can later be replaced with the project brief, ingredient research and the complete packaging specification.",
+      "TRACE is a skincare brand centred on nature, restoration and a pared-back approach to care. The brand seeks to strip away excess and unnecessary complexity from everyday skincare, returning attention to plants, skin and sensory experience, and leaving a light yet lasting trace through a quiet, considered ritual.",
+      "Rosemary is the key ingredient throughout the collection and also serves as the central visual motif across the packaging system. Inspired by botanical printing, the rosemary imagery retains irregular edges, variations in density and subtle imperfections, as though the plant has briefly rested on the surface and left behind a natural imprint. Across the cleanser, serum and cream, rosemary appears at different scales, orientations and crops, allowing each product to remain distinct while sharing a continuous botanical language and a cohesive visual rhythm.",
+      "The colour palette combines soft off-whites with muted greens to create a calm, airy foundation, while vivid botanical green provides the primary visual focus. Deep brown typography adds warmth and balances the organic character with a more contemporary sensibility. In the information hierarchy, key product features and category names form the primary reading path, while supporting details recede into a secondary level, allowing the botanical imagery to carry both mood and recognition.",
     ],
     descriptionZh: [
-      "Trace 是一项护肤精华包装练习，围绕植物成分留下温和痕迹的感受展开。迷迭香既作为有效成分出现，也成为贯穿画面的安静图形线索。",
-      "纸张般的中性色和手写感植物图形让系统保持触感；产品信息则采用克制、清晰的层级，以满足日常使用时的识别需求。",
-      "当前文字为作品集页面的临时示例。之后可替换为项目简报、成分研究和完整包装规格说明。",
+      "TRACE 是一个以自然、疗愈与精简护理为核心的护肤品牌。品牌希望从日常护肤中剥离过度修饰与复杂步骤，将注意力重新放回植物、肌肤与感受本身，在克制而安静的护理节奏中，留下轻盈却持续的痕迹。",
+      "该系列的主要原料是迷迭香，视觉系统也选择以迷迭香作为贯穿整个系列的核心元素，并以植物拓印的风格进行转译。枝叶并非以完整、规整的植物插画出现，而是保留压印后略显不均的边缘、浓淡与残缺感，如同植物曾短暂停留于纸面，并留下自然生长的痕迹。迷迭香在不同包装中以不同尺度、方向与裁切方式延展，使洁面、精华与面霜在保持各自信息独立的同时，共享同一种植物语言，也让系列之间形成连续而统一的视觉节奏。",
+      "色彩以柔和的米白与低饱和绿色系建立安静、通透的基调，鲜明的植物绿色则成为画面中最主要的视觉焦点，与深棕色文字共同平衡自然感与现代感。信息层级上，产品特点与品类名称构成主要阅读路径，其他信息退居次级，使植物图形承担情绪表达与识别功能。",
     ],
   },
 ];
+
+function renderCopyBlocks(blocks: PackagingCopyBlock[]) {
+  return blocks.map((block, index) => {
+    if (typeof block === "string") {
+      return <p className="brand-copy-block" key={`${block}-${index}`}>{block}</p>;
+    }
+
+    const key = block.text ?? block.segments?.map((segment) => (
+      typeof segment === "string" ? segment : segment.text
+    )).join("") ?? String(index);
+
+    return (
+      <p className="brand-copy-block" key={`${key}-${index}`}>
+        {block.segments?.map((segment, segmentIndex) => (
+          typeof segment === "string"
+            ? segment
+            : <strong key={`${segment.text}-${segmentIndex}`}>{segment.text}</strong>
+        )) ?? block.text}
+      </p>
+    );
+  });
+}
 
 export function PackagingDesignPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -105,7 +135,7 @@ export function PackagingDesignPage() {
   };
 
   return (
-    <main className="brand-page packaging-page">
+    <main className="brand-page brand-design-page packaging-page">
       <Link className="brand-back" href="/" aria-label="返回路牌首页">← Index</Link>
 
       <header className="brand-sign-rail" aria-label="包装设计项目导航">
@@ -149,30 +179,18 @@ export function PackagingDesignPage() {
             <div className="brand-panel brand-copy-panel">
               <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-zh" ref={chineseRef} lang="zh-CN">
                 <div className="brand-copy-inner brand-copy-inner-zh">
-                  <p className="brand-kicker">包装设计 / {active.id}</p>
-                  <h1>{active.titleZh}</h1>
-                  <p className="brand-subtitle">{active.subtitleZh}</p>
-                  <div className="brand-copy-rule" />
-                  {active.descriptionZh.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                  <p className="brand-scroll-note">滚动浏览 · 01—03</p>
+                  {renderCopyBlocks(active.descriptionZh)}
                 </div>
               </div>
               <div className="brand-panel-scroll brand-copy-scroll brand-copy-scroll-en" ref={englishRef} lang="en">
                 <div className="brand-copy-inner">
-                  <p className="brand-kicker">Packaging design / {active.id}</p>
-                  <h1>{active.title}</h1>
-                  <p className="brand-subtitle">{active.subtitle}</p>
-                  <div className="brand-copy-rule" />
-                  {active.description.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                  <p className="brand-scroll-note">Scroll to explore · 01—03</p>
+                  {renderCopyBlocks(active.description)}
                 </div>
               </div>
             </div>
           </>
         ) : null}
       </section>
-
-      {active ? <p className="brand-footer-note">Selected packaging studies · 2024—25</p> : null}
     </main>
   );
 }
