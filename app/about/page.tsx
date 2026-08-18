@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SectionPage } from "@/components/SectionPage";
+import { AboutPage } from "@/components/AboutPage";
 
 export const metadata: Metadata = { title: "关于我" };
-export default function Page() { return <SectionPage id="about" />; }
+export default function Page() { return <AboutPage />; }
