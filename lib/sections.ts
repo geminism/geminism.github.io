@@ -1,4 +1,5 @@
 export type SectionId = "about" | "brand" | "packaging" | "event" | "other";
+export type HomeTargetId = SectionId | "contact";
 
 export type PortfolioSection = {
   id: SectionId;

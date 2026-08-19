@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
-import { ContactShadows, useTexture } from "@react-three/drei";
+import { ContactShadows, Html, RoundedBox, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { sections, SectionId } from "@/lib/sections";
+import { HomeTargetId, sections, SectionId } from "@/lib/sections";
 
 type SceneProps = {
-  activeId: SectionId | null;
-  focusId: SectionId | null;
+  activeId: HomeTargetId | null;
+  focusId: HomeTargetId | null;
   rotationTarget: React.MutableRefObject<number>;
   rotationCurrent: React.MutableRefObject<number>;
   didDrag: React.MutableRefObject<boolean>;
-  onActive: (id: SectionId | null) => void;
-  onSelect: (id: SectionId) => void;
+  onActive: (id: HomeTargetId | null) => void;
+  onSelect: (id: HomeTargetId) => void;
   onExitFocus: () => void;
 };
 
@@ -36,6 +36,31 @@ const configs: SignConfig[] = [
   // Keep the sign's radial position at the same 314° beat, but mount the
   // opposite end so the arrow tail—not its tip—meets the pole.
   { id: "other", y: -4.77, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.42, width: 3.55, height: 1.32, shape: "wide" },
+];
+
+const trafficLightConfig = {
+  id: "contact" as const,
+  y: -5.24,
+  angle: THREE.MathUtils.degToRad(322),
+  side: -1 as const,
+  arm: 0.54,
+  width: 0.98,
+  height: 2.18,
+};
+
+type ContactSignalId = "phone" | "linkedin" | "email";
+
+const contactSignals: Array<{
+  id: ContactSignalId;
+  label: string;
+  value: string;
+  symbol: string;
+  color: string;
+  y: number;
+}> = [
+  { id: "phone", label: "PHONE", value: "+44 7700 900 186", symbol: "☎", color: "#ef2f26", y: 0.65 },
+  { id: "linkedin", label: "LINKEDIN", value: "linkedin.com/in/gemini-kong", symbol: "in", color: "#f3bd21", y: 0 },
+  { id: "email", label: "EMAIL", value: "hello@geminikong.design", symbol: "@", color: "#35b95a", y: -0.65 },
 ];
 
 type PortfolioTextures = {
@@ -373,6 +398,199 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   );
 }
 
+function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
+  active: boolean;
+  focused: boolean;
+  onActive: SceneProps["onActive"];
+  onSelect: SceneProps["onSelect"];
+  didDrag: SceneProps["didDrag"];
+}) {
+  const housingRef = useRef<THREE.Group>(null);
+  const [hoveredSignal, setHoveredSignal] = useState<ContactSignalId | null>(null);
+  const [copiedSignal, setCopiedSignal] = useState<ContactSignalId | null>(null);
+  const copiedTimer = useRef<number | null>(null);
+  const sideDistance = trafficLightConfig.side * (trafficLightConfig.arm + trafficLightConfig.width / 2);
+
+  useEffect(() => {
+    if (!focused) setHoveredSignal(null);
+  }, [focused]);
+
+  useEffect(() => () => {
+    if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
+  }, []);
+
+  useFrame((_, delta) => {
+    if (!housingRef.current) return;
+    const targetScale = focused ? 1.08 : active ? 1.04 : 1;
+    const targetZ = focused ? 0.2 : active ? 0.08 : 0;
+    const damping = 1 - Math.exp(-delta * 8);
+    housingRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), damping);
+    housingRef.current.position.z = THREE.MathUtils.lerp(housingRef.current.position.z, targetZ, damping);
+  });
+
+  const selectContact = (event: ThreeEvent<MouseEvent>) => {
+    event.stopPropagation();
+    if (!didDrag.current) onSelect("contact");
+  };
+
+  const copyContact = async (event: ThreeEvent<MouseEvent>, signal: (typeof contactSignals)[number]) => {
+    event.stopPropagation();
+    if (!focused) {
+      if (!didDrag.current) onSelect("contact");
+      return;
+    }
+
+    setHoveredSignal(signal.id);
+    try {
+      await navigator.clipboard.writeText(signal.value);
+    } catch {
+      const helper = document.createElement("textarea");
+      helper.value = signal.value;
+      helper.style.position = "fixed";
+      helper.style.opacity = "0";
+      document.body.appendChild(helper);
+      helper.select();
+      document.execCommand("copy");
+      helper.remove();
+    }
+
+    setCopiedSignal(signal.id);
+    if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
+    copiedTimer.current = window.setTimeout(() => setCopiedSignal(null), 1600);
+  };
+
+  return (
+    <group rotation={[0, trafficLightConfig.angle, 0]} position={[0, trafficLightConfig.y, 0]}>
+      <mesh
+        position={[trafficLightConfig.side * trafficLightConfig.arm / 2, 0, 0]}
+        rotation={[0, 0, Math.PI / 2]}
+      >
+        <cylinderGeometry args={[0.052, 0.052, trafficLightConfig.arm, 16]} />
+        <meshStandardMaterial color="#1a1b1a" roughness={0.45} metalness={0.62} />
+      </mesh>
+      <mesh position={[trafficLightConfig.side * trafficLightConfig.arm, 0, 0]}>
+        <sphereGeometry args={[0.085, 18, 12]} />
+        <meshStandardMaterial color="#aeb2af" roughness={0.2} metalness={0.88} />
+      </mesh>
+
+      <group
+        ref={housingRef}
+        position={[sideDistance, 0, 0]}
+        onPointerEnter={(event) => {
+          event.stopPropagation();
+          document.body.style.cursor = "pointer";
+          onActive("contact");
+        }}
+        onPointerLeave={(event) => {
+          event.stopPropagation();
+          document.body.style.cursor = "default";
+          setHoveredSignal(null);
+          onActive(null);
+        }}
+        onClick={selectContact}
+      >
+        <RoundedBox args={[1.08, 2.3, 0.56]} radius={0.1} smoothness={4} position={[0, 0, -0.05]}>
+          <meshStandardMaterial color="#c8cbc8" roughness={0.26} metalness={0.76} />
+        </RoundedBox>
+        <RoundedBox args={[0.96, 2.18, 0.52]} radius={0.075} smoothness={4} position={[0, 0, 0.03]}>
+          <meshStandardMaterial color="#202220" roughness={0.37} metalness={0.68} />
+        </RoundedBox>
+
+        <RoundedBox args={[0.13, 0.72, 0.36]} radius={0.035} smoothness={3} position={[0.52, 0, -0.08]}>
+          <meshStandardMaterial color="#9da19e" roughness={0.25} metalness={0.84} />
+        </RoundedBox>
+
+        {[
+          [-0.42, 0.98],
+          [0.42, 0.98],
+          [-0.42, -0.98],
+          [0.42, -0.98],
+        ].map(([x, y]) => (
+          <mesh key={`${x}-${y}`} position={[x, y, 0.31]}>
+            <sphereGeometry args={[0.027, 12, 8]} />
+            <meshStandardMaterial color="#d8dad7" roughness={0.22} metalness={0.9} />
+          </mesh>
+        ))}
+
+        {contactSignals.map((signal) => {
+          const isHovered = focused && hoveredSignal === signal.id;
+          return (
+            <group key={signal.id} position={[0, signal.y, 0]}>
+              <mesh position={[0, 0, 0.32]} rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry args={[0.34, 0.37, 0.18, 32]} />
+                <meshStandardMaterial color="#111311" roughness={0.42} metalness={0.68} />
+              </mesh>
+              <mesh
+                position={[0, 0, 0.43]}
+                onPointerEnter={(event) => {
+                  event.stopPropagation();
+                  document.body.style.cursor = "pointer";
+                  onActive("contact");
+                  if (focused) setHoveredSignal(signal.id);
+                }}
+                onPointerLeave={(event) => {
+                  event.stopPropagation();
+                  if (hoveredSignal === signal.id) setHoveredSignal(null);
+                }}
+                onClick={(event) => copyContact(event, signal)}
+              >
+                <circleGeometry args={[0.275, 40]} />
+                <meshStandardMaterial
+                  color={signal.color}
+                  emissive={signal.color}
+                  emissiveIntensity={isHovered ? 3.6 : 0.42}
+                  roughness={0.18}
+                  metalness={0.04}
+                />
+              </mesh>
+
+              <mesh position={[0, 0.13, 0.45]} rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry args={[0.35, 0.35, 0.34, 32, 1, true, 0, Math.PI]} />
+                <meshStandardMaterial color="#171917" roughness={0.39} metalness={0.66} side={THREE.DoubleSide} />
+              </mesh>
+
+              {isHovered && (
+                <>
+                  <pointLight position={[0, 0, 0.7]} color={signal.color} intensity={1.8} distance={2.1} decay={2} />
+                  <Html
+                    transform
+                    center
+                    distanceFactor={7.2}
+                    position={[0, 0, 0.49]}
+                    zIndexRange={[18, 0]}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <span className={`traffic-lamp-symbol traffic-lamp-symbol-${signal.id}`}>{signal.symbol}</span>
+                  </Html>
+                  <Html
+                    transform
+                    distanceFactor={7.2}
+                    position={[0.72, 0.13, 0.34]}
+                    zIndexRange={[17, 0]}
+                    style={{ pointerEvents: "none" }}
+                  >
+                    <div className={`traffic-contact-readout traffic-contact-readout-${signal.id}`} role="status">
+                      <span>{signal.label}</span>
+                      <strong>{signal.value}</strong>
+                      <em>{copiedSignal === signal.id ? "COPIED" : "CLICK LIGHT TO COPY"}</em>
+                    </div>
+                  </Html>
+                </>
+              )}
+            </group>
+          );
+        })}
+      </group>
+    </group>
+  );
+}
+
+function getSceneConfig(id: HomeTargetId | null) {
+  if (!id) return undefined;
+  if (id === "contact") return trafficLightConfig;
+  return configs.find((item) => item.id === id);
+}
+
 function CameraRig({
   activeId,
   focusId,
@@ -384,8 +602,8 @@ function CameraRig({
   const lookTarget = useRef(new THREE.Vector3(0, 0, 0));
 
   useFrame(({ camera }, delta) => {
-    const activeY = configs.find((item) => item.id === activeId)?.y ?? 0;
-    const focusConfig = configs.find((item) => item.id === focusId);
+    const activeY = getSceneConfig(activeId)?.y ?? 0;
+    const focusConfig = getSceneConfig(focusId);
     const targetPosition = new THREE.Vector3(0, activeId ? 2.45 + activeY * 0.035 : 2.45, activeId ? 15.4 : 18.6);
     const targetLook = new THREE.Vector3(0, 0, 0);
 
@@ -440,7 +658,7 @@ function PoleScene(props: SceneProps) {
           <cylinderGeometry args={[0.145, 0.175, 13.35, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
-        {[...configs.map((config) => config.y), 5.05, 6.78, -5.35, -6.18].map((y) => (
+        {[...configs.map((config) => config.y), 5.05, 6.78, trafficLightConfig.y, -6.18].map((y) => (
           <group key={y} position={[0, y, 0]}>
             <mesh>
               <cylinderGeometry args={[0.205, 0.205, 0.12, 24]} />
@@ -454,16 +672,6 @@ function PoleScene(props: SceneProps) {
             ))}
           </group>
         ))}
-        <group position={[0, -5.35, 0]}>
-          <mesh position={[0.28, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.045, 0.045, 0.56, 12]} />
-            <meshStandardMaterial color="#171717" roughness={0.5} metalness={0.5} />
-          </mesh>
-          <mesh position={[0.58, 0, 0]}>
-            <sphereGeometry args={[0.075, 14, 10]} />
-            <meshStandardMaterial color="#858987" metalness={0.82} roughness={0.22} />
-          </mesh>
-        </group>
         {configs.map((config) => (
           <Sign
             key={config.id}
@@ -475,6 +683,13 @@ function PoleScene(props: SceneProps) {
             didDrag={props.didDrag}
           />
         ))}
+        <ContactTrafficLight
+          active={props.activeId === "contact"}
+          focused={props.focusId === "contact"}
+          onActive={props.onActive}
+          onSelect={props.onSelect}
+          didDrag={props.didDrag}
+        />
         <PortfolioTitleSign />
       </group>
       <ContactShadows position={[0, -6.38, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />

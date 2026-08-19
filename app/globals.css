@@ -224,11 +224,95 @@ button {
   background: white;
 }
 
-.keyboard-nav a {
+.keyboard-nav a,
+.keyboard-nav button {
   padding: 6px 9px;
   border: 1px solid var(--line);
+  background: #fff;
+  color: inherit;
+  cursor: pointer;
   font-size: 11px;
   text-decoration: none;
+}
+
+.traffic-lamp-symbol {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(14, 15, 14, 0.48);
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 0 6px rgba(255, 255, 255, 0.2);
+  font-family: Arial, sans-serif;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  animation: traffic-symbol-in 180ms ease-out both;
+}
+
+.traffic-lamp-symbol-phone { padding-bottom: 2px; font-family: Georgia, serif; font-size: 23px; }
+.traffic-lamp-symbol-linkedin { padding-bottom: 2px; font-size: 18px; letter-spacing: -0.08em; }
+.traffic-lamp-symbol-email { padding-bottom: 2px; font-size: 23px; font-weight: 600; }
+
+.traffic-contact-readout {
+  position: relative;
+  display: grid;
+  width: max-content;
+  min-width: 218px;
+  gap: 3px;
+  padding: 12px 15px 11px;
+  border: 1px solid rgba(116, 121, 117, 0.76);
+  border-left-width: 5px;
+  border-radius: 8px;
+  color: #20211f;
+  background: linear-gradient(135deg, rgba(250, 250, 247, 0.97), rgba(218, 221, 217, 0.95));
+  box-shadow: 4px 5px 0 rgba(139, 144, 140, 0.62), 0 12px 24px rgba(18, 19, 18, 0.2), inset 0 1px 0 #fff;
+  font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.2;
+  transform: translateY(-50%) rotate(-1.2deg);
+  transform-origin: 0 50%;
+  animation: traffic-readout-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.traffic-contact-readout-phone { border-left-color: #ef2f26; }
+.traffic-contact-readout-linkedin { border-left-color: #e3aa0b; }
+.traffic-contact-readout-email { border-left-color: #35a653; }
+
+.traffic-contact-readout span {
+  color: rgba(28, 29, 27, 0.5);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+}
+
+.traffic-contact-readout strong {
+  color: rgba(20, 21, 19, 0.88);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.traffic-contact-readout em {
+  margin-top: 3px;
+  color: rgba(28, 29, 27, 0.43);
+  font-size: 7px;
+  font-style: normal;
+  letter-spacing: 0.13em;
+}
+
+@keyframes traffic-symbol-in {
+  from { opacity: 0; transform: scale(0.72) rotate(-8deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes traffic-readout-in {
+  from { opacity: 0; transform: translate(-10px, -50%) rotate(-3deg) scale(0.96); }
+  to { opacity: 1; transform: translate(0, -50%) rotate(-1.2deg) scale(1); }
 }
 
 .section-page {

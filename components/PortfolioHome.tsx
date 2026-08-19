@@ -4,9 +4,8 @@ import { Suspense, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
-import { ContactStub } from "./ContactStub";
 import { SignScene } from "./SignScene";
-import { sections, SectionId } from "@/lib/sections";
+import { HomeTargetId, sections } from "@/lib/sections";
 
 export function PortfolioHome() {
   const router = useRouter();
@@ -17,9 +16,14 @@ export function PortfolioHome() {
   const dragVelocity = useRef(0);
   const didDrag = useRef(false);
   const pointerStart = useRef<{ x: number; lastX: number } | null>(null);
-  const [activeId, setActiveId] = useState<SectionId | null>(null);
-  const [focusId, setFocusId] = useState<SectionId | null>(null);
-  const activeSection = sections.find((section) => section.id === activeId);
+  const [activeId, setActiveId] = useState<HomeTargetId | null>(null);
+  const [focusId, setFocusId] = useState<HomeTargetId | null>(null);
+  const activeSection = activeId === "contact" ? null : sections.find((section) => section.id === activeId);
+  const activeCaption = activeId === "contact"
+    ? "联系方式 / Contact"
+    : activeSection
+      ? `${activeSection.zh} / ${activeSection.en}`
+      : "";
 
   useLayoutEffect(() => {
     if (!shellRef.current) return;
@@ -27,7 +31,7 @@ export function PortfolioHome() {
     gsap.to(shellRef.current, { opacity: 1, duration: reduceMotion ? 0 : 1.1, ease: "power2.out" });
   }, []);
 
-  const selectSection = (id: SectionId) => {
+  const selectSection = (id: HomeTargetId) => {
     if (didDrag.current) return;
     if (focusId !== id) {
       rotationTarget.current = rotationCurrent.current;
@@ -36,6 +40,8 @@ export function PortfolioHome() {
       setActiveId(id);
       return;
     }
+
+    if (id === "contact") return;
 
     const section = sections.find((item) => item.id === id)!;
     if (!curtainRef.current) return;
@@ -102,17 +108,21 @@ export function PortfolioHome() {
       </div>
 
       <p className="gesture-hint">
-        {focusId ? "Click again to enter · Click blank to exit" : "Drag to rotate · Select a sign"}
+        {focusId === "contact"
+          ? "Hover a light · Click blank to exit"
+          : focusId
+            ? "Click again to enter · Click blank to exit"
+            : "Drag to rotate · Select a sign"}
       </p>
-      <div className={`active-caption ${activeSection ? "is-visible" : ""}`} aria-live="polite">
-        {activeSection ? `${activeSection.zh} / ${activeSection.en}` : ""}
+      <div className={`active-caption ${activeCaption ? "is-visible" : ""}`} aria-live="polite">
+        {activeCaption}
       </div>
 
       <nav className="keyboard-nav" aria-label="作品集版块">
         {sections.map((section) => <Link key={section.id} href={section.href}>{section.zh}</Link>)}
+        <button type="button" onClick={() => selectSection("contact")}>联系方式</button>
       </nav>
 
-      <ContactStub />
       <div ref={curtainRef} className="transition-curtain" aria-hidden="true" />
     </main>
   );
