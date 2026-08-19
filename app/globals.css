@@ -743,125 +743,107 @@ button {
   }
 }
 
-/* About page supplied typefaces. */
-@font-face {
-  font-family: "About Condensed";
-  src: url("/about/display-regular.otf") format("opentype");
-  font-display: swap;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "About Condensed";
-  src: url("/about/display-bold.otf") format("opentype");
-  font-display: swap;
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "About Chinese";
-  src: url("/about/meibei.ttf") format("truetype");
-  font-display: swap;
-}
-
-/* About page — 6667 × 4548 proportional coordinate artwork. */
-.about-coordinate-page {
+/* About page — full converted SVG artwork with a coordinate-matched installation layer. */
+.about-svg-page {
+  position: relative;
   width: 100%;
   min-height: 100%;
   background: #fff;
   color: #2d2d2c;
-  font-family: "About Condensed";
 }
 
-.about-coordinate-canvas {
+.about-svg-canvas {
   position: relative;
   width: 100%;
-  aspect-ratio: 6667 / 4548;
+  aspect-ratio: 1600 / 1142.48;
   background: #fff;
 }
 
-.about-coordinate-back {
-  position: absolute;
+.about-svg-artwork {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.about-svg-back {
   z-index: 20;
-  top: 1.2%;
-  left: 2.2%;
-  color: rgba(35, 35, 34, 0.68);
-  font-family: "About Condensed";
-  font-size: 0.78vw;
-  letter-spacing: 0.11em;
-  text-decoration: none;
-  text-transform: uppercase;
 }
 
-.about-coordinate-installation {
+.about-svg-installation {
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 35%;
+  z-index: 2;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
 }
 
-.about-coordinate-pole {
+.about-svg-pole {
   position: absolute;
   z-index: 1;
-  top: 26.8%;
-  bottom: 0;
-  left: 57.4%;
-  width: 1.86%;
+  top: 43.2%;
+  bottom: 3.4%;
+  left: 23.45%;
+  width: 1.32%;
   background: #2b2b2a;
 }
 
-.about-coordinate-photo {
+.about-svg-photo {
   position: absolute;
   z-index: 3;
-  top: 10.6%;
-  left: 24.2%;
+  top: 10.5%;
+  left: 11.1%;
   display: grid;
-  width: 62.7%;
+  width: 25.8%;
   aspect-ratio: 1;
   place-items: center;
-  border: 0.75vw solid #f0f0ef;
+  border: 0.55vw solid #f0f0ef;
   border-radius: 50%;
   background: #fff;
 }
 
-.about-coordinate-photo span {
+.about-svg-photo span {
   padding-left: 0.13em;
   color: #050505;
-  font-family: "About Chinese";
-  font-size: 5.15vw;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 5vw;
   font-weight: 400;
   letter-spacing: 0.08em;
   line-height: 1;
 }
 
-.about-coordinate-warning {
+.about-svg-warning {
   position: absolute;
   z-index: 5;
-  top: 35.1%;
-  left: 49.5%;
-  width: 30%;
+  top: 39.3%;
+  left: 21.7%;
+  width: 13.3%;
   aspect-ratio: 1.04;
   background: #f1f1f0;
   clip-path: polygon(50% 0, 100% 93%, 96% 100%, 4% 100%, 0 93%);
   transform: rotate(10deg);
 }
 
-.about-coordinate-warning-red,
-.about-coordinate-warning-white {
+.about-svg-warning-red,
+.about-svg-warning-white {
   position: absolute;
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
-.about-coordinate-warning-red {
+.about-svg-warning-red {
   inset: 4.5%;
   background: #f51d1e;
 }
 
-.about-coordinate-warning-white {
+.about-svg-warning-white {
   inset: 5.8%;
   background: #fff;
 }
 
-.about-coordinate-exclamation {
+.about-svg-exclamation {
   position: absolute;
   top: 24%;
   left: 47%;
@@ -871,7 +853,7 @@ button {
   transform: skewX(-9deg);
 }
 
-.about-coordinate-exclamation::after {
+.about-svg-exclamation::after {
   position: absolute;
   top: 118%;
   left: -13%;
@@ -882,7 +864,7 @@ button {
   content: "";
 }
 
-.about-coordinate-eyes {
+.about-svg-eyes {
   position: absolute;
   top: 67%;
   left: 42.3%;
@@ -894,7 +876,7 @@ button {
   transform: rotate(-3deg);
 }
 
-.about-coordinate-eyes::after {
+.about-svg-eyes::after {
   position: absolute;
   top: 82%;
   left: 58%;
@@ -905,610 +887,13 @@ button {
   content: "";
 }
 
-.about-coordinate-cone {
+.about-svg-cone {
   position: absolute;
   z-index: 3;
-  bottom: 4.7%;
-  left: 22.4%;
-  width: 29.7%;
+  bottom: 3.8%;
+  left: 9.1%;
+  width: 12%;
   aspect-ratio: 0.66;
   background: #ffb13a;
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-
-.about-coordinate-copy {
-  position: absolute;
-  top: 0;
-  left: 37.6%;
-  width: 56.8%;
-  height: 100%;
-}
-
-.about-coordinate-intro {
-  position: absolute;
-  top: 10.55%;
-  left: 0;
-  width: 100%;
-  height: 18%;
-}
-
-.about-coordinate-name {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 48%;
-}
-
-.about-coordinate-name h1,
-.about-coordinate-name p,
-.about-coordinate-role,
-.about-coordinate-what h2,
-.about-coordinate-what p,
-.about-coordinate-section h2,
-.about-coordinate-section p,
-.about-coordinate-date span { margin: 0; }
-
-.about-coordinate-name h1 {
-  font-family: "About Condensed";
-  font-size: 5.36vw;
-  font-weight: 700;
-  letter-spacing: 0.015em;
-  line-height: 0.84;
-  white-space: nowrap;
-}
-
-.about-coordinate-name p {
-  margin-top: 2.45vw;
-  font-family: "About Chinese";
-  font-size: 4.52vw;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  line-height: 0.85;
-}
-
-.about-coordinate-slash {
-  position: absolute;
-  top: -0.1vw;
-  left: 51.1%;
-  width: 0.12vw;
-  height: 5.05vw;
-  overflow: hidden;
-  background: #2d2d2c;
-  color: transparent;
-  font-size: 0;
-  transform: rotate(17deg);
-}
-
-.about-coordinate-role {
-  position: absolute;
-  top: -0.05vw;
-  left: 62%;
-  font-family: "About Condensed";
-  font-size: 2.2vw;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.18;
-  white-space: nowrap;
-}
-
-.about-coordinate-what {
-  position: absolute;
-  top: 30.6%;
-  left: 0;
-  width: 100%;
-  height: 11.3%;
-}
-
-.about-coordinate-what h2,
-.about-coordinate-section h2 {
-  display: grid;
-  grid-template-columns: 31% 9% 33%;
-  align-items: baseline;
-  width: 74%;
-  font-family: "About Condensed";
-  font-size: 3.17vw;
-  font-weight: 700;
-  letter-spacing: 0.025em;
-  line-height: 1;
-}
-
-.about-coordinate-what h2 b,
-.about-coordinate-section h2 b {
-  position: relative;
-  width: 100%;
-  height: 1em;
-  overflow: hidden;
-  color: transparent;
-  font-size: inherit;
-  line-height: 1;
-  text-indent: -999vw;
-}
-
-.about-coordinate-what h2 b::after,
-.about-coordinate-section h2 b::after {
-  position: absolute;
-  top: -0.08em;
-  left: 50%;
-  width: 0.055em;
-  height: 1.08em;
-  background: #2d2d2c;
-  content: "";
-  font-size: 3.17vw;
-  transform: rotate(17deg);
-}
-
-.about-coordinate-what h2 span[lang="zh-CN"],
-.about-coordinate-section h2 span[lang="zh-CN"] {
-  font-family: "About Chinese";
-  font-size: 0.83em;
-  font-weight: 400;
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.about-coordinate-what p {
-  position: absolute;
-  top: 55%;
-  left: 0;
-  font-family: "About Condensed";
-  font-size: 2.47vw;
-  font-weight: 400;
-  letter-spacing: 0.008em;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.about-coordinate-section {
-  position: absolute;
-  left: 0;
-  width: 100%;
-}
-
-.about-coordinate-education {
-  top: 45.4%;
-  height: 25%;
-}
-
-.about-coordinate-experience {
-  top: 76.6%;
-  height: 23.4%;
-}
-
-.about-coordinate-section h2 {
-  grid-template-columns: 31% 9% 30%;
-  width: 74%;
-}
-
-.about-coordinate-row {
-  position: absolute;
-  left: 0;
-  display: grid;
-  width: 100%;
-  grid-template-columns: 8.2% 57.8% 30%;
-  column-gap: 2%;
-  align-items: start;
-}
-
-.about-coordinate-education .about-coordinate-row:first-of-type {
-  top: 23.5%;
-  height: 34%;
-}
-
-.about-coordinate-education .about-coordinate-row:nth-of-type(2) { top: 65.5%; }
-
-.about-coordinate-experience .about-coordinate-row:first-of-type {
-  top: 15.5%;
-  height: 38%;
-}
-
-.about-coordinate-experience .about-coordinate-row:nth-of-type(2) { top: 61%; }
-
-.about-coordinate-date {
-  display: grid;
-  justify-items: start;
-  padding-top: 0.18vw;
-  font-family: "About Condensed";
-  font-size: 1.6vw;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.about-coordinate-date i {
-  width: 0.1vw;
-  height: 2.0vw;
-  margin: 0.18vw 0 0.08vw 1.12vw;
-  background: currentColor;
-  transform: rotate(-19deg);
-}
-
-.about-coordinate-number-fallback {
-  display: inline;
-  font-family: "About Chinese";
-  font-size: 0.76em;
-  font-weight: 400;
-  vertical-align: 0.08em;
-}
-
-.about-coordinate-english {
-  display: grid;
-  gap: 0.62vw;
-  min-width: 0;
-  font-family: "About Condensed";
-  font-size: 2.26vw;
-  font-weight: 400;
-  letter-spacing: 0.004em;
-  line-height: 1.03;
-  white-space: nowrap;
-}
-
-.about-coordinate-punctuation {
-  display: inline;
-  font-family: "About Chinese";
-  font-size: 0.72em;
-  font-weight: 400;
-}
-
-.about-coordinate-chinese {
-  display: grid;
-  gap: 0.55vw;
-  min-width: 0;
-  font-family: "About Chinese";
-  font-size: 2.12vw;
-  font-weight: 400;
-  line-height: 1.06;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.about-coordinate-note {
-  position: absolute;
-  top: 68%;
-  left: 36.5%;
-  color: rgba(45, 45, 44, 0.18);
-  font-family: "About Condensed";
-  font-size: 1.82vw;
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1;
-  white-space: nowrap;
-  transform: rotate(6.5deg);
-  transform-origin: left center;
-}
-
-.about-coordinate-rule {
-  --editor-line-thickness: max(1px, 0.07vw);
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  display: block;
-  width: 100%;
-  height: 0.5vw;
-  border-top-color: #2d2d2c;
-  border-top-style: solid;
-  border-top-width: var(--editor-line-thickness);
-  pointer-events: none;
-}
-
-.about-coordinate-what-rule,
-.about-coordinate-education-rule { bottom: -0.25vw; }
-.about-coordinate-education-divider { top: 57.5%; border-top-style: dashed; }
-.about-coordinate-experience-divider { top: 53.5%; border-top-style: dashed; }
-
-/* About visual editor: only active on desktop when /about?edit=1 is open. */
-.about-coordinate-page.is-editing {
-  --about-editor-accent: #ff3a8c;
-  overflow-x: hidden;
-}
-
-.about-coordinate-page.is-editing .about-coordinate-editor-target {
-  translate: var(--editor-x, 0) var(--editor-y, 0);
-  rotate: var(--editor-rotate, 0deg);
-  cursor: move;
-  outline: 1px solid transparent;
-  outline-offset: 3px;
-  pointer-events: auto;
-  touch-action: none;
-}
-
-.about-coordinate-page.is-editing .about-coordinate-editor-target:hover {
-  outline-color: rgba(255, 58, 140, 0.42);
-}
-
-.about-coordinate-page.is-editing [data-editable-text][contenteditable="true"] {
-  cursor: text;
-  outline: 2px solid var(--about-editor-accent);
-  user-select: text;
-}
-
-.about-coordinate-page.is-editing .about-coordinate-rule {
-  min-height: 8px;
-}
-
-.about-editor-guides {
-  position: absolute;
-  z-index: 50;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(80, 132, 255, 0.11) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(80, 132, 255, 0.11) 1px, transparent 1px),
-    linear-gradient(to right, transparent calc(35% - 0.5px), rgba(255, 58, 140, 0.55) 35%, transparent calc(35% + 0.5px)),
-    linear-gradient(to bottom, transparent calc(41.7% - 0.5px), rgba(255, 58, 140, 0.34) 41.7%, transparent calc(41.7% + 0.5px)),
-    linear-gradient(to bottom, transparent calc(70.4% - 0.5px), rgba(255, 58, 140, 0.34) 70.4%, transparent calc(70.4% + 0.5px));
-  background-size: 5% 5%, 5% 5%, 100% 100%, 100% 100%, 100% 100%;
-  pointer-events: none;
-}
-
-.about-editor-toolbar {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  right: 0;
-  display: flex;
-  width: 286px;
-  height: 100vh;
-  box-sizing: border-box;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  padding: 17px 15px 15px;
-  border-left: 1px solid #cfcfcd;
-  background: rgba(247, 247, 245, 0.97);
-  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.06);
-  color: #242423;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 1.35;
-  backdrop-filter: blur(12px);
-}
-
-.about-editor-toolbar header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #d8d8d5;
-}
-
-.about-editor-toolbar header div { display: grid; gap: 3px; }
-.about-editor-toolbar header strong { font-size: 13px; letter-spacing: 0.08em; }
-.about-editor-toolbar header span { color: #888; font-size: 10px; }
-.about-editor-toolbar header nav { display: flex; align-items: center; gap: 7px; }
-.about-editor-toolbar header nav button { min-height: 23px; padding: 2px 6px; }
-.about-editor-toolbar header a { color: #555; text-decoration: none; white-space: nowrap; }
-
-.about-editor-toolbar.is-collapsed {
-  top: 14px;
-  right: 14px;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.about-editor-toolbar .about-editor-open-button {
-  min-height: 32px;
-  border-color: var(--about-editor-accent);
-  background: #fff;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
-}
-
-.about-editor-actions,
-.about-editor-toggle-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-}
-
-.about-editor-actions:nth-of-type(2) { grid-template-columns: 1fr 1fr; }
-
-.about-editor-toolbar button,
-.about-editor-toolbar select,
-.about-editor-toolbar input {
-  box-sizing: border-box;
-  border: 1px solid #c7c7c3;
-  border-radius: 5px;
-  background: #fff;
-  color: #292927;
-  font: inherit;
-}
-
-.about-editor-toolbar button {
-  min-height: 30px;
-  padding: 5px 7px;
-  cursor: pointer;
-}
-
-.about-editor-toolbar button:hover,
-.about-editor-toolbar button.is-active {
-  border-color: var(--about-editor-accent);
-  background: #fff0f6;
-}
-
-.about-editor-inspector {
-  display: grid;
-  gap: 10px;
-  padding-top: 3px;
-}
-
-.about-editor-inspector h3 { margin: 0; font-size: 15px; }
-.about-editor-coordinate-readout { margin: 0; color: #777; font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
-
-.about-editor-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-}
-
-.about-editor-fields label,
-.about-editor-select,
-.about-editor-line-controls label {
-  display: grid;
-  gap: 4px;
-  color: #666;
-  font-size: 10px;
-}
-
-.about-editor-fields input,
-.about-editor-select select,
-.about-editor-line-controls input,
-.about-editor-line-controls select {
-  width: 100%;
-  height: 29px;
-  padding: 4px 6px;
-}
-
-.about-editor-line-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-  padding-top: 10px;
-  border-top: 1px solid #d8d8d5;
-}
-
-.about-editor-empty {
-  margin: 5px 0;
-  padding: 13px;
-  border: 1px dashed #bdbdb9;
-  border-radius: 6px;
-  color: #777;
-  line-height: 1.65;
-}
-
-.about-editor-toolbar footer {
-  margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid #d8d8d5;
-  color: #777;
-  font-size: 10px;
-}
-
-.about-editor-selection {
-  position: fixed;
-  z-index: 999;
-  box-sizing: border-box;
-  border: 1px solid var(--about-editor-accent);
-  pointer-events: none;
-}
-
-.about-editor-selection-label {
-  position: absolute;
-  bottom: calc(100% + 5px);
-  left: -1px;
-  padding: 3px 5px;
-  border-radius: 3px;
-  background: var(--about-editor-accent);
-  color: #fff;
-  font: 10px/1.2 Arial, sans-serif;
-  white-space: nowrap;
-}
-
-.about-editor-selection button {
-  position: absolute;
-  display: block;
-  width: 12px;
-  height: 12px;
-  padding: 0;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: var(--about-editor-accent);
-  box-shadow: 0 0 0 1px var(--about-editor-accent);
-  pointer-events: auto;
-  touch-action: none;
-}
-
-.about-editor-resize-handle { right: -6px; bottom: -6px; cursor: nwse-resize; }
-.about-editor-rotate-handle { top: -26px; left: calc(50% - 6px); cursor: grab; }
-.about-editor-rotate-handle::after {
-  position: absolute;
-  top: 10px;
-  left: 4px;
-  width: 1px;
-  height: 14px;
-  background: var(--about-editor-accent);
-  content: "";
-}
-
-.about-editor-manipulating,
-.about-editor-manipulating * { user-select: none !important; }
-
-@media (max-width: 760px) {
-  .about-coordinate-canvas {
-    aspect-ratio: auto;
-    min-height: 0;
-  }
-
-  .about-coordinate-back {
-    position: absolute;
-    top: 18px;
-    left: 22px;
-    font-size: 11px;
-  }
-
-  .about-coordinate-installation {
-    position: relative;
-    width: 100%;
-    height: 640px;
-  }
-
-  .about-coordinate-pole { top: 180px; bottom: 0; left: 63%; width: 10px; }
-  .about-coordinate-photo { top: 92px; left: 10%; width: min(65vw, 320px); border-width: 8px; }
-  .about-coordinate-photo span { font-size: 17vw; }
-  .about-coordinate-warning { top: 305px; left: 45%; width: min(42vw, 205px); }
-  .about-coordinate-cone { bottom: 25px; left: 8%; width: min(34vw, 164px); }
-
-  .about-coordinate-copy {
-    position: relative;
-    top: auto;
-    left: auto;
-    width: auto;
-    height: auto;
-    margin: 0 24px;
-    padding-bottom: 70px;
-  }
-
-  .about-coordinate-intro,
-  .about-coordinate-what,
-  .about-coordinate-section {
-    position: relative;
-    top: auto;
-    left: auto;
-    height: auto;
-  }
-
-  .about-coordinate-intro { display: grid; grid-template-columns: 1fr 22px 0.72fr; gap: 8px; padding: 46px 0 52px; }
-  .about-coordinate-name, .about-coordinate-slash, .about-coordinate-role { position: relative; top: auto; left: auto; width: auto; }
-  .about-coordinate-name h1 { font-size: 12.5vw; }
-  .about-coordinate-name p { margin-top: 18px; font-size: 10.5vw; }
-  .about-coordinate-slash { font-size: 9vw; }
-  .about-coordinate-role { font-size: 4.8vw; }
-
-  .about-coordinate-what { padding: 32px 0 42px; }
-  .about-coordinate-what h2, .about-coordinate-section h2 { grid-template-columns: 1fr 36px 0.8fr; width: 100%; font-size: 8.5vw; }
-  .about-coordinate-what p { position: relative; top: auto; margin-top: 34px; font-size: 5.9vw; white-space: normal; line-height: 1.2; }
-
-  .about-coordinate-section { padding: 38px 0 12px; border-bottom: 1px solid #222; }
-  .about-coordinate-section h2 { margin-bottom: 32px; }
-  .about-coordinate-row,
-  .about-coordinate-education .about-coordinate-row:first-of-type,
-  .about-coordinate-education .about-coordinate-row:nth-of-type(2),
-  .about-coordinate-experience .about-coordinate-row:first-of-type,
-  .about-coordinate-experience .about-coordinate-row:nth-of-type(2) {
-    position: relative;
-    top: auto;
-    grid-template-columns: 58px 1fr;
-    height: auto;
-    padding: 24px 0 30px;
-  }
-
-  .about-coordinate-date { font-size: 15px; }
-  .about-coordinate-date i { width: 1px; height: 22px; margin: 4px 0 3px 12px; }
-  .about-coordinate-english { font-size: 6.3vw; gap: 8px; white-space: normal; }
-  .about-coordinate-chinese { grid-column: 2; margin-top: 12px; font-size: 5.7vw; text-align: left; white-space: normal; }
-  .about-coordinate-note { top: auto; right: 0; bottom: 7px; left: auto; font-size: 4.7vw; }
-
-  .about-coordinate-rule { display: none; }
 }
