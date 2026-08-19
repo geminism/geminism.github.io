@@ -59,16 +59,44 @@ const trafficLightConfig = {
   height: 2.18,
 };
 
-const contactSignals: Array<{
+type ContactSignal = {
+  id: "phone" | "linkedin" | "email";
   color: string;
   y: number;
-}> = [
-  { color: "#ef2f26", y: 0.65 },
-  { color: "#f3bd21", y: 0 },
-  { color: "#35b95a", y: -0.65 },
-];
+  textColor: string;
+  lines: Array<{ label: string; copyValue: string }>;
+};
 
-const CONTACT_PHONE = "+44 0 7486 352980";
+const contactSignals: ContactSignal[] = [
+  {
+    id: "phone",
+    color: "#ef2f26",
+    y: 0.65,
+    textColor: "#ef2f26",
+    lines: [
+      { label: "+44 0 7486 352980", copyValue: "+44 0 7486 352980" },
+      { label: "+86 188 1112 5305", copyValue: "+86 188 1112 5305" },
+    ],
+  },
+  {
+    id: "linkedin",
+    color: "#f3bd21",
+    y: 0,
+    textColor: "#b18400",
+    lines: [
+      { label: "linkedin.com/in/lingjie-kong", copyValue: "https://www.linkedin.com/in/lingjie-kong/" },
+    ],
+  },
+  {
+    id: "email",
+    color: "#35b95a",
+    y: -0.65,
+    textColor: "#24964a",
+    lines: [
+      { label: "hello@lingjiekong.design", copyValue: "hello@lingjiekong.design" },
+    ],
+  },
+];
 
 function getSignY(config: SignConfig) {
   return config.y + SIGN_LIFT[config.id];
@@ -415,50 +443,54 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
   didDrag: SceneProps["didDrag"];
 }) {
   const housingRef = useRef<THREE.Group>(null);
-  const [redHovered, setRedHovered] = useState(false);
-  const [phoneCopied, setPhoneCopied] = useState(false);
-  const redHoverExitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [hoveredSignal, setHoveredSignal] = useState<number | null>(null);
+  const [copiedContact, setCopiedContact] = useState<string | null>(null);
+  const signalHoverExitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const copiedResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [redIdleTexture, redActiveTexture] = useTexture([
+  const signalTextures = useTexture([
     "/traffic-light/red-idle.png",
     "/traffic-light/red-active.png",
+    "/traffic-light/yellow-idle.png",
+    "/traffic-light/yellow-active.png",
+    "/traffic-light/green-idle.png",
+    "/traffic-light/green-active.png",
   ]);
   const sideDistance = trafficLightConfig.side * (trafficLightConfig.arm + trafficLightConfig.width / 2);
 
   useEffect(() => {
-    [redIdleTexture, redActiveTexture].forEach((texture) => {
+    signalTextures.forEach((texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = 8;
       texture.needsUpdate = true;
     });
-  }, [redIdleTexture, redActiveTexture]);
+  }, [signalTextures]);
 
   useEffect(() => () => {
-    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
+    if (signalHoverExitTimer.current) clearTimeout(signalHoverExitTimer.current);
     if (copiedResetTimer.current) clearTimeout(copiedResetTimer.current);
   }, []);
 
-  const keepRedContactVisible = () => {
-    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
-    setRedHovered(true);
+  const keepSignalVisible = (signalIndex: number) => {
+    if (signalHoverExitTimer.current) clearTimeout(signalHoverExitTimer.current);
+    setHoveredSignal(signalIndex);
   };
 
-  const hideRedContactSoon = () => {
-    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
-    redHoverExitTimer.current = setTimeout(() => {
-      setRedHovered(false);
-      setPhoneCopied(false);
+  const hideSignalSoon = (signalIndex: number) => {
+    if (signalHoverExitTimer.current) clearTimeout(signalHoverExitTimer.current);
+    signalHoverExitTimer.current = setTimeout(() => {
+      setHoveredSignal((current) => current === signalIndex ? null : current);
+      setCopiedContact(null);
     }, 180);
   };
 
-  const copyPhoneNumber = async () => {
+  const copyContact = async (copyValue: string) => {
     try {
-      await navigator.clipboard.writeText(CONTACT_PHONE);
-      setPhoneCopied(true);
+      await navigator.clipboard.writeText(copyValue);
+      setCopiedContact(copyValue);
       if (copiedResetTimer.current) clearTimeout(copiedResetTimer.current);
-      copiedResetTimer.current = setTimeout(() => setPhoneCopied(false), 1400);
+      copiedResetTimer.current = setTimeout(() => setCopiedContact(null), 1400);
     } catch {
-      setPhoneCopied(false);
+      setCopiedContact(null);
     }
   };
 
@@ -519,8 +551,9 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
         </RoundedBox>
 
         {contactSignals.map((signal, signalIndex) => {
-          const isRedSignal = signalIndex === 0;
-          const revealRedContact = isRedSignal && focused && redHovered;
+          const revealContact = focused && hoveredSignal === signalIndex;
+          const idleTexture = signalTextures[signalIndex * 2];
+          const activeTexture = signalTextures[signalIndex * 2 + 1];
 
           return (
             <group key={signal.y} position={[0, signal.y, 0]}>
@@ -547,58 +580,51 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
               <mesh
                 position={[0, 0, 0.43]}
                 onPointerEnter={() => {
-                  if (isRedSignal && focused) keepRedContactVisible();
+                  if (focused) keepSignalVisible(signalIndex);
                 }}
                 onPointerMove={() => {
-                  if (isRedSignal && focused) keepRedContactVisible();
+                  if (focused) keepSignalVisible(signalIndex);
                 }}
                 onPointerLeave={() => {
-                  if (isRedSignal) hideRedContactSoon();
+                  hideSignalSoon(signalIndex);
                 }}
               >
                 <circleGeometry args={[0.275, 40]} />
-                {isRedSignal ? (
-                  <meshBasicMaterial
-                    map={revealRedContact ? redActiveTexture : redIdleTexture}
-                    transparent
-                    alphaTest={0.015}
-                    toneMapped={false}
-                  />
-                ) : (
-                  <meshStandardMaterial
-                    color={signal.color}
-                    emissive={signal.color}
-                    emissiveIntensity={0.42}
-                    roughness={0.18}
-                    metalness={0.04}
-                  />
-                )}
+                <meshBasicMaterial
+                  map={revealContact ? activeTexture : idleTexture}
+                  transparent
+                  alphaTest={0.015}
+                  toneMapped={false}
+                />
               </mesh>
-              {!isRedSignal && (
-                <mesh position={[-0.075, 0.075, 0.445]}>
-                  <circleGeometry args={[0.095, 24]} />
-                  <meshBasicMaterial color="#ffffff" transparent opacity={0.13} depthWrite={false} />
-                </mesh>
-              )}
 
-              {revealRedContact && (
+              {revealContact && (
                 <Html position={[-0.31, 0, 0.49]} zIndexRange={[30, 0]} style={{ pointerEvents: "auto" }}>
                   <div
-                    className="traffic-phone-anchor"
-                    onMouseEnter={keepRedContactVisible}
-                    onMouseLeave={hideRedContactSoon}
+                    className={`traffic-contact-anchor is-${signal.id}`}
+                    style={{ "--traffic-contact-color": signal.textColor } as React.CSSProperties}
+                    onMouseEnter={() => keepSignalVisible(signalIndex)}
+                    onMouseLeave={() => hideSignalSoon(signalIndex)}
                   >
-                    <button
-                      type="button"
-                      className="traffic-phone-number"
-                      onClick={copyPhoneNumber}
-                      aria-label={`Copy phone number ${CONTACT_PHONE}`}
-                    >
-                      <span>{CONTACT_PHONE}</span>
-                      <span className={`traffic-phone-status${phoneCopied ? " is-visible" : ""}`} aria-live="polite">
-                        {phoneCopied ? "Copied" : ""}
-                      </span>
-                    </button>
+                    <div className="traffic-contact-list">
+                      {signal.lines.map((line) => (
+                        <button
+                          key={line.copyValue}
+                          type="button"
+                          className="traffic-contact-line"
+                          onClick={() => copyContact(line.copyValue)}
+                          aria-label={`Copy ${signal.id} ${line.label}`}
+                        >
+                          <span>{line.label}</span>
+                          <span
+                            className={`traffic-contact-status${copiedContact === line.copyValue ? " is-visible" : ""}`}
+                            aria-hidden="true"
+                          >
+                            Copied
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </Html>
               )}

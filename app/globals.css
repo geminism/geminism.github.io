@@ -1156,48 +1156,56 @@ button {
   line-height: 1.86;
 }
 
-.traffic-phone-anchor {
+.traffic-contact-anchor {
   position: relative;
   width: 0;
   height: 0;
   pointer-events: auto;
 }
 
-.traffic-phone-number {
+.traffic-contact-list {
   position: absolute;
   top: 0;
   right: 0;
-  display: block;
+  display: grid;
+  gap: 7px;
   padding-right: 17px;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 0;
+  color: var(--traffic-contact-color, #ef2f26);
+  transform: translateY(-50%);
+  transform-origin: 100% 50%;
+  animation: traffic-contact-emerge 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.traffic-contact-line {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: #ef2f26;
+  color: inherit;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(15px, 1.15vw, 19px);
+  font-size: clamp(20px, 1.55vw, 27px);
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.08;
   letter-spacing: 0.025em;
   white-space: nowrap;
   cursor: copy;
-  transform: translateY(-50%);
-  transform-origin: 100% 50%;
-  animation: traffic-phone-emerge 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.traffic-phone-number:hover,
-.traffic-phone-number:focus-visible {
-  color: #ff3228;
+.traffic-contact-line:hover,
+.traffic-contact-line:focus-visible {
+  filter: brightness(1.08) saturate(1.12);
 }
 
-.traffic-phone-number:focus-visible {
+.traffic-contact-line:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 5px;
 }
 
-.traffic-phone-number::after {
+.traffic-contact-list::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -1208,11 +1216,10 @@ button {
   transform-origin: 100% 50%;
 }
 
-.traffic-phone-status {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 17px;
-  font-size: 10px;
+.traffic-contact-status {
+  display: inline-block;
+  min-width: 44px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1221,12 +1228,12 @@ button {
   transition: opacity 150ms ease, transform 150ms ease;
 }
 
-.traffic-phone-status.is-visible {
+.traffic-contact-status.is-visible {
   opacity: 0.72;
   transform: translateY(0);
 }
 
-@keyframes traffic-phone-emerge {
+@keyframes traffic-contact-emerge {
   from {
     opacity: 0;
     clip-path: inset(0 0 0 100%);
@@ -1313,7 +1320,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .traffic-phone-number {
+  .traffic-contact-list {
     animation: none !important;
   }
 
