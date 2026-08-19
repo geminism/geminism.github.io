@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
-import { ContactShadows, Html, RoundedBox, useTexture } from "@react-three/drei";
+import { ContactShadows, RoundedBox, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { HomeTargetId, sections, SectionId } from "@/lib/sections";
 
@@ -38,32 +38,27 @@ const configs: SignConfig[] = [
   { id: "other", y: -4.77, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.42, width: 3.55, height: 1.32, shape: "wide" },
 ];
 
-const SIGN_SCALE = 0.94;
+const SIGN_SCALE = 0.9;
 const SIGN_Y_OFFSET = 0.28;
+const TRAFFIC_LIGHT_SCALE = 0.88;
 
 const trafficLightConfig = {
   id: "contact" as const,
-  y: -5.24,
-  angle: THREE.MathUtils.degToRad(322),
+  y: -5,
+  angle: THREE.MathUtils.degToRad(80),
   side: -1 as const,
   arm: 0.54,
   width: 0.98,
   height: 2.18,
 };
 
-type ContactSignalId = "phone" | "linkedin" | "email";
-
 const contactSignals: Array<{
-  id: ContactSignalId;
-  label: string;
-  value: string;
-  symbol: string;
   color: string;
   y: number;
 }> = [
-  { id: "phone", label: "PHONE", value: "+44 7700 900 186", symbol: "☎", color: "#ef2f26", y: 0.65 },
-  { id: "linkedin", label: "LINKEDIN", value: "linkedin.com/in/gemini-kong", symbol: "in", color: "#f3bd21", y: 0 },
-  { id: "email", label: "EMAIL", value: "hello@geminikong.design", symbol: "@", color: "#35b95a", y: -0.65 },
+  { color: "#ef2f26", y: 0.65 },
+  { color: "#f3bd21", y: 0 },
+  { color: "#35b95a", y: -0.65 },
 ];
 
 type PortfolioTextures = {
@@ -401,31 +396,18 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   );
 }
 
-function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
-  active: boolean;
+function ContactTrafficLight({ focused, onSelect, didDrag }: {
   focused: boolean;
-  onActive: SceneProps["onActive"];
   onSelect: SceneProps["onSelect"];
   didDrag: SceneProps["didDrag"];
 }) {
   const housingRef = useRef<THREE.Group>(null);
-  const [hoveredSignal, setHoveredSignal] = useState<ContactSignalId | null>(null);
-  const [copiedSignal, setCopiedSignal] = useState<ContactSignalId | null>(null);
-  const copiedTimer = useRef<number | null>(null);
   const sideDistance = trafficLightConfig.side * (trafficLightConfig.arm + trafficLightConfig.width / 2);
-
-  useEffect(() => {
-    if (!focused) setHoveredSignal(null);
-  }, [focused]);
-
-  useEffect(() => () => {
-    if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
-  }, []);
 
   useFrame((_, delta) => {
     if (!housingRef.current) return;
-    const targetScale = focused ? 1.08 : active ? 1.04 : 1;
-    const targetZ = focused ? 0.2 : active ? 0.08 : 0;
+    const targetScale = focused ? 1.06 : 1;
+    const targetZ = focused ? 0.18 : 0;
     const damping = 1 - Math.exp(-delta * 8);
     housingRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), damping);
     housingRef.current.position.z = THREE.MathUtils.lerp(housingRef.current.position.z, targetZ, damping);
@@ -436,34 +418,12 @@ function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
     if (!didDrag.current) onSelect("contact");
   };
 
-  const copyContact = async (event: ThreeEvent<MouseEvent>, signal: (typeof contactSignals)[number]) => {
-    event.stopPropagation();
-    if (!focused) {
-      if (!didDrag.current) onSelect("contact");
-      return;
-    }
-
-    setHoveredSignal(signal.id);
-    try {
-      await navigator.clipboard.writeText(signal.value);
-    } catch {
-      const helper = document.createElement("textarea");
-      helper.value = signal.value;
-      helper.style.position = "fixed";
-      helper.style.opacity = "0";
-      document.body.appendChild(helper);
-      helper.select();
-      document.execCommand("copy");
-      helper.remove();
-    }
-
-    setCopiedSignal(signal.id);
-    if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
-    copiedTimer.current = window.setTimeout(() => setCopiedSignal(null), 1600);
-  };
-
   return (
-    <group rotation={[0, trafficLightConfig.angle, 0]} position={[0, trafficLightConfig.y, 0]}>
+    <group
+      rotation={[0, trafficLightConfig.angle, 0]}
+      position={[0, trafficLightConfig.y, 0]}
+      scale={TRAFFIC_LIGHT_SCALE}
+    >
       <mesh
         position={[trafficLightConfig.side * trafficLightConfig.arm / 2, 0, 0]}
         rotation={[0, 0, Math.PI / 2]}
@@ -482,13 +442,10 @@ function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
         onPointerEnter={(event) => {
           event.stopPropagation();
           document.body.style.cursor = "pointer";
-          onActive("contact");
         }}
         onPointerLeave={(event) => {
           event.stopPropagation();
           document.body.style.cursor = "default";
-          setHoveredSignal(null);
-          onActive(null);
         }}
         onClick={selectContact}
       >
@@ -515,33 +472,18 @@ function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
           </mesh>
         ))}
 
-        {contactSignals.map((signal) => {
-          const isHovered = focused && hoveredSignal === signal.id;
-          return (
-            <group key={signal.id} position={[0, signal.y, 0]}>
+        {contactSignals.map((signal) => (
+            <group key={signal.y} position={[0, signal.y, 0]}>
               <mesh position={[0, 0, 0.32]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry args={[0.34, 0.37, 0.18, 32]} />
                 <meshStandardMaterial color="#111311" roughness={0.42} metalness={0.68} />
               </mesh>
-              <mesh
-                position={[0, 0, 0.43]}
-                onPointerEnter={(event) => {
-                  event.stopPropagation();
-                  document.body.style.cursor = "pointer";
-                  onActive("contact");
-                  if (focused) setHoveredSignal(signal.id);
-                }}
-                onPointerLeave={(event) => {
-                  event.stopPropagation();
-                  if (hoveredSignal === signal.id) setHoveredSignal(null);
-                }}
-                onClick={(event) => copyContact(event, signal)}
-              >
+              <mesh position={[0, 0, 0.43]}>
                 <circleGeometry args={[0.275, 40]} />
                 <meshStandardMaterial
                   color={signal.color}
                   emissive={signal.color}
-                  emissiveIntensity={isHovered ? 3.6 : 0.42}
+                  emissiveIntensity={0.42}
                   roughness={0.18}
                   metalness={0.04}
                 />
@@ -552,44 +494,16 @@ function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
                 <meshStandardMaterial color="#171917" roughness={0.39} metalness={0.66} side={THREE.DoubleSide} />
               </mesh>
 
-              {isHovered && (
-                <>
-                  <pointLight position={[0, 0, 0.7]} color={signal.color} intensity={1.8} distance={2.1} decay={2} />
-                  <Html
-                    transform
-                    center
-                    distanceFactor={7.2}
-                    position={[0, 0, 0.49]}
-                    zIndexRange={[18, 0]}
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <span className={`traffic-lamp-symbol traffic-lamp-symbol-${signal.id}`}>{signal.symbol}</span>
-                  </Html>
-                  <Html
-                    transform
-                    distanceFactor={7.2}
-                    position={[0.72, 0.13, 0.34]}
-                    zIndexRange={[17, 0]}
-                    style={{ pointerEvents: "none" }}
-                  >
-                    <div className={`traffic-contact-readout traffic-contact-readout-${signal.id}`} role="status">
-                      <span>{signal.label}</span>
-                      <strong>{signal.value}</strong>
-                      <em>{copiedSignal === signal.id ? "COPIED" : "CLICK LIGHT TO COPY"}</em>
-                    </div>
-                  </Html>
-                </>
-              )}
             </group>
-          );
-        })}
+        ))}
       </group>
     </group>
   );
 }
 
 function getSceneConfig(id: HomeTargetId | null) {
-  if (!id || id === "contact") return undefined;
+  if (!id) return undefined;
+  if (id === "contact") return trafficLightConfig;
   return configs.find((item) => item.id === id);
 }
 
@@ -604,27 +518,32 @@ function CameraRig({
   const lookTarget = useRef(new THREE.Vector3(0, 0, 0));
 
   useFrame(({ camera }, delta) => {
-    const activeY = getSceneConfig(activeId)?.y ?? 0;
+    const activeConfig = getSceneConfig(activeId);
+    const activeY = activeConfig
+      ? activeConfig.y + (activeId === "contact" ? 0 : SIGN_Y_OFFSET)
+      : 0;
     const focusConfig = getSceneConfig(focusId);
     const targetPosition = new THREE.Vector3(0, activeId ? 2.45 + activeY * 0.035 : 2.45, activeId ? 15.4 : 18.6);
     const targetLook = new THREE.Vector3(0, 0, 0);
 
     if (focusConfig) {
+      const focusScale = focusId === "contact" ? TRAFFIC_LIGHT_SCALE : SIGN_SCALE;
+      const focusY = focusConfig.y + (focusId === "contact" ? 0 : SIGN_Y_OFFSET);
       const totalAngle = rotationCurrent.current + focusConfig.angle;
-      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2) * SIGN_SCALE;
+      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2) * focusScale;
       const center = focusConfig.side === 0
         ? new THREE.Vector3(
-            rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm * SIGN_SCALE,
-            focusConfig.y + SIGN_Y_OFFSET,
-            Math.cos(totalAngle) * focusConfig.arm * SIGN_SCALE,
+            rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm * focusScale,
+            focusY,
+            Math.cos(totalAngle) * focusConfig.arm * focusScale,
           )
         : new THREE.Vector3(
             rootOffsetX.current + Math.cos(totalAngle) * sideDistance,
-            focusConfig.y + SIGN_Y_OFFSET,
+            focusY,
             -Math.sin(totalAngle) * sideDistance,
           );
       const normal = new THREE.Vector3(Math.sin(totalAngle), 0, Math.cos(totalAngle));
-      const distance = Math.max(focusConfig.width, focusConfig.height) * SIGN_SCALE * 1.15 + 4.8;
+      const distance = Math.max(focusConfig.width, focusConfig.height) * focusScale * 1.15 + 4.8;
       targetPosition.copy(center).addScaledVector(normal, distance);
       targetLook.copy(center);
     }
@@ -660,7 +579,12 @@ function PoleScene(props: SceneProps) {
           <cylinderGeometry args={[0.145, 0.175, 21.5, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
-        {[...configs.map((config) => config.y + SIGN_Y_OFFSET), 5.05 + SIGN_Y_OFFSET, 6.78].map((y) => (
+        {[
+          ...configs.map((config) => config.y + SIGN_Y_OFFSET),
+          5.05 + SIGN_Y_OFFSET,
+          6.78,
+          trafficLightConfig.y,
+        ].map((y) => (
           <group key={y} position={[0, y, 0]}>
             <mesh>
               <cylinderGeometry args={[0.205, 0.205, 0.12, 24]} />
@@ -685,6 +609,11 @@ function PoleScene(props: SceneProps) {
             didDrag={props.didDrag}
           />
         ))}
+        <ContactTrafficLight
+          focused={props.focusId === "contact"}
+          onSelect={props.onSelect}
+          didDrag={props.didDrag}
+        />
         <PortfolioTitleSign />
       </group>
       <ContactShadows position={[0, -10.2, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />

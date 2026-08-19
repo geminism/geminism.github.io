@@ -104,9 +104,11 @@ export function PortfolioHome() {
       </div>
 
       <p className="gesture-hint">
-        {focusId
-          ? "Click again to enter · Click blank to exit"
-          : "Drag to rotate · Select a sign"}
+        {focusId === "contact"
+          ? "Click blank to exit"
+          : focusId
+            ? "Click again to enter · Click blank to exit"
+            : "Drag to rotate · Select a sign"}
       </p>
       <div className={`active-caption ${activeCaption ? "is-visible" : ""}`} aria-live="polite">
         {activeCaption}
@@ -114,6 +116,7 @@ export function PortfolioHome() {
 
       <nav className="keyboard-nav" aria-label="作品集版块">
         {sections.map((section) => <Link key={section.id} href={section.href}>{section.zh}</Link>)}
+        <button type="button" onClick={() => selectSection("contact")}>联系方式</button>
       </nav>
 
       <div ref={curtainRef} className="transition-curtain" aria-hidden="true" />
