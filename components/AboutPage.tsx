@@ -1,99 +1,110 @@
 import Link from "next/link";
 
-const BULB_COUNT = 16;
+function Range({ from, to }: { from: string; to: string }) {
+  return (
+    <span className="about-plan-range" aria-label={`${from} 至 ${to}`}>
+      <span>{from}</span>
+      <i />
+      <span>{to}</span>
+    </span>
+  );
+}
 
 export function AboutPage() {
   return (
-    <main className="about-page">
-      <Link className="about-back" href="/" aria-label="返回首页">
+    <main className="about-plan-page">
+      <Link className="about-plan-back" href="/" aria-label="返回首页">
         ← Index
       </Link>
 
-      <div className="about-overhead" aria-hidden="true">
-        <span className="about-rail-shadow" />
-        <span className="about-rail" />
-        <span className="about-rail-collar about-rail-collar-a" />
-        <span className="about-rail-collar about-rail-collar-b" />
-      </div>
-
-      <div className="about-layout">
-        <section className="about-installation" aria-label="悬挂式个人照片路牌装置">
-          <div className="about-hanging-assembly">
-            <span className="about-hanger about-hanger-left" aria-hidden="true" />
-            <span className="about-hanger about-hanger-right" aria-hidden="true" />
-
-            <div className="about-photo-sign">
-              <div className="about-photo-bezel">
-                <img
-                  src="/brand/verge/1.jpg"
-                  alt="个人照片占位图，之后将替换为正式照片"
-                />
-                <span className="about-photo-placeholder">Portrait pending</span>
-              </div>
-
-              <div className="about-lights" aria-hidden="true">
-                {Array.from({ length: BULB_COUNT }, (_, index) => (
-                  <span className="about-bulb" key={index} />
-                ))}
-              </div>
-            </div>
+      <aside className="about-plan-installation" aria-label="个人照片路牌与路障装置">
+        <span className="about-plan-pole" aria-hidden="true" />
+        <div className="about-plan-photo-sign">
+          <div className="about-plan-photo-frame">
+            <img src="/brand/verge/1.jpg" alt="个人照片临时占位图" />
+            <span>照片</span>
           </div>
+        </div>
+        <div className="about-plan-cone" aria-hidden="true">
+          <span className="about-plan-cone-face" />
+        </div>
+      </aside>
 
-          <div className="about-traffic-cone" aria-hidden="true">
-            <span className="about-cone-body">
-              <i className="about-cone-band" />
-            </span>
-            <span className="about-cone-base" />
-            <span className="about-cone-shadow" />
+      <article className="about-plan-copy">
+        <header className="about-plan-intro">
+          <div className="about-plan-name">
+            <h1>GEMINI KONG</h1>
+            <p lang="zh-CN">孔 令杰</p>
+          </div>
+          <span className="about-plan-slash" aria-hidden="true">/</span>
+          <p className="about-plan-role">
+            Graphic designer<br />
+            working across<br />
+            branding,<br />
+            packaging<br />
+            and visual communication.
+          </p>
+        </header>
+
+        <section className="about-plan-section about-plan-what">
+          <h2><span>WHAT I DO</span><b>/</b><span lang="zh-CN">设计方向</span></h2>
+          <p>Branding <i>•</i> Packaging <i>•</i> Campaigns <i>•</i> Visual Systems</p>
+        </section>
+
+        <section className="about-plan-section about-plan-education">
+          <h2><span>EDUCATION</span><b>/</b><span lang="zh-CN">教育经历</span></h2>
+          <div className="about-plan-records">
+            <div className="about-plan-record">
+              <Range from="25.09" to="26.08" />
+              <div className="about-plan-record-main">
+                <strong>University of Leeds</strong>
+                <span>MA Culture, Creativity and Entrepreneurship</span>
+              </div>
+              <p lang="zh-CN">文化、创意与创业硕士<br />利兹大学</p>
+            </div>
+            <div className="about-plan-record about-plan-law-record">
+              <Range from="20.09" to="24.07" />
+              <div className="about-plan-record-main">
+                <strong>Central University of Finance and Economics</strong>
+                <span>LLB Law</span>
+              </div>
+              <p lang="zh-CN">法学学士<br />中央财经大学</p>
+              <aside className="about-plan-law-note">
+                yeah, I used to study law.<br />
+                <span lang="zh-CN">对，我就是从法律转行过来的。</span>
+              </aside>
+            </div>
           </div>
         </section>
 
-        <article className="about-copy">
-          <header className="about-heading">
-            <p className="about-kicker">About / 个人简介</p>
-            <h1>GEMINI KONG</h1>
-            <p className="about-name-zh" lang="zh-CN">孔 令杰</p>
-            <p className="about-role">
-              Graphic designer working across branding, packaging and visual communication.
-            </p>
-          </header>
-
-          <div className="about-copy-rule" />
-
-          <section className="about-profile-section" aria-labelledby="about-education-title">
-            <h2 id="about-education-title">EDUCATION / 教育背景</h2>
-            <div className="about-education-list">
-              <article className="about-education-item">
-                <h3>University of Leeds</h3>
-                <div>
-                  <p>MA Culture, Creativity and Entrepreneurship</p>
-                  <p lang="zh-CN">利兹大学 · 文化、创意与创业硕士</p>
-                </div>
-              </article>
-              <article className="about-education-item">
-                <h3>Central University of Finance and Economics</h3>
-                <div>
-                  <p>LLB Law</p>
-                  <p lang="zh-CN">中央财经大学 · 法学学士</p>
-                </div>
-              </article>
+        <section className="about-plan-section about-plan-experience">
+          <h2><span>EXPERIENCE</span><b>/</b><span lang="zh-CN">工作经历</span></h2>
+          <div className="about-plan-records">
+            <div className="about-plan-record">
+              <Range from="25.05" to="25.08" />
+              <div className="about-plan-record-main">
+                <strong>Beijing Good for All</strong>
+                <span>Project Assistant &amp; Visual Designer (Intern)</span>
+              </div>
+              <p lang="zh-CN">项目助理&amp;平面设计（实习）<br />北京一切都好</p>
             </div>
-
-            <aside className="about-law-note" aria-label="关于法律专业的手写注释">
-              <span>yeah, I used to study law.</span>
-              <span lang="zh-CN">对，我就是从法律转行过来的。</span>
-            </aside>
-          </section>
-
-          <section className="about-currently" aria-labelledby="about-currently-title">
-            <h2 id="about-currently-title">CURRENTLY / 最近在做什么</h2>
-            <div>
-              <p>Trying to make simple things less boring.</p>
-              <p lang="zh-CN">努力避免想法滑向无聊。</p>
+            <div className="about-plan-record">
+              <Range from="25.02" to="now" />
+              <div className="about-plan-record-main">
+                <strong>JX Creative Studio</strong>
+                <span>Visual Designer (Part-time)</span>
+              </div>
+              <p lang="zh-CN">平面设计（兼职）<br />激星创意工作室</p>
             </div>
-          </section>
-        </article>
-      </div>
+          </div>
+        </section>
+
+        <section className="about-plan-current">
+          <h2>CURRENTLY <b>/</b> <span lang="zh-CN">最近在做什么</span></h2>
+          <p>Trying to make simple things less boring.</p>
+          <p lang="zh-CN">努力避免想法滑向无聊。</p>
+        </section>
+      </article>
     </main>
   );
 }

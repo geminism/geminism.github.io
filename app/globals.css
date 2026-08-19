@@ -1335,3 +1335,389 @@ button {
     animation: none !important;
   }
 }
+
+/* About page — flat route-sign layout from the supplied art direction. */
+@font-face {
+  font-family: "About Condensed";
+  src: url("/about/display-regular.otf") format("opentype");
+  font-display: swap;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "About Condensed";
+  src: url("/about/display-bold.otf") format("opentype");
+  font-display: swap;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "About Chinese";
+  src: url("/about/meibei.ttf") format("truetype");
+  font-display: swap;
+}
+
+.about-plan-page {
+  --about-ink: #282827;
+  --about-soft: #eeeeed;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(310px, 34vw) minmax(0, 1fr);
+  min-height: 100svh;
+  overflow: clip;
+  background: #fff;
+  color: var(--about-ink);
+  font-family: "About Condensed", "Arial Narrow", Arial, sans-serif;
+}
+
+.about-plan-back {
+  position: fixed;
+  z-index: 20;
+  top: 20px;
+  left: clamp(24px, 4.4vw, 76px);
+  color: rgba(30, 30, 29, 0.72);
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.about-plan-back:hover { color: #111; transform: translateX(-3px); }
+
+.about-plan-installation {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 700px;
+  overflow: hidden;
+}
+
+.about-plan-pole {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: -5px;
+  left: 61%;
+  width: clamp(10px, 0.92vw, 15px);
+  border-inline: 1px solid #151515;
+  background: linear-gradient(90deg, #323230 0%, #20211f 20%, #101110 49%, #353632 78%, #171816 100%);
+  box-shadow: 3px 0 5px rgba(0, 0, 0, 0.08);
+}
+
+.about-plan-photo-sign {
+  position: absolute;
+  z-index: 2;
+  top: clamp(100px, 16vh, 200px);
+  left: 8%;
+  width: min(27vw, 370px);
+  aspect-ratio: 1;
+  border: clamp(8px, 0.8vw, 13px) solid var(--about-soft);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 0 rgba(35, 35, 34, 0.02);
+}
+
+.about-plan-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(190, 191, 187, 0.7);
+  border-radius: inherit;
+  background: #f7f7f6;
+}
+
+.about-plan-photo-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 48%;
+  opacity: 0.28;
+  filter: grayscale(1) contrast(0.76) brightness(1.28);
+}
+
+.about-plan-photo-frame::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.48);
+  content: "";
+}
+
+.about-plan-photo-frame span {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  color: #050505;
+  font-family: "About Chinese", "Songti SC", serif;
+  font-size: clamp(48px, 6.5vw, 108px);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  transform: translate(-47%, -48%);
+}
+
+.about-plan-cone {
+  position: absolute;
+  z-index: 2;
+  bottom: clamp(46px, 8vh, 118px);
+  left: clamp(34px, 8vw, 140px);
+  width: min(18vw, 255px);
+  aspect-ratio: 0.74;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: linear-gradient(100deg, #ffb23d 0%, #ffad38 49%, #f49a23 100%);
+}
+
+.about-plan-cone-face {
+  position: absolute;
+  top: 25%;
+  left: 48%;
+  width: 9%;
+  height: 21%;
+  background: #fce731;
+  transform: skewX(-11deg);
+}
+
+.about-plan-cone-face::before {
+  position: absolute;
+  top: 78%;
+  left: -76%;
+  width: 250%;
+  height: 25%;
+  border-radius: 50%;
+  background: #b8ee54;
+  content: "";
+}
+
+.about-plan-cone-face::after {
+  position: absolute;
+  top: 83%;
+  left: -51%;
+  width: 59%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #101010;
+  box-shadow: 20px 0 #101010;
+  content: "";
+}
+
+.about-plan-copy {
+  min-width: 0;
+  padding: clamp(118px, 15vh, 188px) clamp(38px, 7vw, 126px) 80px clamp(36px, 6vw, 112px);
+}
+
+.about-plan-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(34px, 4.1vw, 76px) minmax(225px, 0.72fr);
+  align-items: start;
+  gap: clamp(16px, 2vw, 38px);
+  padding-bottom: clamp(42px, 6vh, 90px);
+}
+
+.about-plan-name h1,
+.about-plan-name p,
+.about-plan-intro p,
+.about-plan-section h2,
+.about-plan-section p,
+.about-plan-record strong,
+.about-plan-record span,
+.about-plan-record p,
+.about-plan-current h2,
+.about-plan-current p { margin: 0; }
+
+.about-plan-name h1 {
+  font-size: clamp(60px, 7.25vw, 132px);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.about-plan-name p {
+  margin-top: clamp(19px, 3vw, 43px);
+  font-family: "About Chinese", "PingFang SC", sans-serif;
+  font-size: clamp(44px, 5vw, 92px);
+  line-height: 0.95;
+}
+
+.about-plan-slash,
+.about-plan-section h2 b,
+.about-plan-current h2 b {
+  font-family: Arial, sans-serif;
+  font-weight: 300;
+}
+
+.about-plan-slash {
+  padding-top: clamp(12px, 1.1vw, 23px);
+  font-size: clamp(56px, 5vw, 94px);
+  line-height: 1;
+}
+
+.about-plan-role {
+  padding-top: 4px;
+  font-size: clamp(27px, 2.4vw, 45px);
+  font-weight: 700;
+  line-height: 1.22;
+}
+
+.about-plan-section {
+  border-top: 2px solid #252525;
+  padding: clamp(28px, 4.2vh, 54px) 0 clamp(36px, 5.2vh, 76px);
+}
+
+.about-plan-section h2,
+.about-plan-current h2 {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.72fr) 40px minmax(170px, 0.72fr);
+  align-items: center;
+  margin-bottom: clamp(30px, 4.2vh, 56px);
+  font-size: clamp(43px, 4.5vw, 82px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+}
+
+.about-plan-section h2 b,
+.about-plan-current h2 b {
+  font-size: 0.82em;
+  text-align: center;
+}
+
+.about-plan-section h2 span[lang="zh-CN"],
+.about-plan-current h2 span[lang="zh-CN"] {
+  font-family: "About Chinese", "PingFang SC", sans-serif;
+  font-size: 0.78em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.about-plan-what p {
+  font-size: clamp(31px, 3.25vw, 59px);
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.about-plan-what p i {
+  padding-inline: 0.18em;
+  font-family: Arial, sans-serif;
+  font-size: 0.7em;
+  font-style: normal;
+  vertical-align: 0.11em;
+}
+
+.about-plan-records { border-top: 2px dotted #2b2b2a; }
+
+.about-plan-record {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(70px, 7.3vw, 125px) minmax(0, 1fr) minmax(164px, 0.43fr);
+  gap: clamp(15px, 2vw, 36px);
+  align-items: start;
+  padding: clamp(27px, 4vh, 51px) 0;
+}
+
+.about-plan-range {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding-top: 0.17em;
+  font-family: Arial, sans-serif;
+  font-size: clamp(17px, 1.75vw, 31px);
+  line-height: 1;
+}
+
+.about-plan-range i {
+  width: 2px;
+  height: clamp(18px, 2.7vw, 42px);
+  background: currentColor;
+  transform: rotate(-20deg);
+  transform-origin: center;
+}
+
+.about-plan-record-main { display: grid; gap: clamp(8px, 1.25vw, 18px); }
+
+.about-plan-record strong {
+  font-size: clamp(32px, 3.25vw, 59px);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 0.98;
+}
+
+.about-plan-record-main span,
+.about-plan-record > p {
+  font-size: clamp(25px, 2.55vw, 46px);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.about-plan-record > p {
+  font-family: "About Chinese", "PingFang SC", sans-serif;
+  text-align: right;
+}
+
+.about-plan-law-record { padding-bottom: clamp(76px, 11vh, 154px); }
+
+.about-plan-law-note {
+  position: absolute;
+  right: clamp(12%, 16vw, 28%);
+  bottom: clamp(20px, 3.5vh, 55px);
+  color: rgba(39, 39, 38, 0.22);
+  font-family: "Brush Script MT", "Bradley Hand", cursive;
+  font-size: clamp(24px, 2.7vw, 49px);
+  line-height: 1.05;
+  transform: rotate(5deg);
+}
+
+.about-plan-law-note span {
+  font-family: "About Chinese", "KaiTi", cursive;
+  font-size: 0.72em;
+}
+
+.about-plan-current {
+  padding-bottom: 40px;
+  border-top: 2px solid #252525;
+  padding-top: clamp(28px, 4.2vh, 54px);
+}
+
+.about-plan-current h2 { margin-bottom: 25px; }
+.about-plan-current p { font-size: clamp(24px, 2.1vw, 38px); line-height: 1.28; }
+.about-plan-current p[lang="zh-CN"] { font-family: "About Chinese", "PingFang SC", sans-serif; font-size: 0.85em; }
+
+@media (max-width: 1120px) {
+  .about-plan-page { grid-template-columns: minmax(280px, 31vw) minmax(0, 1fr); }
+  .about-plan-copy { padding-left: 35px; padding-right: 38px; }
+  .about-plan-photo-sign { left: 3%; width: min(28vw, 330px); }
+  .about-plan-cone { left: 12%; }
+  .about-plan-intro { grid-template-columns: minmax(0, 1fr) 28px minmax(180px, 0.58fr); gap: 13px; }
+  .about-plan-section h2 { grid-template-columns: minmax(178px, 0.72fr) 30px minmax(144px, 0.68fr); }
+}
+
+@media (max-width: 760px) {
+  .about-plan-page { display: block; overflow: visible; }
+  .about-plan-back { top: 18px; left: 22px; }
+  .about-plan-installation { position: relative; height: min(94vh, 690px); min-height: 540px; }
+  .about-plan-pole { left: 63%; width: 10px; }
+  .about-plan-photo-sign { top: 104px; left: 11%; width: min(64vw, 320px); }
+  .about-plan-cone { bottom: 36px; left: 8%; width: min(38vw, 180px); }
+  .about-plan-copy { padding: 36px 24px 58px; }
+  .about-plan-intro { grid-template-columns: minmax(0, 1fr) 18px minmax(110px, 0.49fr); gap: 10px; padding-bottom: 44px; }
+  .about-plan-name h1 { font-size: clamp(42px, 12vw, 78px); }
+  .about-plan-name p { margin-top: 13px; font-size: clamp(35px, 10vw, 62px); }
+  .about-plan-slash { font-size: 40px; }
+  .about-plan-role { font-size: clamp(17px, 5.5vw, 28px); }
+  .about-plan-section { padding: 28px 0 38px; }
+  .about-plan-section h2, .about-plan-current h2 { grid-template-columns: minmax(0, 1fr) 22px minmax(0, 0.73fr); margin-bottom: 28px; font-size: clamp(29px, 9vw, 48px); }
+  .about-plan-what p { white-space: normal; font-size: clamp(24px, 7.2vw, 36px); line-height: 1.18; }
+  .about-plan-record { grid-template-columns: 58px minmax(0, 1fr); gap: 12px; padding: 25px 0; }
+  .about-plan-record > p { grid-column: 2; padding-top: 3px; text-align: left; }
+  .about-plan-range { font-size: 15px; }
+  .about-plan-record strong { font-size: clamp(25px, 7.6vw, 39px); }
+  .about-plan-record-main span, .about-plan-record > p { font-size: clamp(20px, 6vw, 30px); }
+  .about-plan-law-record { padding-bottom: 100px; }
+  .about-plan-law-note { right: 0; bottom: 25px; font-size: clamp(22px, 7vw, 35px); }
+  .about-plan-current p { font-size: clamp(22px, 6.4vw, 31px); }
+}
