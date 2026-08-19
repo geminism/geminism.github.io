@@ -832,11 +832,11 @@ button {
   box-shadow: 0 0.12vw 0.16vw rgba(0, 0, 0, 0.22), inset 0 0.06vw 0.05vw rgba(255, 255, 255, 0.55);
 }
 
-.about-svg-collar-1 { top: 47.3%; }
-.about-svg-collar-2 { top: 58.7%; }
-.about-svg-collar-3 { top: 70.1%; }
-.about-svg-collar-4 { top: 81.5%; }
-.about-svg-collar-5 { top: 92.9%; }
+.about-svg-collar-1 { top: 47.3%; left: 20%; transform: rotate(-1deg); }
+.about-svg-collar-2 { top: 58.9%; left: 20.35%; transform: rotate(0.7deg); }
+.about-svg-collar-3 { top: 69.8%; left: 19.85%; transform: rotate(-0.5deg); }
+.about-svg-collar-4 { top: 81.2%; left: 20.2%; transform: rotate(1.1deg); }
+.about-svg-collar-5 { top: 92.4%; left: 19.95%; transform: rotate(-0.8deg); }
 
 .about-svg-cone {
   position: absolute;
