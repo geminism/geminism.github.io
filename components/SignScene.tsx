@@ -508,9 +508,9 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
                 <meshBasicMaterial color="#ffffff" transparent opacity={0.13} depthWrite={false} />
               </mesh>
 
-              <mesh position={[0, 0.055, 0.48]} rotation={[Math.PI / 2, 0, 0]}>
+              <mesh position={[0, 0.045, 0.465]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry
-                  args={[0.39, 0.325, 0.46, 40, 1, true, Math.PI * 0.32, Math.PI * 1.36]}
+                  args={[0.33, 0.295, 0.32, 40, 1, true, Math.PI * 0.42, Math.PI * 1.16]}
                 />
                 <meshStandardMaterial color="#171917" roughness={0.39} metalness={0.66} side={THREE.DoubleSide} />
               </mesh>
