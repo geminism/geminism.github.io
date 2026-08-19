@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, ThreeEvent, useFrame } from "@react-three/fiber";
-import { ContactShadows, RoundedBox, useTexture } from "@react-three/drei";
+import { ContactShadows, Html, RoundedBox, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { HomeTargetId, sections, SectionId } from "@/lib/sections";
 
@@ -67,6 +67,8 @@ const contactSignals: Array<{
   { color: "#f3bd21", y: 0 },
   { color: "#35b95a", y: -0.65 },
 ];
+
+const CONTACT_PHONE = "+44 0 7486 352980";
 
 function getSignY(config: SignConfig) {
   return config.y + SIGN_LIFT[config.id];
@@ -413,7 +415,52 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
   didDrag: SceneProps["didDrag"];
 }) {
   const housingRef = useRef<THREE.Group>(null);
+  const [redHovered, setRedHovered] = useState(false);
+  const [phoneCopied, setPhoneCopied] = useState(false);
+  const redHoverExitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copiedResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [redIdleTexture, redActiveTexture] = useTexture([
+    "/traffic-light/red-idle.png",
+    "/traffic-light/red-active.png",
+  ]);
   const sideDistance = trafficLightConfig.side * (trafficLightConfig.arm + trafficLightConfig.width / 2);
+
+  useEffect(() => {
+    [redIdleTexture, redActiveTexture].forEach((texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = 8;
+      texture.needsUpdate = true;
+    });
+  }, [redIdleTexture, redActiveTexture]);
+
+  useEffect(() => () => {
+    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
+    if (copiedResetTimer.current) clearTimeout(copiedResetTimer.current);
+  }, []);
+
+  const keepRedContactVisible = () => {
+    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
+    setRedHovered(true);
+  };
+
+  const hideRedContactSoon = () => {
+    if (redHoverExitTimer.current) clearTimeout(redHoverExitTimer.current);
+    redHoverExitTimer.current = setTimeout(() => {
+      setRedHovered(false);
+      setPhoneCopied(false);
+    }, 180);
+  };
+
+  const copyPhoneNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_PHONE);
+      setPhoneCopied(true);
+      if (copiedResetTimer.current) clearTimeout(copiedResetTimer.current);
+      copiedResetTimer.current = setTimeout(() => setPhoneCopied(false), 1400);
+    } catch {
+      setPhoneCopied(false);
+    }
+  };
 
   useFrame((_, delta) => {
     if (!housingRef.current) return;
@@ -471,8 +518,12 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
           <meshStandardMaterial color="#9da19e" roughness={0.25} metalness={0.84} />
         </RoundedBox>
 
-        {contactSignals.map((signal) => (
-          <group key={signal.y} position={[0, signal.y, 0]}>
+        {contactSignals.map((signal, signalIndex) => {
+          const isRedSignal = signalIndex === 0;
+          const revealRedContact = isRedSignal && focused && redHovered;
+
+          return (
+            <group key={signal.y} position={[0, signal.y, 0]}>
               <RoundedBox args={[0.86, 0.66, 0.12]} radius={0.07} smoothness={4} position={[0, 0, 0.29]}>
                 <meshStandardMaterial color="#292b29" roughness={0.4} metalness={0.62} />
               </RoundedBox>
@@ -493,20 +544,64 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
                 <cylinderGeometry args={[0.34, 0.37, 0.18, 32]} />
                 <meshStandardMaterial color="#111311" roughness={0.42} metalness={0.68} />
               </mesh>
-              <mesh position={[0, 0, 0.43]}>
+              <mesh
+                position={[0, 0, 0.43]}
+                onPointerEnter={() => {
+                  if (isRedSignal && focused) keepRedContactVisible();
+                }}
+                onPointerMove={() => {
+                  if (isRedSignal && focused) keepRedContactVisible();
+                }}
+                onPointerLeave={() => {
+                  if (isRedSignal) hideRedContactSoon();
+                }}
+              >
                 <circleGeometry args={[0.275, 40]} />
-                <meshStandardMaterial
-                  color={signal.color}
-                  emissive={signal.color}
-                  emissiveIntensity={0.42}
-                  roughness={0.18}
-                  metalness={0.04}
-                />
+                {isRedSignal ? (
+                  <meshBasicMaterial
+                    map={revealRedContact ? redActiveTexture : redIdleTexture}
+                    transparent
+                    alphaTest={0.015}
+                    toneMapped={false}
+                  />
+                ) : (
+                  <meshStandardMaterial
+                    color={signal.color}
+                    emissive={signal.color}
+                    emissiveIntensity={0.42}
+                    roughness={0.18}
+                    metalness={0.04}
+                  />
+                )}
               </mesh>
-              <mesh position={[-0.075, 0.075, 0.445]}>
-                <circleGeometry args={[0.095, 24]} />
-                <meshBasicMaterial color="#ffffff" transparent opacity={0.13} depthWrite={false} />
-              </mesh>
+              {!isRedSignal && (
+                <mesh position={[-0.075, 0.075, 0.445]}>
+                  <circleGeometry args={[0.095, 24]} />
+                  <meshBasicMaterial color="#ffffff" transparent opacity={0.13} depthWrite={false} />
+                </mesh>
+              )}
+
+              {revealRedContact && (
+                <Html position={[-0.31, 0, 0.49]} zIndexRange={[30, 0]} style={{ pointerEvents: "auto" }}>
+                  <div
+                    className="traffic-phone-anchor"
+                    onMouseEnter={keepRedContactVisible}
+                    onMouseLeave={hideRedContactSoon}
+                  >
+                    <button
+                      type="button"
+                      className="traffic-phone-number"
+                      onClick={copyPhoneNumber}
+                      aria-label={`Copy phone number ${CONTACT_PHONE}`}
+                    >
+                      <span>{CONTACT_PHONE}</span>
+                      <span className={`traffic-phone-status${phoneCopied ? " is-visible" : ""}`} aria-live="polite">
+                        {phoneCopied ? "Copied" : ""}
+                      </span>
+                    </button>
+                  </div>
+                </Html>
+              )}
 
               <mesh position={[0, 0.045, 0.465]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry
@@ -514,9 +609,9 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
                 />
                 <meshStandardMaterial color="#171917" roughness={0.39} metalness={0.66} side={THREE.DoubleSide} />
               </mesh>
-
-          </group>
-        ))}
+            </group>
+          );
+        })}
       </group>
     </group>
   );
