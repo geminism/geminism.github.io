@@ -159,7 +159,7 @@ export function AboutPage() {
     const shouldEdit = params.get("edit") === "1" && desktop;
     setEditMode(shouldEdit);
 
-    if (shouldEdit) {
+    if (desktop) {
       try {
         const saved = window.localStorage.getItem(STORAGE_KEY);
         if (saved) {
