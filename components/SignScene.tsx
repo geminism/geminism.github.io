@@ -716,7 +716,6 @@ function PoleScene(props: SceneProps) {
 
   return (
     <>
-      <color attach="background" args={["#f7f7f4"]} />
       <ambientLight intensity={1.7} />
       <directionalLight position={[4, 7, 6]} intensity={2.8} color="#ffffff" />
       <directionalLight position={[-5, 1, 3]} intensity={0.8} color="#e6eef4" />
