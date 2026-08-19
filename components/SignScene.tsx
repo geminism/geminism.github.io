@@ -39,13 +39,20 @@ const configs: SignConfig[] = [
 ];
 
 const SIGN_SCALE = 0.9;
-const SIGN_Y_OFFSET = 0.28;
+const TITLE_Y_OFFSET = 0.28;
+const SIGN_LIFT: Record<SectionId, number> = {
+  about: 0.42,
+  brand: 0.58,
+  packaging: 0.75,
+  event: 0.93,
+  other: 1.12,
+};
 const TRAFFIC_LIGHT_SCALE = 0.88;
 
 const trafficLightConfig = {
   id: "contact" as const,
-  y: -5,
-  angle: THREE.MathUtils.degToRad(80),
+  y: -4.75,
+  angle: THREE.MathUtils.degToRad(105),
   side: -1 as const,
   arm: 0.54,
   width: 0.98,
@@ -60,6 +67,10 @@ const contactSignals: Array<{
   { color: "#f3bd21", y: 0 },
   { color: "#35b95a", y: -0.65 },
 ];
+
+function getSignY(config: SignConfig) {
+  return config.y + SIGN_LIFT[config.id];
+}
 
 type PortfolioTextures = {
   face: THREE.CanvasTexture;
@@ -240,7 +251,7 @@ function PortfolioTitleSign() {
   );
 
   return (
-    <group position={[0, 4.85 + SIGN_Y_OFFSET, 0.2]} scale={SIGN_SCALE}>
+    <group position={[0, 4.85 + TITLE_Y_OFFSET, 0.2]} scale={SIGN_SCALE}>
       <mesh position={[0, -0.05, -0.16]}>
         <boxGeometry args={[5.4, 0.07, 0.1]} />
         <meshStandardMaterial color="#4e5250" metalness={0.76} roughness={0.28} />
@@ -352,7 +363,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   };
 
   return (
-    <group rotation={[0, config.angle, 0]} position={[0, config.y + SIGN_Y_OFFSET, 0]} scale={SIGN_SCALE}>
+    <group rotation={[0, config.angle, 0]} position={[0, getSignY(config), 0]} scale={SIGN_SCALE}>
       {config.side === 0 ? (
         <mesh position={[0, 0, config.arm / 2]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.045, 0.045, config.arm, 12]} />
@@ -460,20 +471,24 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
           <meshStandardMaterial color="#9da19e" roughness={0.25} metalness={0.84} />
         </RoundedBox>
 
-        {[
-          [-0.42, 0.98],
-          [0.42, 0.98],
-          [-0.42, -0.98],
-          [0.42, -0.98],
-        ].map(([x, y]) => (
-          <mesh key={`${x}-${y}`} position={[x, y, 0.31]}>
-            <sphereGeometry args={[0.027, 12, 8]} />
-            <meshStandardMaterial color="#d8dad7" roughness={0.22} metalness={0.9} />
-          </mesh>
-        ))}
-
         {contactSignals.map((signal) => (
-            <group key={signal.y} position={[0, signal.y, 0]}>
+          <group key={signal.y} position={[0, signal.y, 0]}>
+              <RoundedBox args={[0.86, 0.66, 0.12]} radius={0.07} smoothness={4} position={[0, 0, 0.29]}>
+                <meshStandardMaterial color="#292b29" roughness={0.4} metalness={0.62} />
+              </RoundedBox>
+
+              {[
+                [-0.34, 0.25],
+                [0.34, 0.25],
+                [-0.34, -0.25],
+                [0.34, -0.25],
+              ].map(([x, y]) => (
+                <mesh key={`${signal.y}-${x}-${y}`} position={[x, y, 0.37]}>
+                  <sphereGeometry args={[0.025, 12, 8]} />
+                  <meshStandardMaterial color="#9fa39f" roughness={0.24} metalness={0.88} />
+                </mesh>
+              ))}
+
               <mesh position={[0, 0, 0.32]} rotation={[Math.PI / 2, 0, 0]}>
                 <cylinderGeometry args={[0.34, 0.37, 0.18, 32]} />
                 <meshStandardMaterial color="#111311" roughness={0.42} metalness={0.68} />
@@ -488,13 +503,19 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
                   metalness={0.04}
                 />
               </mesh>
+              <mesh position={[-0.075, 0.075, 0.445]}>
+                <circleGeometry args={[0.095, 24]} />
+                <meshBasicMaterial color="#ffffff" transparent opacity={0.13} depthWrite={false} />
+              </mesh>
 
-              <mesh position={[0, 0.13, 0.45]} rotation={[Math.PI / 2, 0, 0]}>
-                <cylinderGeometry args={[0.35, 0.35, 0.34, 32, 1, true, 0, Math.PI]} />
+              <mesh position={[0, 0.055, 0.48]} rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry
+                  args={[0.39, 0.325, 0.46, 40, 1, true, Math.PI * 0.32, Math.PI * 1.36]}
+                />
                 <meshStandardMaterial color="#171917" roughness={0.39} metalness={0.66} side={THREE.DoubleSide} />
               </mesh>
 
-            </group>
+          </group>
         ))}
       </group>
     </group>
@@ -520,7 +541,9 @@ function CameraRig({
   useFrame(({ camera }, delta) => {
     const activeConfig = getSceneConfig(activeId);
     const activeY = activeConfig
-      ? activeConfig.y + (activeId === "contact" ? 0 : SIGN_Y_OFFSET)
+      ? activeId === "contact"
+        ? activeConfig.y
+        : getSignY(activeConfig as SignConfig)
       : 0;
     const focusConfig = getSceneConfig(focusId);
     const targetPosition = new THREE.Vector3(0, activeId ? 2.45 + activeY * 0.035 : 2.45, activeId ? 15.4 : 18.6);
@@ -528,7 +551,9 @@ function CameraRig({
 
     if (focusConfig) {
       const focusScale = focusId === "contact" ? TRAFFIC_LIGHT_SCALE : SIGN_SCALE;
-      const focusY = focusConfig.y + (focusId === "contact" ? 0 : SIGN_Y_OFFSET);
+      const focusY = focusId === "contact"
+        ? focusConfig.y
+        : getSignY(focusConfig as SignConfig);
       const totalAngle = rotationCurrent.current + focusConfig.angle;
       const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2) * focusScale;
       const center = focusConfig.side === 0
@@ -580,8 +605,8 @@ function PoleScene(props: SceneProps) {
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
         {[
-          ...configs.map((config) => config.y + SIGN_Y_OFFSET),
-          5.05 + SIGN_Y_OFFSET,
+          ...configs.map(getSignY),
+          5.05 + TITLE_Y_OFFSET,
           6.78,
           trafficLightConfig.y,
         ].map((y) => (
