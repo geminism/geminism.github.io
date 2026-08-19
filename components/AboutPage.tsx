@@ -28,7 +28,7 @@ export function AboutPage() {
             <span className="about-svg-collar about-svg-collar-5" />
           </div>
 
-          <img className="about-svg-cone" src="/about/traffic-cone.png" alt="橙白相间的交通路障" />
+          <img className="about-svg-cone" src="/about/traffic-cone-front.png" alt="橙白相间的正面交通路障" />
         </aside>
       </div>
     </main>
