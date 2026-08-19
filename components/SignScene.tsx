@@ -359,7 +359,7 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
       { x: 0, y: h },
       { x: w, y: -h },
       { x: -w, y: -h },
-    ], Math.min(width, height) * 0.085);
+    ], Math.min(width, height) * 0.055);
   } else if (kind === "octagon") {
     const c = Math.min(width, height) * 0.24;
     roundedPolygon([
@@ -371,7 +371,10 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
       { x: -w + c, y: -h },
       { x: -w, y: -h + c },
       { x: -w, y: h - c },
-    ], Math.min(width, height) * 0.11);
+    // The artwork already contains a chamfered, softly finished perimeter.
+    // Keep this radius small so the metal reads as a true offset path instead
+    // of turning the sign into a pill-like octagon.
+    ], Math.min(width, height) * 0.035);
   } else {
     const radius = Math.min(width, height) * 0.1;
     shape.moveTo(-w + radius, -h);
@@ -402,10 +405,19 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   // sloped edge sits farther from the pole at mid-height, so only its arm needs
   // to extend; moving the plate itself would make it intersect the pole.
   const connectorLength = config.shape === "triangle" ? config.arm + config.width / 4 : config.arm;
-  const metalPadding = config.id === "about" || config.id === "event" ? 0.065 : 0;
+  // The PNGs include a small transparent margin around their visible plate.
+  // Build the metal from the visible silhouette (rather than the full canvas)
+  // and add only a narrow, even offset around it.
+  const isOffsetFrame = config.id === "about" || config.id === "event";
+  const frameGap = isOffsetFrame ? 0.045 : 0;
+  const frameContentScale = isOffsetFrame ? 0.935 : 1;
   const shape = useMemo(
-    () => makeShape(config.shape, config.width + metalPadding * 2, config.height + metalPadding * 2),
-    [config, metalPadding],
+    () => makeShape(
+      config.shape,
+      config.width * frameContentScale + frameGap * 2,
+      config.height * frameContentScale + frameGap * 2,
+    ),
+    [config, frameContentScale, frameGap],
   );
   const geometry = useMemo(
     () => new THREE.ExtrudeGeometry(shape, { depth: 0.075, bevelEnabled: true, bevelSize: 0.022, bevelThickness: 0.018, bevelSegments: 2 }),
