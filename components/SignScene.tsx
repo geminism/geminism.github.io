@@ -31,7 +31,7 @@ type SignConfig = {
 };
 
 const configs: SignConfig[] = [
-  { id: "about", y: 1.9, angle: 0, side: 1, arm: 0.42, width: 2.22, height: 2.12, shape: "triangle" },
+  { id: "about", y: 1.9, angle: THREE.MathUtils.degToRad(30), side: 1, arm: 0.42, width: 2.22, height: 2.12, shape: "triangle" },
   { id: "brand", y: 0, angle: THREE.MathUtils.degToRad(62), side: 1, arm: 0.42, width: 3.65, height: 1.58, shape: "wide" },
   { id: "packaging", y: -1.65, angle: THREE.MathUtils.degToRad(147), side: -1, arm: 0.42, width: 1.72, height: 2.17, shape: "vertical" },
   { id: "event", y: -3.25, angle: THREE.MathUtils.degToRad(238), side: 1, arm: 0.42, width: 2.28, height: 2.28, shape: "octagon" },
@@ -284,7 +284,7 @@ function PortfolioTitleSign() {
 
   return (
     <group
-      position={[0, 4.85 + TITLE_Y_OFFSET, 0.2]}
+      position={[0.32, 4.85 + TITLE_Y_OFFSET, 0]}
       rotation={[0, -HOME_INITIAL_ROTATION, 0]}
       scale={SIGN_SCALE}
     >
