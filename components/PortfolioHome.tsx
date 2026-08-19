@@ -95,7 +95,7 @@ export function PortfolioHome() {
         <div className="home-sky-haze home-sky-haze-b" />
         <div className="home-cloud-title">
           {cloudTitle.map((letter, index) => (
-            <span key={`${letter}-${index}`}>
+            <span key={`${letter}-${index}`} data-letter={letter}>
               {letter}
             </span>
           ))}

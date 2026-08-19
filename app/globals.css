@@ -92,18 +92,18 @@ button {
 .home-cloud-title {
   position: absolute;
   z-index: 1;
-  top: clamp(8px, 1.6vh, 24px);
+  top: clamp(70px, 9.5vh, 118px);
   left: 50%;
   display: flex;
-  width: 106vw;
+  width: 120vw;
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.96);
   font-family: "Arial Rounded MT Bold", "Avenir Next", Arial, sans-serif;
-  font-size: clamp(112px, 18vw, 320px);
+  font-size: clamp(148px, 22vw, 390px);
   font-weight: 900;
-  letter-spacing: -0.08em;
-  line-height: 0.7;
+  letter-spacing: -0.1em;
+  line-height: 0.68;
   transform: translateX(-50%);
   white-space: nowrap;
 }
@@ -124,19 +124,59 @@ button {
   --cloud-delay: 0s;
   position: relative;
   display: inline-block;
-  margin-inline: -0.035em;
-  -webkit-text-stroke: 0.055em rgba(255, 255, 255, 0.78);
-  filter: drop-shadow(0 18px 16px rgba(48, 124, 174, 0.14));
+  margin-inline: -0.045em;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255, 255, 255, 1) 0 7%, transparent 24%),
+    radial-gradient(circle at 73% 34%, rgba(255, 255, 255, 0.96) 0 6%, transparent 25%),
+    radial-gradient(circle at 42% 78%, rgba(255, 255, 255, 0.82) 0 8%, transparent 27%),
+    linear-gradient(145deg, #fff 4%, #f8fafb 31%, #dfe7eb 57%, #fff 79%, #e7edf0 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.07em rgba(248, 251, 252, 0.88);
+  color: transparent;
+  filter: drop-shadow(0 0.055em 0.045em rgba(49, 93, 124, 0.2));
   paint-order: stroke fill;
   text-shadow:
-    -0.04em -0.025em 0 rgba(255, 255, 255, 0.68),
-    0.04em 0.03em 0 rgba(238, 249, 255, 0.8),
-    0 0.075em 0.1em rgba(53, 133, 183, 0.12),
-    0 0 0.15em rgba(255, 255, 255, 0.6);
+    -0.045em -0.035em 0.045em rgba(255, 255, 255, 0.96),
+    0.025em 0.035em 0.035em rgba(91, 117, 132, 0.22),
+    0 0.085em 0.095em rgba(45, 110, 151, 0.16),
+    0 0 0.13em rgba(255, 255, 255, 0.78);
   transform-origin: 50% 55%;
   animation: home-cloud-letter-float var(--cloud-duration) cubic-bezier(0.45, 0.02, 0.38, 1) infinite;
   animation-delay: var(--cloud-delay);
   will-change: transform;
+}
+
+.home-cloud-title span::before,
+.home-cloud-title span::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: attr(data-letter);
+}
+
+.home-cloud-title span::before {
+  z-index: -1;
+  color: rgba(224, 233, 238, 0.94);
+  -webkit-text-fill-color: currentColor;
+  -webkit-text-stroke: 0.105em rgba(249, 251, 252, 0.92);
+  filter: blur(0.022em);
+  opacity: 0.92;
+  transform: translate(0.025em, 0.045em) scale(1.018);
+}
+
+.home-cloud-title span::after {
+  z-index: 1;
+  background:
+    radial-gradient(circle at 26% 26%, rgba(255, 255, 255, 0.62) 0 5%, transparent 18%),
+    radial-gradient(circle at 64% 68%, rgba(148, 169, 180, 0.2) 0 4%, transparent 21%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.018em rgba(255, 255, 255, 0.24);
+  filter: blur(0.012em);
+  opacity: 0.9;
 }
 
 .home-cloud-title span:nth-child(1) { z-index: 2; --cloud-tilt: -5deg; --cloud-tilt-mid: -1deg; --cloud-scale-x: 1.13; --cloud-scale-y: 0.9; --cloud-scale-x-mid: 1.03; --cloud-scale-y-mid: 1.02; --cloud-lift: 8px; --cloud-lift-mid: -8px; --cloud-lift-end: 2px; --cloud-shift: 9px; --cloud-shift-end: -4px; --cloud-duration: 7.8s; --cloud-delay: -2.6s; }
@@ -681,10 +721,10 @@ button {
   }
 
   .home-cloud-title {
-    top: 28px;
-    width: 118vw;
-    font-size: clamp(72px, 20vw, 132px);
-    letter-spacing: -0.1em;
+    top: 68px;
+    width: 128vw;
+    font-size: clamp(88px, 24vw, 158px);
+    letter-spacing: -0.12em;
   }
 
   .home-sky {
