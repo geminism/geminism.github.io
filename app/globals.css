@@ -786,7 +786,7 @@ button {
   z-index: 1;
   top: 43.2%;
   bottom: 3.4%;
-  left: 23.45%;
+  left: 20.7%;
   width: 1.32%;
   border: 0.05vw solid #080908;
   border-radius: 0.35vw;
@@ -798,7 +798,7 @@ button {
   position: absolute;
   z-index: 3;
   top: 10.5%;
-  left: 11.1%;
+  left: 8.3%;
   display: grid;
   width: 25.8%;
   aspect-ratio: 1;
@@ -823,8 +823,7 @@ button {
 .about-svg-collar {
   position: absolute;
   z-index: 4;
-  top: 43.75%;
-  left: 22.86%;
+  left: 20.1%;
   width: 2.55%;
   height: 0.82%;
   border: 0.05vw solid #717572;
@@ -832,6 +831,12 @@ button {
   background: linear-gradient(90deg, #e8eae6 0%, #9da19d 23%, #d9dcd8 53%, #8a8e8b 79%, #edf0ec 100%);
   box-shadow: 0 0.12vw 0.16vw rgba(0, 0, 0, 0.22), inset 0 0.06vw 0.05vw rgba(255, 255, 255, 0.55);
 }
+
+.about-svg-collar-1 { top: 47.3%; }
+.about-svg-collar-2 { top: 58.7%; }
+.about-svg-collar-3 { top: 70.1%; }
+.about-svg-collar-4 { top: 81.5%; }
+.about-svg-collar-5 { top: 92.9%; }
 
 .about-svg-cone {
   position: absolute;

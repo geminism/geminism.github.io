@@ -20,7 +20,13 @@ export function AboutPage() {
           <div className="about-svg-photo">
             <img src="/about/photo.png" alt="Gemini Kong 个人照片" />
           </div>
-          <span className="about-svg-collar" aria-hidden="true" />
+          <div className="about-svg-collars" aria-hidden="true">
+            <span className="about-svg-collar about-svg-collar-1" />
+            <span className="about-svg-collar about-svg-collar-2" />
+            <span className="about-svg-collar about-svg-collar-3" />
+            <span className="about-svg-collar about-svg-collar-4" />
+            <span className="about-svg-collar about-svg-collar-5" />
+          </div>
 
           <img className="about-svg-cone" src="/about/traffic-cone.png" alt="橙白相间的交通路障" />
         </aside>
