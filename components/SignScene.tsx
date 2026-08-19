@@ -38,6 +38,9 @@ const configs: SignConfig[] = [
   { id: "other", y: -4.77, angle: THREE.MathUtils.degToRad(494), side: 1, arm: 0.42, width: 3.55, height: 1.32, shape: "wide" },
 ];
 
+const SIGN_SCALE = 0.94;
+const SIGN_Y_OFFSET = 0.28;
+
 const trafficLightConfig = {
   id: "contact" as const,
   y: -5.24,
@@ -242,7 +245,7 @@ function PortfolioTitleSign() {
   );
 
   return (
-    <group position={[0, 4.85, 0.2]}>
+    <group position={[0, 4.85 + SIGN_Y_OFFSET, 0.2]} scale={SIGN_SCALE}>
       <mesh position={[0, -0.05, -0.16]}>
         <boxGeometry args={[5.4, 0.07, 0.1]} />
         <meshStandardMaterial color="#4e5250" metalness={0.76} roughness={0.28} />
@@ -354,7 +357,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   };
 
   return (
-    <group rotation={[0, config.angle, 0]} position={[0, config.y, 0]}>
+    <group rotation={[0, config.angle, 0]} position={[0, config.y + SIGN_Y_OFFSET, 0]} scale={SIGN_SCALE}>
       {config.side === 0 ? (
         <mesh position={[0, 0, config.arm / 2]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.045, 0.045, config.arm, 12]} />
@@ -586,8 +589,7 @@ function ContactTrafficLight({ active, focused, onActive, onSelect, didDrag }: {
 }
 
 function getSceneConfig(id: HomeTargetId | null) {
-  if (!id) return undefined;
-  if (id === "contact") return trafficLightConfig;
+  if (!id || id === "contact") return undefined;
   return configs.find((item) => item.id === id);
 }
 
@@ -609,20 +611,20 @@ function CameraRig({
 
     if (focusConfig) {
       const totalAngle = rotationCurrent.current + focusConfig.angle;
-      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2);
+      const sideDistance = focusConfig.side * (focusConfig.arm + focusConfig.width / 2) * SIGN_SCALE;
       const center = focusConfig.side === 0
         ? new THREE.Vector3(
-            rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm,
-            focusConfig.y,
-            Math.cos(totalAngle) * focusConfig.arm,
+            rootOffsetX.current + Math.sin(totalAngle) * focusConfig.arm * SIGN_SCALE,
+            focusConfig.y + SIGN_Y_OFFSET,
+            Math.cos(totalAngle) * focusConfig.arm * SIGN_SCALE,
           )
         : new THREE.Vector3(
             rootOffsetX.current + Math.cos(totalAngle) * sideDistance,
-            focusConfig.y,
+            focusConfig.y + SIGN_Y_OFFSET,
             -Math.sin(totalAngle) * sideDistance,
           );
       const normal = new THREE.Vector3(Math.sin(totalAngle), 0, Math.cos(totalAngle));
-      const distance = Math.max(focusConfig.width, focusConfig.height) * 1.15 + 4.8;
+      const distance = Math.max(focusConfig.width, focusConfig.height) * SIGN_SCALE * 1.15 + 4.8;
       targetPosition.copy(center).addScaledVector(normal, distance);
       targetLook.copy(center);
     }
@@ -654,11 +656,11 @@ function PoleScene(props: SceneProps) {
       <directionalLight position={[4, 7, 6]} intensity={2.8} color="#ffffff" />
       <directionalLight position={[-5, 1, 3]} intensity={0.8} color="#e6eef4" />
       <group ref={rootRef}>
-        <mesh position={[0, 0.275, 0]}>
-          <cylinderGeometry args={[0.145, 0.175, 13.35, 24]} />
+        <mesh position={[0, 0.4, 0]}>
+          <cylinderGeometry args={[0.145, 0.175, 21.5, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />
         </mesh>
-        {[...configs.map((config) => config.y), 5.05, 6.78, trafficLightConfig.y, -6.18].map((y) => (
+        {[...configs.map((config) => config.y + SIGN_Y_OFFSET), 5.05 + SIGN_Y_OFFSET, 6.78].map((y) => (
           <group key={y} position={[0, y, 0]}>
             <mesh>
               <cylinderGeometry args={[0.205, 0.205, 0.12, 24]} />
@@ -683,16 +685,9 @@ function PoleScene(props: SceneProps) {
             didDrag={props.didDrag}
           />
         ))}
-        <ContactTrafficLight
-          active={props.activeId === "contact"}
-          focused={props.focusId === "contact"}
-          onActive={props.onActive}
-          onSelect={props.onSelect}
-          didDrag={props.didDrag}
-        />
         <PortfolioTitleSign />
       </group>
-      <ContactShadows position={[0, -6.38, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />
+      <ContactShadows position={[0, -10.2, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />
       <CameraRig
         activeId={props.activeId}
         focusId={props.focusId}

@@ -18,12 +18,8 @@ export function PortfolioHome() {
   const pointerStart = useRef<{ x: number; lastX: number } | null>(null);
   const [activeId, setActiveId] = useState<HomeTargetId | null>(null);
   const [focusId, setFocusId] = useState<HomeTargetId | null>(null);
-  const activeSection = activeId === "contact" ? null : sections.find((section) => section.id === activeId);
-  const activeCaption = activeId === "contact"
-    ? "联系方式 / Contact"
-    : activeSection
-      ? `${activeSection.zh} / ${activeSection.en}`
-      : "";
+  const activeSection = sections.find((section) => section.id === activeId);
+  const activeCaption = activeSection ? `${activeSection.zh} / ${activeSection.en}` : "";
 
   useLayoutEffect(() => {
     if (!shellRef.current) return;
@@ -108,11 +104,9 @@ export function PortfolioHome() {
       </div>
 
       <p className="gesture-hint">
-        {focusId === "contact"
-          ? "Hover a light · Click blank to exit"
-          : focusId
-            ? "Click again to enter · Click blank to exit"
-            : "Drag to rotate · Select a sign"}
+        {focusId
+          ? "Click again to enter · Click blank to exit"
+          : "Drag to rotate · Select a sign"}
       </p>
       <div className={`active-caption ${activeCaption ? "is-visible" : ""}`} aria-live="polite">
         {activeCaption}
@@ -120,7 +114,6 @@ export function PortfolioHome() {
 
       <nav className="keyboard-nav" aria-label="作品集版块">
         {sections.map((section) => <Link key={section.id} href={section.href}>{section.zh}</Link>)}
-        <button type="button" onClick={() => selectSection("contact")}>联系方式</button>
       </nav>
 
       <div ref={curtainRef} className="transition-curtain" aria-hidden="true" />
