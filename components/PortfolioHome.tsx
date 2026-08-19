@@ -37,6 +37,9 @@ export function PortfolioHome() {
       return;
     }
 
+    // “Other Design” is still under construction. Keep its focus interaction
+    // available, but do not send visitors to the unfinished route.
+    if (id === "other") return;
     if (id === "contact") return;
 
     const section = sections.find((item) => item.id === id)!;
@@ -115,7 +118,9 @@ export function PortfolioHome() {
       </div>
 
       <nav className="keyboard-nav" aria-label="作品集版块">
-        {sections.map((section) => <Link key={section.id} href={section.href}>{section.zh}</Link>)}
+        {sections.map((section) => section.id === "other"
+          ? <button key={section.id} type="button" onClick={() => selectSection(section.id)}>{section.zh}</button>
+          : <Link key={section.id} href={section.href}>{section.zh}</Link>)}
         <button type="button" onClick={() => selectSection("contact")}>联系方式</button>
       </nav>
 

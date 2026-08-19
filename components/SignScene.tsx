@@ -402,6 +402,9 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
 }) {
   const section = sections.find((item) => item.id === config.id)!;
   const texture = useTexture(section.image);
+  // Shared tape texture is cached by drei; it is only rendered on the
+  // unfinished “Other Design” plate below.
+  const tapeTexture = useTexture("/signs/other-tape.png");
   const signRef = useRef<THREE.Group>(null);
   // Keep every plate on the same bounding-box rhythm. The triangular plate's
   // sloped edge sits farther from the pole at mid-height, so only its arm needs
@@ -429,8 +432,11 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   useEffect(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 8;
+    tapeTexture.colorSpace = THREE.SRGBColorSpace;
+    tapeTexture.anisotropy = 8;
     texture.needsUpdate = true;
-  }, [texture]);
+    tapeTexture.needsUpdate = true;
+  }, [texture, tapeTexture]);
 
   useFrame((_, delta) => {
     if (!signRef.current) return;
@@ -488,6 +494,77 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
           <planeGeometry args={[config.width, config.height]} />
           <meshBasicMaterial map={texture} transparent alphaTest={0.02} toneMapped={false} />
         </mesh>
+        {config.id === "other" && (
+          <>
+            {/* Front strips: slightly translucent, softly reflective vinyl tape. */}
+            <mesh
+              position={[0.82, 0.42, 0.145]}
+              rotation={[0, 0, THREE.MathUtils.degToRad(-24)]}
+              raycast={() => null}
+              renderOrder={3}
+            >
+              <planeGeometry args={[2.95, 0.19]} />
+              <meshPhysicalMaterial
+                map={tapeTexture}
+                clearcoat={0.22}
+                clearcoatRoughness={0.18}
+                metalness={0.08}
+                roughness={0.28}
+                toneMapped={false}
+              />
+            </mesh>
+            <mesh
+              position={[-0.9, -0.32, 0.145]}
+              rotation={[0, 0, THREE.MathUtils.degToRad(-24)]}
+              raycast={() => null}
+              renderOrder={3}
+            >
+              <planeGeometry args={[2.25, 0.18]} />
+              <meshPhysicalMaterial
+                map={tapeTexture}
+                clearcoat={0.2}
+                clearcoatRoughness={0.2}
+                metalness={0.08}
+                roughness={0.3}
+                toneMapped={false}
+              />
+            </mesh>
+
+            {/* Back strips echo the supplied back-side layout. */}
+            <mesh
+              position={[0.66, 0.31, -0.115]}
+              rotation={[0, Math.PI, THREE.MathUtils.degToRad(24)]}
+              raycast={() => null}
+              renderOrder={3}
+            >
+              <planeGeometry args={[2.75, 0.19]} />
+              <meshPhysicalMaterial
+                map={tapeTexture}
+                clearcoat={0.22}
+                clearcoatRoughness={0.18}
+                metalness={0.08}
+                roughness={0.28}
+                toneMapped={false}
+              />
+            </mesh>
+            <mesh
+              position={[-0.95, -0.34, -0.115]}
+              rotation={[0, Math.PI, THREE.MathUtils.degToRad(24)]}
+              raycast={() => null}
+              renderOrder={3}
+            >
+              <planeGeometry args={[2.15, 0.18]} />
+              <meshPhysicalMaterial
+                map={tapeTexture}
+                clearcoat={0.2}
+                clearcoatRoughness={0.2}
+                metalness={0.08}
+                roughness={0.3}
+                toneMapped={false}
+              />
+            </mesh>
+          </>
+        )}
       </group>
     </group>
   );
