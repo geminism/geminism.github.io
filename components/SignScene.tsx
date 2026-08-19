@@ -405,6 +405,14 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   // Shared tape texture is cached by drei; it is only rendered on the
   // unfinished “Other Design” plate below.
   const tapeTexture = useTexture("/signs/other-tape.png");
+  const tapeStripeTexture = useMemo(() => {
+    const stripe = tapeTexture.clone();
+    stripe.wrapS = THREE.ClampToEdgeWrapping;
+    stripe.repeat.set(0.18, 1);
+    stripe.offset.set(0, 0);
+    stripe.needsUpdate = true;
+    return stripe;
+  }, [tapeTexture]);
   const signRef = useRef<THREE.Group>(null);
   // Keep every plate on the same bounding-box rhythm. The triangular plate's
   // sloped edge sits farther from the pole at mid-height, so only its arm needs
@@ -434,9 +442,14 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
     texture.anisotropy = 8;
     tapeTexture.colorSpace = THREE.SRGBColorSpace;
     tapeTexture.anisotropy = 8;
+    tapeStripeTexture.colorSpace = THREE.SRGBColorSpace;
+    tapeStripeTexture.anisotropy = 8;
     texture.needsUpdate = true;
     tapeTexture.needsUpdate = true;
-  }, [texture, tapeTexture]);
+    tapeStripeTexture.needsUpdate = true;
+  }, [texture, tapeTexture, tapeStripeTexture]);
+
+  useEffect(() => () => tapeStripeTexture.dispose(), [tapeStripeTexture]);
 
   useFrame((_, delta) => {
     if (!signRef.current) return;
@@ -496,73 +509,93 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
         </mesh>
         {config.id === "other" && (
           <>
-            {/* Front strips: slightly translucent, softly reflective vinyl tape. */}
+            {/* Front: the wide descending band and steep crossing band follow
+                the supplied front mockup and deliberately extend past the plate. */}
             <mesh
-              position={[0.82, 0.42, 0.145]}
-              rotation={[0, 0, THREE.MathUtils.degToRad(-24)]}
+              position={[0.55, 0.38, 0.155]}
+              rotation={[0, 0, THREE.MathUtils.degToRad(-27)]}
               raycast={() => null}
-              renderOrder={3}
+              renderOrder={4}
             >
-              <planeGeometry args={[2.95, 0.19]} />
+              <planeGeometry args={[3.45, 0.34]} />
               <meshPhysicalMaterial
                 map={tapeTexture}
-                clearcoat={0.22}
-                clearcoatRoughness={0.18}
-                metalness={0.08}
-                roughness={0.28}
+                clearcoat={0.18}
+                clearcoatRoughness={0.24}
+                metalness={0.05}
+                roughness={0.32}
                 toneMapped={false}
               />
             </mesh>
             <mesh
-              position={[-0.9, -0.32, 0.145]}
-              rotation={[0, 0, THREE.MathUtils.degToRad(-24)]}
+              position={[1.25, 0.28, 0.15]}
+              rotation={[0, 0, THREE.MathUtils.degToRad(56)]}
               raycast={() => null}
               renderOrder={3}
             >
-              <planeGeometry args={[2.25, 0.18]} />
+              <planeGeometry args={[2.7, 0.32]} />
               <meshPhysicalMaterial
                 map={tapeTexture}
-                clearcoat={0.2}
-                clearcoatRoughness={0.2}
-                metalness={0.08}
-                roughness={0.3}
+                clearcoat={0.18}
+                clearcoatRoughness={0.24}
+                metalness={0.05}
+                roughness={0.32}
                 toneMapped={false}
               />
             </mesh>
 
-            {/* Back strips echo the supplied back-side layout. */}
-            <mesh
-              position={[0.66, 0.31, -0.115]}
-              rotation={[0, Math.PI, THREE.MathUtils.degToRad(24)]}
-              raycast={() => null}
-              renderOrder={3}
-            >
-              <planeGeometry args={[2.75, 0.19]} />
-              <meshPhysicalMaterial
-                map={tapeTexture}
-                clearcoat={0.22}
-                clearcoatRoughness={0.18}
-                metalness={0.08}
-                roughness={0.28}
-                toneMapped={false}
-              />
-            </mesh>
-            <mesh
-              position={[-0.95, -0.34, -0.115]}
-              rotation={[0, Math.PI, THREE.MathUtils.degToRad(24)]}
-              raycast={() => null}
-              renderOrder={3}
-            >
-              <planeGeometry args={[2.15, 0.18]} />
-              <meshPhysicalMaterial
-                map={tapeTexture}
-                clearcoat={0.2}
-                clearcoatRoughness={0.2}
-                metalness={0.08}
-                roughness={0.3}
-                toneMapped={false}
-              />
-            </mesh>
+            {/* Back: one long left-hand band plus two stripe-only pieces,
+                matching the supplied back mockup. */}
+            <group position={[0, 0, -0.115]} rotation={[0, Math.PI, 0]}>
+              <mesh
+                position={[-1.16, 0.08, 0]}
+                rotation={[0, 0, THREE.MathUtils.degToRad(-46)]}
+                raycast={() => null}
+                renderOrder={3}
+              >
+                <planeGeometry args={[3.45, 0.35]} />
+                <meshPhysicalMaterial
+                  map={tapeTexture}
+                  clearcoat={0.18}
+                  clearcoatRoughness={0.24}
+                  metalness={0.05}
+                  roughness={0.32}
+                  toneMapped={false}
+                />
+              </mesh>
+              <mesh
+                position={[0.78, 0.53, 0.004]}
+                rotation={[0, 0, THREE.MathUtils.degToRad(18)]}
+                raycast={() => null}
+                renderOrder={4}
+              >
+                <planeGeometry args={[2.35, 0.3]} />
+                <meshPhysicalMaterial
+                  map={tapeStripeTexture}
+                  clearcoat={0.16}
+                  clearcoatRoughness={0.26}
+                  metalness={0.04}
+                  roughness={0.34}
+                  toneMapped={false}
+                />
+              </mesh>
+              <mesh
+                position={[-1.48, -0.47, 0.004]}
+                rotation={[0, 0, THREE.MathUtils.degToRad(25)]}
+                raycast={() => null}
+                renderOrder={4}
+              >
+                <planeGeometry args={[1.35, 0.27]} />
+                <meshPhysicalMaterial
+                  map={tapeStripeTexture}
+                  clearcoat={0.16}
+                  clearcoatRoughness={0.26}
+                  metalness={0.04}
+                  roughness={0.34}
+                  toneMapped={false}
+                />
+              </mesh>
+            </group>
           </>
         )}
       </group>
