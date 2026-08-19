@@ -6,6 +6,8 @@ import { ContactShadows, Html, RoundedBox, useTexture } from "@react-three/drei"
 import * as THREE from "three";
 import { HomeTargetId, sections, SectionId } from "@/lib/sections";
 
+export const HOME_INITIAL_ROTATION = -Math.PI / 2;
+
 type SceneProps = {
   activeId: HomeTargetId | null;
   focusId: HomeTargetId | null;
@@ -281,7 +283,11 @@ function PortfolioTitleSign() {
   );
 
   return (
-    <group position={[0, 4.85 + TITLE_Y_OFFSET, 0.2]} scale={SIGN_SCALE}>
+    <group
+      position={[0, 4.85 + TITLE_Y_OFFSET, 0.2]}
+      rotation={[0, -HOME_INITIAL_ROTATION, 0]}
+      scale={SIGN_SCALE}
+    >
       <mesh position={[0, -0.05, -0.16]}>
         <boxGeometry args={[5.4, 0.07, 0.1]} />
         <meshStandardMaterial color="#4e5250" metalness={0.76} roughness={0.28} />
@@ -719,7 +725,7 @@ function PoleScene(props: SceneProps) {
       <ambientLight intensity={1.7} />
       <directionalLight position={[4, 7, 6]} intensity={2.8} color="#ffffff" />
       <directionalLight position={[-5, 1, 3]} intensity={0.8} color="#e6eef4" />
-      <group ref={rootRef}>
+      <group ref={rootRef} rotation={[0, props.rotationTarget.current, 0]}>
         <mesh position={[0, 0.4, 0]}>
           <cylinderGeometry args={[0.145, 0.175, 21.5, 24]} />
           <meshStandardMaterial color="#111111" roughness={0.42} metalness={0.58} />

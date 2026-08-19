@@ -4,15 +4,15 @@ import { Suspense, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
-import { SignScene } from "./SignScene";
+import { HOME_INITIAL_ROTATION, SignScene } from "./SignScene";
 import { HomeTargetId, sections } from "@/lib/sections";
 
 export function PortfolioHome() {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
   const curtainRef = useRef<HTMLDivElement>(null);
-  const rotationTarget = useRef(0);
-  const rotationCurrent = useRef(0);
+  const rotationTarget = useRef(HOME_INITIAL_ROTATION);
+  const rotationCurrent = useRef(HOME_INITIAL_ROTATION);
   const dragVelocity = useRef(0);
   const didDrag = useRef(false);
   const pointerStart = useRef<{ x: number; lastX: number } | null>(null);
