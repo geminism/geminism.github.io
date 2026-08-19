@@ -7,8 +7,6 @@ import { gsap } from "gsap";
 import { SignScene } from "./SignScene";
 import { HomeTargetId, sections } from "@/lib/sections";
 
-const cloudTitle = "PORTFOLIO".split("");
-
 export function PortfolioHome() {
   const router = useRouter();
   const shellRef = useRef<HTMLDivElement>(null);
@@ -90,18 +88,6 @@ export function PortfolioHome() {
       }}
       onPointerCancel={() => { pointerStart.current = null; }}
     >
-      <div className="home-sky" aria-hidden="true">
-        <div className="home-sky-haze home-sky-haze-a" />
-        <div className="home-sky-haze home-sky-haze-b" />
-        <div className="home-cloud-title">
-          {cloudTitle.map((letter, index) => (
-            <span key={`${letter}-${index}`} data-letter={letter}>
-              {letter}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <div ref={shellRef} className="scene-shell">
         <Suspense fallback={<div className="loading-state">Loading spatial index</div>}>
           <SignScene

@@ -761,7 +761,7 @@ function PoleScene(props: SceneProps) {
         />
         <PortfolioTitleSign />
       </group>
-      <ContactShadows position={[0, -10.2, 0]} opacity={0.22} scale={15} blur={2.8} far={7} />
+      <ContactShadows position={[0, -10.2, 0]} opacity={0.22} scale={15} blur={2.8} far={7} resolution={256} />
       <CameraRig
         activeId={props.activeId}
         focusId={props.focusId}
@@ -776,8 +776,8 @@ export function SignScene(props: SceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 2.45, 18.6], fov: 42, near: 0.1, far: 60 }}
-      dpr={[1, 1.6]}
-      gl={{ antialias: true, alpha: true }}
+      dpr={[1, 1.4]}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       onPointerMissed={() => props.onExitFocus()}
     >
       <PoleScene {...props} />
