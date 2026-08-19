@@ -1024,10 +1024,19 @@ button {
 }
 
 .about-role {
-  margin: 16px 0 0;
+  max-width: 610px;
+  margin: 22px 0 0;
   color: rgba(30, 30, 29, 0.65);
-  font-size: clamp(15px, 1.5vw, 21px);
+  font-size: clamp(15px, 1.35vw, 19px);
   letter-spacing: 0.015em;
+  line-height: 1.5;
+}
+
+.about-name-zh {
+  margin: 14px 0 0;
+  color: rgba(30, 30, 29, 0.82);
+  font-size: 17px;
+  letter-spacing: 0.34em;
 }
 
 .about-copy-rule {
@@ -1037,28 +1046,8 @@ button {
   background: rgba(30, 30, 29, 0.2);
 }
 
-.about-bilingual-copy {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(28px, 4.2vw, 68px);
-}
-
-.about-bilingual-copy p {
-  margin: 0 0 18px;
-  color: rgba(30, 30, 29, 0.78);
-  font-size: 14.5px;
-  line-height: 1.75;
-}
-
-.about-bilingual-copy [lang="zh-CN"] p { line-height: 1.86; }
-
-.about-experience {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(30, 30, 29, 0.2);
-}
-
-.about-experience h2 {
+.about-profile-section h2,
+.about-currently h2 {
   margin: 0 0 12px;
   font-size: 10px;
   font-weight: 400;
@@ -1066,36 +1055,109 @@ button {
   text-transform: uppercase;
 }
 
-.about-experience-row {
+.about-education-list {
+  border-top: 1px solid rgba(30, 30, 29, 0.2);
+}
+
+.about-education-item {
   display: grid;
-  grid-template-columns: minmax(78px, 0.65fr) minmax(130px, 1fr) minmax(190px, 1.55fr);
-  gap: 18px;
-  padding: 10px 0;
+  grid-template-columns: minmax(190px, 0.95fr) minmax(260px, 1.25fr);
+  gap: clamp(20px, 3.2vw, 52px);
+  padding: 17px 0 18px;
   border-bottom: 1px solid rgba(30, 30, 29, 0.11);
 }
 
-.about-experience-row time,
-.about-experience-row p {
+.about-education-item h3,
+.about-education-item p {
   margin: 0;
   color: rgba(30, 30, 29, 0.7);
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.7;
 }
 
-.about-experience-row time { color: rgba(30, 30, 29, 0.48); }
+.about-education-item h3 {
+  color: rgba(30, 30, 29, 0.88);
+  line-height: 1.45;
+}
 
-.about-copy-note {
-  margin: 14px 0 0;
-  color: rgba(30, 30, 29, 0.38);
-  font-size: 9px;
-  letter-spacing: 0.04em;
+.about-education-item p[lang="zh-CN"] {
+  color: rgba(30, 30, 29, 0.54);
+  line-height: 1.86;
+}
+
+.about-law-note {
+  position: relative;
+  width: fit-content;
+  max-width: calc(100% - 40px);
+  margin: 23px 0 31px clamp(46px, 9vw, 145px);
+  color: #ef3e35;
+  font-family: "Bradley Hand", "Comic Sans MS", "KaiTi", "STKaiti", cursive;
+  font-size: clamp(18px, 1.65vw, 24px);
+  line-height: 1.2;
+  transform: rotate(-2.4deg);
+}
+
+.about-law-note::before {
+  content: "↳";
+  position: absolute;
+  top: -10px;
+  left: -34px;
+  font-size: 32px;
+  font-weight: 400;
+  transform: rotate(8deg);
+}
+
+.about-law-note::after {
+  content: "";
+  position: absolute;
+  right: 3%;
+  bottom: -8px;
+  width: 92%;
+  height: 7px;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.8;
+  transform: rotate(0.8deg) skewX(-8deg);
+}
+
+.about-law-note span { display: block; }
+
+.about-law-note span[lang="zh-CN"] {
+  margin-top: 3px;
+  font-family: "KaiTi", "STKaiti", "FangSong", cursive;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+}
+
+.about-currently {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.95fr) minmax(260px, 1.25fr);
+  gap: clamp(20px, 3.2vw, 52px);
+  padding-top: 20px;
+  border-top: 1px solid rgba(30, 30, 29, 0.2);
+}
+
+.about-currently h2 { margin-top: 4px; }
+
+.about-currently p {
+  margin: 0;
+  color: rgba(30, 30, 29, 0.78);
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.about-currently p[lang="zh-CN"] {
+  color: rgba(30, 30, 29, 0.62);
+  line-height: 1.86;
 }
 
 @media (max-width: 980px) {
   .about-layout { grid-template-columns: minmax(310px, 39%) minmax(0, 61%); }
   .about-hanging-assembly { width: min(29vw, 340px); min-width: 255px; }
   .about-copy { padding-right: 34px; padding-left: 34px; }
-  .about-bilingual-copy { grid-template-columns: 1fr; gap: 0; }
+  .about-education-item,
+  .about-currently { grid-template-columns: 1fr; gap: 7px; }
 }
 
 @media (max-width: 760px) {
@@ -1152,12 +1214,15 @@ button {
 
   .about-heading h1 { font-size: clamp(48px, 15vw, 72px); }
   .about-copy-rule { margin: 26px 0 21px; }
-  .about-bilingual-copy { grid-template-columns: 1fr; gap: 6px; }
-  .about-bilingual-copy p { margin-bottom: 15px; font-size: 12.5px; line-height: 1.7; }
-  .about-bilingual-copy [lang="zh-CN"] p { line-height: 1.76; }
-  .about-experience { margin-top: 24px; }
-  .about-experience-row { grid-template-columns: 72px 1fr; gap: 4px 14px; }
-  .about-experience-row p:last-child { grid-column: 2; }
+  .about-name-zh { font-size: 14px; }
+  .about-role { margin-top: 17px; font-size: 13px; }
+  .about-education-item { grid-template-columns: 1fr; gap: 5px; padding: 14px 0; }
+  .about-education-item h3,
+  .about-education-item p,
+  .about-currently p { font-size: 12.5px; }
+  .about-law-note { max-width: calc(100% - 30px); margin: 21px 0 29px 32px; font-size: 18px; }
+  .about-law-note::before { left: -27px; font-size: 27px; }
+  .about-currently { grid-template-columns: 1fr; gap: 5px; padding-top: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

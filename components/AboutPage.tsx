@@ -51,52 +51,46 @@ export function AboutPage() {
         <article className="about-copy">
           <header className="about-heading">
             <p className="about-kicker">About / 个人简介</p>
-            <h1>Kong Lingjie</h1>
-            <p className="about-role">Graphic Designer</p>
+            <h1>GEMINI KONG</h1>
+            <p className="about-name-zh" lang="zh-CN">孔 令杰</p>
+            <p className="about-role">
+              Graphic designer working across branding, packaging and visual communication.
+            </p>
           </header>
 
           <div className="about-copy-rule" />
 
-          <div className="about-bilingual-copy">
-            <section lang="zh-CN">
-              <p>
-                我是一名平面设计师，关注品牌识别、包装、编辑与活动视觉。我的工作常从日常环境中的标识、材料和偶然秩序出发，在清晰的信息结构里保留一点幽默、陌生感与不完美。
-              </p>
-              <p>
-                我喜欢让平面设计走出纸面，通过物件、空间与动态交互建立更直接的观看体验。这个网站既是一份作品档案，也是一组仍在生长的路牌。
-              </p>
-            </section>
-
-            <section lang="en">
-              <p>
-                I am a graphic designer working across visual identity, packaging, editorial and event design. My practice often begins with signs, materials and accidental orders found in everyday environments.
-              </p>
-              <p>
-                I am interested in taking graphic design beyond the page, using objects, space and motion to build direct viewing experiences. This website is both an archive and a sign system still in progress.
-              </p>
-            </section>
-          </div>
-
-          <section className="about-experience" aria-labelledby="about-experience-title">
-            <h2 id="about-experience-title">Selected experience / 个人经历</h2>
-            <div className="about-experience-list">
-              <div className="about-experience-row">
-                <time>2025—Now</time>
-                <p>Independent practice</p>
-                <p>Visual identity, editorial and spatial graphics</p>
-              </div>
-              <div className="about-experience-row">
-                <time>2024</time>
-                <p>Selected projects</p>
-                <p>Brand, packaging and event design</p>
-              </div>
-              <div className="about-experience-row">
-                <time>2023</time>
-                <p>Design studies</p>
-                <p>Research-led visual communication</p>
-              </div>
+          <section className="about-profile-section" aria-labelledby="about-education-title">
+            <h2 id="about-education-title">EDUCATION / 教育背景</h2>
+            <div className="about-education-list">
+              <article className="about-education-item">
+                <h3>University of Leeds</h3>
+                <div>
+                  <p>MA Culture, Creativity and Entrepreneurship</p>
+                  <p lang="zh-CN">利兹大学 · 文化、创意与创业硕士</p>
+                </div>
+              </article>
+              <article className="about-education-item">
+                <h3>Central University of Finance and Economics</h3>
+                <div>
+                  <p>LLB Law</p>
+                  <p lang="zh-CN">中央财经大学 · 法学学士</p>
+                </div>
+              </article>
             </div>
-            <p className="about-copy-note">Example copy — to be replaced with final biography and experience.</p>
+
+            <aside className="about-law-note" aria-label="关于法律专业的手写注释">
+              <span>yeah, I used to study law.</span>
+              <span lang="zh-CN">对，我就是从法律转行过来的。</span>
+            </aside>
+          </section>
+
+          <section className="about-currently" aria-labelledby="about-currently-title">
+            <h2 id="about-currently-title">CURRENTLY / 最近在做什么</h2>
+            <div>
+              <p>Trying to make simple things less boring.</p>
+              <p lang="zh-CN">努力避免想法滑向无聊。</p>
+            </div>
           </section>
         </article>
       </div>
