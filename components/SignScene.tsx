@@ -324,22 +324,54 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
   const shape = new THREE.Shape();
   const w = width / 2;
   const h = height / 2;
-  if (kind === "triangle") {
-    shape.moveTo(0, h);
-    shape.lineTo(w, -h);
-    shape.lineTo(-w, -h);
+
+  const roundedPolygon = (points: Array<{ x: number; y: number }>, radius: number) => {
+    const insetPoints = points.map((point, index) => {
+      const previous = points[(index + points.length - 1) % points.length];
+      const next = points[(index + 1) % points.length];
+      const previousLength = Math.hypot(previous.x - point.x, previous.y - point.y);
+      const nextLength = Math.hypot(next.x - point.x, next.y - point.y);
+      const inset = Math.min(radius, previousLength * 0.32, nextLength * 0.32);
+      return {
+        before: {
+          x: point.x + ((previous.x - point.x) / previousLength) * inset,
+          y: point.y + ((previous.y - point.y) / previousLength) * inset,
+        },
+        after: {
+          x: point.x + ((next.x - point.x) / nextLength) * inset,
+          y: point.y + ((next.y - point.y) / nextLength) * inset,
+        },
+        point,
+      };
+    });
+
+    shape.moveTo(insetPoints[0].before.x, insetPoints[0].before.y);
+    insetPoints.forEach((item, index) => {
+      shape.quadraticCurveTo(item.point.x, item.point.y, item.after.x, item.after.y);
+      const next = insetPoints[(index + 1) % insetPoints.length];
+      shape.lineTo(next.before.x, next.before.y);
+    });
     shape.closePath();
+  };
+
+  if (kind === "triangle") {
+    roundedPolygon([
+      { x: 0, y: h },
+      { x: w, y: -h },
+      { x: -w, y: -h },
+    ], Math.min(width, height) * 0.085);
   } else if (kind === "octagon") {
     const c = Math.min(width, height) * 0.24;
-    shape.moveTo(-w + c, h);
-    shape.lineTo(w - c, h);
-    shape.lineTo(w, h - c);
-    shape.lineTo(w, -h + c);
-    shape.lineTo(w - c, -h);
-    shape.lineTo(-w + c, -h);
-    shape.lineTo(-w, -h + c);
-    shape.lineTo(-w, h - c);
-    shape.closePath();
+    roundedPolygon([
+      { x: -w + c, y: h },
+      { x: w - c, y: h },
+      { x: w, y: h - c },
+      { x: w, y: -h + c },
+      { x: w - c, y: -h },
+      { x: -w + c, y: -h },
+      { x: -w, y: -h + c },
+      { x: -w, y: h - c },
+    ], Math.min(width, height) * 0.11);
   } else {
     const radius = Math.min(width, height) * 0.1;
     shape.moveTo(-w + radius, -h);
@@ -370,7 +402,11 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   // sloped edge sits farther from the pole at mid-height, so only its arm needs
   // to extend; moving the plate itself would make it intersect the pole.
   const connectorLength = config.shape === "triangle" ? config.arm + config.width / 4 : config.arm;
-  const shape = useMemo(() => makeShape(config.shape, config.width, config.height), [config]);
+  const metalPadding = config.id === "about" || config.id === "event" ? 0.065 : 0;
+  const shape = useMemo(
+    () => makeShape(config.shape, config.width + metalPadding * 2, config.height + metalPadding * 2),
+    [config, metalPadding],
+  );
   const geometry = useMemo(
     () => new THREE.ExtrudeGeometry(shape, { depth: 0.075, bevelEnabled: true, bevelSize: 0.022, bevelThickness: 0.018, bevelSegments: 2 }),
     [shape],
