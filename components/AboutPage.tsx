@@ -17,20 +17,12 @@ export function AboutPage() {
         <aside className="about-svg-installation" aria-label="个人照片路牌装置">
           <span className="about-svg-pole" aria-hidden="true" />
 
-          <div className="about-svg-photo" aria-label="个人照片占位">
-            <span>照片</span>
+          <div className="about-svg-photo">
+            <img src="/about/photo.png" alt="Gemini Kong 个人照片" />
           </div>
+          <span className="about-svg-collar" aria-hidden="true" />
 
-          <div className="about-svg-warning" aria-label="三角形装饰路牌">
-            <span className="about-svg-warning-red" aria-hidden="true">
-              <span className="about-svg-warning-white">
-                <i className="about-svg-exclamation" />
-                <i className="about-svg-eyes" />
-              </span>
-            </span>
-          </div>
-
-          <div className="about-svg-cone" aria-label="橙色路障" />
+          <img className="about-svg-cone" src="/about/traffic-cone.png" alt="橙白相间的交通路障" />
         </aside>
       </div>
     </main>
