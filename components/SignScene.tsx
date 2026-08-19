@@ -74,7 +74,7 @@ const contactSignals: ContactSignal[] = [
     id: "phone",
     color: "#ef2f26",
     y: 0.65,
-    textColor: "#ef2f26",
+    textColor: "#ff2f24",
     lines: [
       { label: "+44 0 7486 352980", copyValue: "+44 0 7486 352980" },
       { label: "+86 188 1112 5305", copyValue: "+86 188 1112 5305" },
@@ -84,7 +84,7 @@ const contactSignals: ContactSignal[] = [
     id: "linkedin",
     color: "#f3bd21",
     y: 0,
-    textColor: "#b18400",
+    textColor: "#f2b400",
     lines: [
       { label: "linkedin.com/in/lingjie-kong", copyValue: "https://www.linkedin.com/in/lingjie-kong/" },
     ],
@@ -93,7 +93,7 @@ const contactSignals: ContactSignal[] = [
     id: "email",
     color: "#35b95a",
     y: -0.65,
-    textColor: "#24964a",
+    textColor: "#18c95a",
     lines: [
       { label: "hello@lingjiekong.design", copyValue: "hello@lingjiekong.design" },
     ],
