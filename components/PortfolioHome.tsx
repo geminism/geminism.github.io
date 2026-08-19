@@ -95,10 +95,7 @@ export function PortfolioHome() {
         <div className="home-sky-haze home-sky-haze-b" />
         <div className="home-cloud-title">
           {cloudTitle.map((letter, index) => (
-            <span
-              key={`${letter}-${index}`}
-              style={{ "--cloud-letter-index": index } as React.CSSProperties}
-            >
+            <span key={`${letter}-${index}`}>
               {letter}
             </span>
           ))}
