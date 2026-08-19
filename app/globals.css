@@ -41,7 +41,7 @@ button {
   min-height: 560px;
   overflow: hidden;
   background: #fff;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 .scene-shell {
@@ -778,13 +778,33 @@ button {
   z-index: 2;
   inset: 0;
   overflow: visible;
-  pointer-events: none;
+  pointer-events: auto;
+  touch-action: none;
+  cursor: grab;
+}
+
+.about-svg-installation.is-dragging {
+  cursor: grabbing;
+}
+
+.about-svg-scene {
+  position: absolute;
+  inset: 0;
+  transform-origin: 21.36% 78%;
+  transform-style: preserve-3d;
+  transform: perspective(1500px) rotateX(30deg) rotateY(var(--scene-rotation, 0deg));
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+
+.about-svg-installation.is-dragging .about-svg-scene {
+  transition: none;
 }
 
 .about-svg-pole {
   position: absolute;
   z-index: 1;
-  top: 43.2%;
+  top: 34.5%;
   bottom: 3.4%;
   left: 20.7%;
   width: 1.32%;
@@ -798,9 +818,9 @@ button {
   position: absolute;
   z-index: 3;
   top: 10.5%;
-  left: 8.3%;
+  left: 5.3%;
   display: grid;
-  width: 25.8%;
+  width: 20.64%;
   aspect-ratio: 1;
   padding: 0.55vw;
   place-items: center;
@@ -818,6 +838,19 @@ button {
   object-fit: cover;
   object-position: center;
   user-select: none;
+}
+
+.about-svg-photo-arm {
+  position: absolute;
+  z-index: 2;
+  top: 37.2%;
+  left: 17.8%;
+  width: 3.8%;
+  height: 0.55%;
+  border: 0.05vw solid #080908;
+  border-radius: 0.24vw;
+  background: linear-gradient(90deg, #353735 0%, #070807 48%, #414442 100%);
+  box-shadow: 0 0.12vw 0.16vw rgba(0, 0, 0, 0.2), inset 0 0.04vw 0.04vw rgba(255, 255, 255, 0.18);
 }
 
 .about-svg-collar {
