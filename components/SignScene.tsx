@@ -361,7 +361,10 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
       { x: -w, y: -h },
     ], Math.min(width, height) * 0.055);
   } else if (kind === "octagon") {
-    const c = Math.min(width, height) * 0.24;
+    // For a square bounding box, this cut length makes the four horizontal /
+    // vertical edges and four diagonal edges the same length: a true regular
+    // octagon rather than a shallow chamfered rectangle.
+    const c = Math.min(width, height) / (2 + Math.SQRT2);
     roundedPolygon([
       { x: -w + c, y: h },
       { x: w - c, y: h },
@@ -371,10 +374,9 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
       { x: -w + c, y: -h },
       { x: -w, y: -h + c },
       { x: -w, y: h - c },
-    // The artwork already contains a chamfered, softly finished perimeter.
-    // Keep this radius small so the metal reads as a true offset path instead
-    // of turning the sign into a pill-like octagon.
-    ], Math.min(width, height) * 0.035);
+    // Use one shared radius at every vertex so the outer corners echo the
+    // artwork's softened octagon without becoming overly round.
+    ], Math.min(width, height) * 0.045);
   } else {
     const radius = Math.min(width, height) * 0.1;
     shape.moveTo(-w + radius, -h);
