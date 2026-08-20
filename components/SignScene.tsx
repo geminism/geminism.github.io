@@ -397,13 +397,14 @@ type TapeSpec = {
   length: number;
   width: number;
   angle: number;
+  layer?: number;
 };
 
 type TapePoint = { x: number; y: number; z?: number };
 
 const OTHER_FRONT_TAPES: TapeSpec[] = [
-  { center: [0.55, 0.38], length: 3.45, width: 0.34, angle: THREE.MathUtils.degToRad(-27) },
-  { center: [1.25, 0.28], length: 2.7, width: 0.32, angle: THREE.MathUtils.degToRad(56) },
+  { center: [0.55, 0.38], length: 3.45, width: 0.34, angle: THREE.MathUtils.degToRad(-27), layer: 0 },
+  { center: [1.25, 0.28], length: 2.7, width: 0.32, angle: THREE.MathUtils.degToRad(56), layer: 1 },
 ];
 
 const OTHER_BACK_TAPES: TapeSpec[] = [
@@ -411,6 +412,12 @@ const OTHER_BACK_TAPES: TapeSpec[] = [
   { center: [0.78, 0.53], length: 2.35, width: 0.3, angle: THREE.MathUtils.degToRad(18) },
   { center: [-1.48, -0.47], length: 1.35, width: 0.27, angle: THREE.MathUtils.degToRad(25) },
 ];
+
+// The artwork plane sits at z=0.09. Keep tape only a few thousandths above it
+// so it reads as adhered to the sign rather than hovering over the face. The
+// side fold spans the actual thin sign body and stops at its rear surface.
+const TAPE_FRONT_Z = 0.096;
+const TAPE_BACK_Z = -0.044;
 
 function tapeCorners(spec: TapeSpec): TapePoint[] {
   const [cx, cy] = spec.center;
@@ -511,7 +518,7 @@ function makeTapeWrapGeometry(spec: TapeSpec, signWidth: number, signHeight: num
   const halfHeight = signHeight / 2;
   const positions: number[] = [];
   const uvs: number[] = [];
-  const epsilon = 0.006;
+  const epsilon = 0.0015;
   const addQuad = (points: TapePoint[]) => {
     const start = positions.length / 3;
     points.forEach((point) => {
@@ -579,9 +586,10 @@ function WrappedTape({ spec, map, signWidth, signHeight, showFront = true, showB
   showBack?: boolean;
   showWrap?: boolean;
 }) {
-  const frontGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, 0.14), [spec, signWidth, signHeight]);
-  const backGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, -0.105), [spec, signWidth, signHeight]);
-  const wrapGeometry = useMemo(() => makeTapeWrapGeometry(spec, signWidth, signHeight, 0.14, -0.105), [spec, signWidth, signHeight]);
+  const frontZ = TAPE_FRONT_Z + (spec.layer ?? 0) * 0.0015;
+  const frontGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, frontZ), [spec, signWidth, signHeight, frontZ]);
+  const backGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, TAPE_BACK_Z), [spec, signWidth, signHeight]);
+  const wrapGeometry = useMemo(() => makeTapeWrapGeometry(spec, signWidth, signHeight, frontZ, TAPE_BACK_Z), [spec, signWidth, signHeight, frontZ]);
   return (
     <>
       {showFront && frontGeometry && <mesh geometry={frontGeometry} raycast={() => null} renderOrder={4}><TapeMaterial map={map} /></mesh>}
