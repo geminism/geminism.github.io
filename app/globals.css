@@ -686,6 +686,10 @@ button {
   cursor: copy;
 }
 
+.traffic-contact-line.is-link {
+  cursor: pointer;
+}
+
 .traffic-contact-line:hover,
 .traffic-contact-line:focus-visible {
   filter: brightness(1.08) saturate(1.12);

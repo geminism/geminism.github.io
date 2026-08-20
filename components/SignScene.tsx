@@ -66,7 +66,7 @@ type ContactSignal = {
   color: string;
   y: number;
   textColor: string;
-  lines: Array<{ label: string; copyValue: string }>;
+  lines: Array<{ label: string; copyValue?: string; href?: string }>;
 };
 
 const contactSignals: ContactSignal[] = [
@@ -86,7 +86,10 @@ const contactSignals: ContactSignal[] = [
     y: 0,
     textColor: "#f2b400",
     lines: [
-      { label: "linkedin.com/in/lingjie-kong", copyValue: "https://www.linkedin.com/in/lingjie-kong/" },
+      {
+        label: "linkedin.com/in/Gemini-Kon-78749239a",
+        href: "https://www.linkedin.com/in/Gemini-Kon-78749239a",
+      },
     ],
   },
   {
@@ -946,19 +949,29 @@ function ContactTrafficLight({ focused, onSelect, didDrag }: {
                     <div className="traffic-contact-list">
                       {signal.lines.map((line) => (
                         <button
-                          key={line.copyValue}
+                          key={line.href ?? line.copyValue}
                           type="button"
-                          className="traffic-contact-line"
-                          onClick={() => copyContact(line.copyValue)}
-                          aria-label={`Copy ${signal.id} ${line.label}`}
+                          className={`traffic-contact-line${line.href ? " is-link" : ""}`}
+                          onClick={() => {
+                            if (line.href) {
+                              window.open(line.href, "_blank", "noopener,noreferrer");
+                              return;
+                            }
+                            if (line.copyValue) copyContact(line.copyValue);
+                          }}
+                          aria-label={line.href
+                            ? `Open ${signal.id} ${line.label}`
+                            : `Copy ${signal.id} ${line.label}`}
                         >
                           <span>{line.label}</span>
-                          <span
-                            className={`traffic-contact-status${copiedContact === line.copyValue ? " is-visible" : ""}`}
-                            aria-hidden="true"
-                          >
-                            Copied
-                          </span>
+                          {!line.href && (
+                            <span
+                              className={`traffic-contact-status${copiedContact === line.copyValue ? " is-visible" : ""}`}
+                              aria-hidden="true"
+                            >
+                              Copied
+                            </span>
+                          )}
                         </button>
                       ))}
                     </div>
