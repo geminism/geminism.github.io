@@ -95,7 +95,7 @@ const contactSignals: ContactSignal[] = [
     y: -0.65,
     textColor: "#18c95a",
     lines: [
-      { label: "hello@lingjiekong.design", copyValue: "hello@lingjiekong.design" },
+      { label: "gemini18811125305@outlook.com", copyValue: "gemini18811125305@outlook.com" },
     ],
   },
 ];
