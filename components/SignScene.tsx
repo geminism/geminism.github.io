@@ -407,9 +407,7 @@ const OTHER_FRONT_TAPES: TapeSpec[] = [
   { center: [1.25, 0.28], length: 2.7, width: 0.32, angle: THREE.MathUtils.degToRad(56), layer: 1 },
 ];
 
-const OTHER_BACK_TAPES: TapeSpec[] = [
-  { center: [-1.16, 0.08], length: 3.45, width: 0.35, angle: THREE.MathUtils.degToRad(-46), layer: 0 },
-  { center: [0.78, 0.53], length: 2.35, width: 0.3, angle: THREE.MathUtils.degToRad(18), layer: 1 },
+const OTHER_BACK_EXTRA_TAPES: TapeSpec[] = [
   { center: [-1.48, -0.47], length: 1.35, width: 0.27, angle: THREE.MathUtils.degToRad(25), layer: 2 },
 ];
 
@@ -517,6 +515,13 @@ function boundarySpan(corners: TapePoint[], axis: "x" | "y", bound: number) {
   return [Math.min(...values), Math.max(...values)] as const;
 }
 
+function clampBoundarySpan(span: readonly [number, number] | null, minimum: number, maximum: number) {
+  if (!span) return null;
+  const start = Math.max(span[0], minimum);
+  const end = Math.min(span[1], maximum);
+  return end - start > 0.0001 ? [start, end] as const : null;
+}
+
 function makeTapeWrapGeometry(spec: TapeSpec, signWidth: number, signHeight: number, frontZ: number, backZ: number) {
   const corners = tapeCorners(spec);
   const halfWidth = signWidth / 2;
@@ -538,7 +543,7 @@ function makeTapeWrapGeometry(spec: TapeSpec, signWidth: number, signHeight: num
   const horizontalEdges: Array<[-1 | 1, number]> = [[-1, -halfHeight], [1, halfHeight]];
 
   verticalEdges.forEach(([direction, edge]) => {
-    const span = boundarySpan(corners, "x", edge);
+    const span = clampBoundarySpan(boundarySpan(corners, "x", edge), -halfHeight, halfHeight);
     if (!span) return;
     const [start, end] = span;
     addQuad([
@@ -549,7 +554,7 @@ function makeTapeWrapGeometry(spec: TapeSpec, signWidth: number, signHeight: num
     ]);
   });
   horizontalEdges.forEach(([direction, edge]) => {
-    const span = boundarySpan(corners, "y", edge);
+    const span = clampBoundarySpan(boundarySpan(corners, "y", edge), -halfWidth, halfWidth);
     if (!span) return;
     const [start, end] = span;
     addQuad([
@@ -733,20 +738,29 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
         {config.id === "other" && (
           <>
             {OTHER_FRONT_TAPES.map((spec, index) => (
-              <WrappedTape
-                key={`front-tape-${index}`}
-                spec={spec}
-                map={tapeTexture}
-                signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
-                signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
-                showBack={false}
-              />
+              <group key={`continuous-tape-${index}`}>
+                <WrappedTape
+                  spec={spec}
+                  map={tapeTexture}
+                  signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
+                  signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
+                  showBack={false}
+                />
+                <WrappedTape
+                  spec={spec}
+                  map={index === 0 ? tapeStripeTexture : tapeTexture}
+                  signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
+                  signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
+                  showFront={false}
+                  showWrap={false}
+                />
+              </group>
             ))}
-            {OTHER_BACK_TAPES.map((spec, index) => (
+            {OTHER_BACK_EXTRA_TAPES.map((spec, index) => (
               <WrappedTape
-                key={`back-tape-${index}`}
+                key={`back-extra-tape-${index}`}
                 spec={spec}
-                map={index === 0 ? tapeTexture : tapeStripeTexture}
+                map={tapeStripeTexture}
                 signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
                 signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
                 showFront={false}
