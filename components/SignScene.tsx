@@ -408,16 +408,21 @@ const OTHER_FRONT_TAPES: TapeSpec[] = [
 ];
 
 const OTHER_BACK_TAPES: TapeSpec[] = [
-  { center: [-1.16, 0.08], length: 3.45, width: 0.35, angle: THREE.MathUtils.degToRad(-46) },
-  { center: [0.78, 0.53], length: 2.35, width: 0.3, angle: THREE.MathUtils.degToRad(18) },
-  { center: [-1.48, -0.47], length: 1.35, width: 0.27, angle: THREE.MathUtils.degToRad(25) },
+  { center: [-1.16, 0.08], length: 3.45, width: 0.35, angle: THREE.MathUtils.degToRad(-46), layer: 0 },
+  { center: [0.78, 0.53], length: 2.35, width: 0.3, angle: THREE.MathUtils.degToRad(18), layer: 1 },
+  { center: [-1.48, -0.47], length: 1.35, width: 0.27, angle: THREE.MathUtils.degToRad(25), layer: 2 },
 ];
 
-// The artwork plane sits at z=0.09. Keep tape only a few thousandths above it
-// so it reads as adhered to the sign rather than hovering over the face. The
-// side fold spans the actual thin sign body and stops at its rear surface.
-const TAPE_FRONT_Z = 0.096;
-const TAPE_BACK_Z = -0.044;
+// Extrusion (including bevel) occupies z=-0.0555...0.0555 after centering.
+// These tiny offsets keep the tape adhered to the actual metal surfaces while
+// leaving enough separation for deterministic overlap ordering.
+const OTHER_FACE_Z = 0.057;
+const TAPE_FRONT_Z = 0.0585;
+const TAPE_BACK_Z = -0.057;
+const OTHER_VISIBLE_WIDTH_SCALE = 0.93457;
+const OTHER_VISIBLE_HEIGHT_SCALE = 0.82461;
+const OTHER_METAL_GAP = 0.035;
+const SIGN_BEVEL_DIAMETER = 0.044;
 
 function tapeCorners(spec: TapeSpec): TapePoint[] {
   const [cx, cy] = spec.center;
@@ -586,10 +591,11 @@ function WrappedTape({ spec, map, signWidth, signHeight, showFront = true, showB
   showBack?: boolean;
   showWrap?: boolean;
 }) {
-  const frontZ = TAPE_FRONT_Z + (spec.layer ?? 0) * 0.0015;
+  const frontZ = TAPE_FRONT_Z + (spec.layer ?? 0) * 0.002;
+  const backZ = TAPE_BACK_Z - (spec.layer ?? 0) * 0.002;
   const frontGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, frontZ), [spec, signWidth, signHeight, frontZ]);
-  const backGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, TAPE_BACK_Z), [spec, signWidth, signHeight]);
-  const wrapGeometry = useMemo(() => makeTapeWrapGeometry(spec, signWidth, signHeight, frontZ, TAPE_BACK_Z), [spec, signWidth, signHeight, frontZ]);
+  const backGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, backZ), [spec, signWidth, signHeight, backZ]);
+  const wrapGeometry = useMemo(() => makeTapeWrapGeometry(spec, signWidth, signHeight, frontZ, backZ), [spec, signWidth, signHeight, frontZ, backZ]);
   return (
     <>
       {showFront && frontGeometry && <mesh geometry={frontGeometry} raycast={() => null} renderOrder={4}><TapeMaterial map={map} /></mesh>}
@@ -621,23 +627,33 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
     return stripe;
   }, [tapeTexture]);
   const signRef = useRef<THREE.Group>(null);
+  const otherShapeWidth = config.width * OTHER_VISIBLE_WIDTH_SCALE + OTHER_METAL_GAP - SIGN_BEVEL_DIAMETER;
+  const otherShapeHeight = config.height * OTHER_VISIBLE_HEIGHT_SCALE + OTHER_METAL_GAP - SIGN_BEVEL_DIAMETER;
   // Keep every plate on the same bounding-box rhythm. The triangular plate's
   // sloped edge sits farther from the pole at mid-height, so only its arm needs
   // to extend; moving the plate itself would make it intersect the pole.
-  const connectorLength = config.shape === "triangle" ? config.arm + config.width / 4 : config.arm;
+  const connectorLength = config.shape === "triangle"
+    ? config.arm + config.width / 4
+    : config.arm + (config.id === "other" ? (config.width - otherShapeWidth) / 2 : 0);
   // The PNGs include a small transparent margin around their visible plate.
   // Build the metal from the visible silhouette (rather than the full canvas)
   // and add only a narrow, even offset around it.
   const isOffsetFrame = config.id === "about" || config.id === "event";
   const frameGap = isOffsetFrame ? 0.045 : 0;
   const frameContentScale = isOffsetFrame ? 0.935 : 1;
+  const shapeWidth = config.id === "other"
+    ? otherShapeWidth
+    : config.width * frameContentScale + frameGap * 2;
+  const shapeHeight = config.id === "other"
+    ? otherShapeHeight
+    : config.height * frameContentScale + frameGap * 2;
   const shape = useMemo(
     () => makeShape(
       config.shape,
-      config.width * frameContentScale + frameGap * 2,
-      config.height * frameContentScale + frameGap * 2,
+      shapeWidth,
+      shapeHeight,
     ),
-    [config, frameContentScale, frameGap],
+    [config.shape, shapeWidth, shapeHeight],
   );
   const geometry = useMemo(
     () => new THREE.ExtrudeGeometry(shape, { depth: 0.075, bevelEnabled: true, bevelSize: 0.022, bevelThickness: 0.018, bevelSegments: 2 }),
@@ -710,7 +726,7 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
         >
           <meshStandardMaterial color="#cfd0cd" roughness={0.34} metalness={0.58} />
         </mesh>
-        <mesh position={[0, 0, 0.09]} raycast={() => null} renderOrder={2}>
+        <mesh position={[0, 0, config.id === "other" ? OTHER_FACE_Z : 0.09]} raycast={() => null} renderOrder={2}>
           <planeGeometry args={[config.width, config.height]} />
           <meshBasicMaterial map={texture} transparent alphaTest={0.02} toneMapped={false} />
         </mesh>
@@ -721,8 +737,8 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
                 key={`front-tape-${index}`}
                 spec={spec}
                 map={tapeTexture}
-                signWidth={config.width}
-                signHeight={config.height}
+                signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
+                signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
                 showBack={false}
               />
             ))}
@@ -731,8 +747,8 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
                 key={`back-tape-${index}`}
                 spec={spec}
                 map={index === 0 ? tapeTexture : tapeStripeTexture}
-                signWidth={config.width}
-                signHeight={config.height}
+                signWidth={otherShapeWidth + SIGN_BEVEL_DIAMETER}
+                signHeight={otherShapeHeight + SIGN_BEVEL_DIAMETER}
                 showFront={false}
                 showWrap={false}
               />
