@@ -392,6 +392,205 @@ function makeShape(kind: SignConfig["shape"], width: number, height: number) {
   return shape;
 }
 
+type TapeSpec = {
+  center: [number, number];
+  length: number;
+  width: number;
+  angle: number;
+};
+
+type TapePoint = { x: number; y: number; z?: number };
+
+const OTHER_FRONT_TAPES: TapeSpec[] = [
+  { center: [0.55, 0.38], length: 3.45, width: 0.34, angle: THREE.MathUtils.degToRad(-27) },
+  { center: [1.25, 0.28], length: 2.7, width: 0.32, angle: THREE.MathUtils.degToRad(56) },
+];
+
+const OTHER_BACK_TAPES: TapeSpec[] = [
+  { center: [-1.16, 0.08], length: 3.45, width: 0.35, angle: THREE.MathUtils.degToRad(-46) },
+  { center: [0.78, 0.53], length: 2.35, width: 0.3, angle: THREE.MathUtils.degToRad(18) },
+  { center: [-1.48, -0.47], length: 1.35, width: 0.27, angle: THREE.MathUtils.degToRad(25) },
+];
+
+function tapeCorners(spec: TapeSpec): TapePoint[] {
+  const [cx, cy] = spec.center;
+  const direction = new THREE.Vector2(Math.cos(spec.angle), Math.sin(spec.angle));
+  const normal = new THREE.Vector2(-direction.y, direction.x);
+  const halfLength = spec.length / 2;
+  const halfWidth = spec.width / 2;
+  return [
+    { x: cx - direction.x * halfLength - normal.x * halfWidth, y: cy - direction.y * halfLength - normal.y * halfWidth },
+    { x: cx + direction.x * halfLength - normal.x * halfWidth, y: cy + direction.y * halfLength - normal.y * halfWidth },
+    { x: cx + direction.x * halfLength + normal.x * halfWidth, y: cy + direction.y * halfLength + normal.y * halfWidth },
+    { x: cx - direction.x * halfLength + normal.x * halfWidth, y: cy - direction.y * halfLength + normal.y * halfWidth },
+  ];
+}
+
+function clipTapePolygon(polygon: TapePoint[], axis: "x" | "y", bound: number, keepGreater: boolean) {
+  const clipped: TapePoint[] = [];
+  const inside = (point: TapePoint) => keepGreater ? point[axis] >= bound : point[axis] <= bound;
+  const intersect = (a: TapePoint, b: TapePoint) => {
+    const denominator = b[axis] - a[axis];
+    if (Math.abs(denominator) < 0.00001) return { ...b };
+    const t = (bound - a[axis]) / denominator;
+    return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+  };
+
+  for (let index = 0; index < polygon.length; index += 1) {
+    const current = polygon[index];
+    const previous = polygon[(index + polygon.length - 1) % polygon.length];
+    const currentInside = inside(current);
+    const previousInside = inside(previous);
+    if (currentInside !== previousInside) clipped.push(intersect(previous, current));
+    if (currentInside) clipped.push(current);
+  }
+  return clipped;
+}
+
+function clipTapeToSign(spec: TapeSpec, signWidth: number, signHeight: number) {
+  let polygon = tapeCorners(spec);
+  const halfWidth = signWidth / 2;
+  const halfHeight = signHeight / 2;
+  polygon = clipTapePolygon(polygon, "x", -halfWidth, true);
+  polygon = clipTapePolygon(polygon, "x", halfWidth, false);
+  polygon = clipTapePolygon(polygon, "y", -halfHeight, true);
+  polygon = clipTapePolygon(polygon, "y", halfHeight, false);
+  return polygon;
+}
+
+function tapeUv(point: TapePoint, spec: TapeSpec): [number, number] {
+  const dx = point.x - spec.center[0];
+  const dy = point.y - spec.center[1];
+  const u = (dx * Math.cos(spec.angle) + dy * Math.sin(spec.angle)) / spec.length + 0.5;
+  const v = (-dx * Math.sin(spec.angle) + dy * Math.cos(spec.angle)) / spec.width + 0.5;
+  return [u, v];
+}
+
+function makeTapeFaceGeometry(spec: TapeSpec, signWidth: number, signHeight: number, z: number) {
+  const polygon = clipTapeToSign(spec, signWidth, signHeight);
+  if (polygon.length < 3) return null;
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  polygon.forEach((point) => {
+    positions.push(point.x, point.y, z);
+    const [u, v] = tapeUv(point, spec);
+    uvs.push(u, v);
+  });
+  const indices: number[] = [];
+  for (let index = 1; index < polygon.length - 1; index += 1) indices.push(0, index, index + 1);
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function boundarySpan(corners: TapePoint[], axis: "x" | "y", bound: number) {
+  const values: number[] = [];
+  for (let index = 0; index < corners.length; index += 1) {
+    const current = corners[index];
+    const next = corners[(index + 1) % corners.length];
+    const currentDistance = current[axis] - bound;
+    const nextDistance = next[axis] - bound;
+    if (Math.abs(currentDistance) < 0.00001) values.push(axis === "x" ? current.y : current.x);
+    if (currentDistance * nextDistance < 0) {
+      const t = currentDistance / (currentDistance - nextDistance);
+      const x = current.x + (next.x - current.x) * t;
+      const y = current.y + (next.y - current.y) * t;
+      values.push(axis === "x" ? y : x);
+    }
+  }
+  if (values.length < 2) return null;
+  return [Math.min(...values), Math.max(...values)] as const;
+}
+
+function makeTapeWrapGeometry(spec: TapeSpec, signWidth: number, signHeight: number, frontZ: number, backZ: number) {
+  const corners = tapeCorners(spec);
+  const halfWidth = signWidth / 2;
+  const halfHeight = signHeight / 2;
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const epsilon = 0.006;
+  const addQuad = (points: TapePoint[]) => {
+    const start = positions.length / 3;
+    points.forEach((point) => {
+      positions.push(point.x, point.y, point.z ?? 0);
+      const [u, v] = tapeUv(point, spec);
+      uvs.push(u, v);
+    });
+    indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
+  };
+  const indices: number[] = [];
+  const verticalEdges: Array<[-1 | 1, number]> = [[-1, -halfWidth], [1, halfWidth]];
+  const horizontalEdges: Array<[-1 | 1, number]> = [[-1, -halfHeight], [1, halfHeight]];
+
+  verticalEdges.forEach(([direction, edge]) => {
+    const span = boundarySpan(corners, "x", edge);
+    if (!span) return;
+    const [start, end] = span;
+    addQuad([
+      { x: edge + direction * epsilon, y: start, z: frontZ },
+      { x: edge + direction * epsilon, y: end, z: frontZ },
+      { x: edge + direction * epsilon, y: end, z: backZ },
+      { x: edge + direction * epsilon, y: start, z: backZ },
+    ]);
+  });
+  horizontalEdges.forEach(([direction, edge]) => {
+    const span = boundarySpan(corners, "y", edge);
+    if (!span) return;
+    const [start, end] = span;
+    addQuad([
+      { x: start, y: edge + direction * epsilon, z: frontZ },
+      { x: end, y: edge + direction * epsilon, z: frontZ },
+      { x: end, y: edge + direction * epsilon, z: backZ },
+      { x: start, y: edge + direction * epsilon, z: backZ },
+    ]);
+  });
+  if (!positions.length) return null;
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function TapeMaterial({ map }: { map: THREE.Texture }) {
+  return (
+    <meshPhysicalMaterial
+      map={map}
+      side={THREE.DoubleSide}
+      clearcoat={0.18}
+      clearcoatRoughness={0.24}
+      metalness={0.05}
+      roughness={0.32}
+      toneMapped={false}
+    />
+  );
+}
+
+function WrappedTape({ spec, map, signWidth, signHeight, showFront = true, showBack = true, showWrap = true }: {
+  spec: TapeSpec;
+  map: THREE.Texture;
+  signWidth: number;
+  signHeight: number;
+  showFront?: boolean;
+  showBack?: boolean;
+  showWrap?: boolean;
+}) {
+  const frontGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, 0.14), [spec, signWidth, signHeight]);
+  const backGeometry = useMemo(() => makeTapeFaceGeometry(spec, signWidth, signHeight, -0.105), [spec, signWidth, signHeight]);
+  const wrapGeometry = useMemo(() => makeTapeWrapGeometry(spec, signWidth, signHeight, 0.14, -0.105), [spec, signWidth, signHeight]);
+  return (
+    <>
+      {showFront && frontGeometry && <mesh geometry={frontGeometry} raycast={() => null} renderOrder={4}><TapeMaterial map={map} /></mesh>}
+      {showBack && backGeometry && <mesh geometry={backGeometry} raycast={() => null} renderOrder={3}><TapeMaterial map={map} /></mesh>}
+      {showWrap && wrapGeometry && <mesh geometry={wrapGeometry} raycast={() => null} renderOrder={5}><TapeMaterial map={map} /></mesh>}
+    </>
+  );
+}
+
 function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
   config: SignConfig;
   active: boolean;
@@ -509,93 +708,27 @@ function Sign({ config, active, focused, onActive, onSelect, didDrag }: {
         </mesh>
         {config.id === "other" && (
           <>
-            {/* Front: the wide descending band and steep crossing band follow
-                the supplied front mockup and deliberately extend past the plate. */}
-            <mesh
-              position={[0.55, 0.38, 0.155]}
-              rotation={[0, 0, THREE.MathUtils.degToRad(-27)]}
-              raycast={() => null}
-              renderOrder={4}
-            >
-              <planeGeometry args={[3.45, 0.34]} />
-              <meshPhysicalMaterial
+            {OTHER_FRONT_TAPES.map((spec, index) => (
+              <WrappedTape
+                key={`front-tape-${index}`}
+                spec={spec}
                 map={tapeTexture}
-                clearcoat={0.18}
-                clearcoatRoughness={0.24}
-                metalness={0.05}
-                roughness={0.32}
-                toneMapped={false}
+                signWidth={config.width}
+                signHeight={config.height}
+                showBack={false}
               />
-            </mesh>
-            <mesh
-              position={[1.25, 0.28, 0.15]}
-              rotation={[0, 0, THREE.MathUtils.degToRad(56)]}
-              raycast={() => null}
-              renderOrder={3}
-            >
-              <planeGeometry args={[2.7, 0.32]} />
-              <meshPhysicalMaterial
-                map={tapeTexture}
-                clearcoat={0.18}
-                clearcoatRoughness={0.24}
-                metalness={0.05}
-                roughness={0.32}
-                toneMapped={false}
+            ))}
+            {OTHER_BACK_TAPES.map((spec, index) => (
+              <WrappedTape
+                key={`back-tape-${index}`}
+                spec={spec}
+                map={index === 0 ? tapeTexture : tapeStripeTexture}
+                signWidth={config.width}
+                signHeight={config.height}
+                showFront={false}
+                showWrap={false}
               />
-            </mesh>
-
-            {/* Back: one long left-hand band plus two stripe-only pieces,
-                matching the supplied back mockup. */}
-            <group position={[0, 0, -0.115]} rotation={[0, Math.PI, 0]}>
-              <mesh
-                position={[-1.16, 0.08, 0]}
-                rotation={[0, 0, THREE.MathUtils.degToRad(-46)]}
-                raycast={() => null}
-                renderOrder={3}
-              >
-                <planeGeometry args={[3.45, 0.35]} />
-                <meshPhysicalMaterial
-                  map={tapeTexture}
-                  clearcoat={0.18}
-                  clearcoatRoughness={0.24}
-                  metalness={0.05}
-                  roughness={0.32}
-                  toneMapped={false}
-                />
-              </mesh>
-              <mesh
-                position={[0.78, 0.53, 0.004]}
-                rotation={[0, 0, THREE.MathUtils.degToRad(18)]}
-                raycast={() => null}
-                renderOrder={4}
-              >
-                <planeGeometry args={[2.35, 0.3]} />
-                <meshPhysicalMaterial
-                  map={tapeStripeTexture}
-                  clearcoat={0.16}
-                  clearcoatRoughness={0.26}
-                  metalness={0.04}
-                  roughness={0.34}
-                  toneMapped={false}
-                />
-              </mesh>
-              <mesh
-                position={[-1.48, -0.47, 0.004]}
-                rotation={[0, 0, THREE.MathUtils.degToRad(25)]}
-                raycast={() => null}
-                renderOrder={4}
-              >
-                <planeGeometry args={[1.35, 0.27]} />
-                <meshPhysicalMaterial
-                  map={tapeStripeTexture}
-                  clearcoat={0.16}
-                  clearcoatRoughness={0.26}
-                  metalness={0.04}
-                  roughness={0.34}
-                  toneMapped={false}
-                />
-              </mesh>
-            </group>
+            ))}
           </>
         )}
       </group>
