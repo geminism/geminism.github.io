@@ -424,15 +424,6 @@ button {
   user-select: none;
 }
 
-/* The brand sign artwork already contains its own metal edge. Give the
-   packaging and event sign artwork the same restrained edge without adding a
-   rectangular plate behind their irregular silhouettes. */
-.packaging-page .brand-sign-button img,
-.event-design-page .brand-sign-button img {
-  filter: brightness(1.045) saturate(0.82) contrast(0.96)
-    drop-shadow(0 0 1.15px rgba(167, 171, 168, 0.92));
-}
-
 .brand-sign-arm {
   position: absolute;
   z-index: -1;
