@@ -330,7 +330,10 @@ button {
   top: 0;
   left: 0;
   width: 174px;
-  height: 100%;
+  /* Keep the navigation's coordinate system tied to the viewport. The
+     content panels are mounted below this layer, so their height must not
+     cause the rail and signs to reflow when a project is selected. */
+  height: 100svh;
   margin: 0;
   overflow: hidden;
 }
@@ -411,8 +414,6 @@ button {
 .brand-sign-button:focus-visible,
 .brand-sign-button.is-active { filter: drop-shadow(0 20px 15px rgba(0, 0, 0, 0.17)); }
 .brand-sign-button:focus-visible { outline: 2px solid rgba(25, 25, 24, 0.55); outline-offset: 4px; }
-.brand-sign-button.is-active { transform: rotate(0deg) scale(1.025); }
-.brand-sign-mount:nth-child(2) .brand-sign-button.is-active { transform: rotate(0deg) scale(1.025); }
 
 .brand-sign-button img {
   display: block;
@@ -610,7 +611,7 @@ button {
 
   .brand-page { min-height: 100svh; overflow: auto; padding: 16px 10px 38px 0; }
   .brand-back { top: 12px; left: 70px; }
-  .brand-sign-rail { top: 0; left: 0; width: 132px; height: 100%; margin: 0; transform: none; }
+  .brand-sign-rail { top: 0; left: 0; width: 132px; height: 100svh; margin: 0; transform: none; }
   .brand-rail { top: 50%; left: 38px; width: 7px; height: calc(100% + 20px); }
   .brand-rail-shadow { top: 50%; left: 41px; width: 12px; height: calc(100% + 28px); }
   .brand-sign-list { top: 12%; left: 0; width: 132px; height: 76%; min-width: 0; gap: 0; }
