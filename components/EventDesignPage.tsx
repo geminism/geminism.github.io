@@ -16,6 +16,7 @@ type EventProject = {
   sign: string;
   assetDir: string;
   video?: string;
+  videoBackground?: string;
   images: string[];
   description: EventCopyBlock[];
   descriptionZh: EventCopyBlock[];
@@ -29,6 +30,7 @@ const projects: EventProject[] = [
     sign: "/event/sign-1.png",
     assetDir: "trash-shop",
     video: "1.mp4",
+    videoBackground: "video-background.jpg",
     images: ["2.jpg", "3.jpg", "4.jpg", "5.jpg"],
     description: [
       "TRASH SHOP is a student creative market at the University of Leeds, created to give rejected, unused and abandoned creative work a second chance to be seen. Student designers can submit their discarded work, set their own prices and put these ideas back into circulation, allowing them to be discovered, purchased and reused by other students.",
@@ -172,17 +174,40 @@ export function EventDesignPage() {
               <div className="brand-panel-scroll brand-image-scroll" ref={imageRef}>
                 <div className={`brand-image-stack event-image-stack ${active.video ? "has-video" : ""}`}>
                   {active.video ? (
-                    <div className="event-video-stage">
-                      <video
-                        ref={videoRef}
-                        src={`/event/${active.assetDir}/${active.video}?v=hd`}
-                        aria-label={`${active.title} 项目动态展示`}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="metadata"
-                      />
+                    <div className={`event-video-stage ${active.videoBackground ? "has-background" : ""}`}>
+                      {active.videoBackground ? (
+                        <div className="event-video-composite">
+                          <img
+                            className="event-video-background"
+                            src={`/event/${active.assetDir}/${active.videoBackground}`}
+                            alt=""
+                            aria-hidden="true"
+                            draggable="false"
+                          />
+                          <video
+                            className="event-video-inset"
+                            ref={videoRef}
+                            src={`/event/${active.assetDir}/${active.video}?v=background-frame`}
+                            aria-label={`${active.title} 项目动态展示`}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                          />
+                        </div>
+                      ) : (
+                        <video
+                          ref={videoRef}
+                          src={`/event/${active.assetDir}/${active.video}?v=hd`}
+                          aria-label={`${active.title} 项目动态展示`}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                        />
+                      )}
                     </div>
                   ) : null}
                   {active.images.map((image, index) => (

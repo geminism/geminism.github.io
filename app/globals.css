@@ -530,6 +530,32 @@ button {
   object-fit: contain;
   background: transparent;
 }
+.event-video-stage.has-background {
+  container-type: size;
+}
+.event-video-composite {
+  position: relative;
+  width: min(100cqw, 177.7778cqh);
+  height: min(100cqh, 56.25cqw);
+}
+.event-video-stage .event-video-background {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+.event-video-stage video.event-video-inset {
+  top: 4.3111%;
+  right: auto;
+  bottom: auto;
+  left: 31.3875%;
+  width: 37.225%;
+  height: 93.6222%;
+  object-fit: cover;
+}
 
 .brand-copy-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3px; }
 .brand-copy-scroll { padding: clamp(18px, 2.15vw, 32px) clamp(16px, 1.85vw, 28px); background: #ffffff; }
