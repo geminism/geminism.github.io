@@ -786,7 +786,7 @@ button {
 .about-svg-canvas {
   position: relative;
   width: 100%;
-  aspect-ratio: 1600 / 1142.48;
+  aspect-ratio: 1600 / 1349.22;
   background: #fff;
 }
 
@@ -797,6 +797,7 @@ button {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  pointer-events: none;
   user-select: none;
 }
 
@@ -815,8 +816,8 @@ button {
 .about-svg-pole {
   position: absolute;
   z-index: 1;
-  top: 43.2%;
-  bottom: 3.4%;
+  top: 36.58%;
+  bottom: 2.88%;
   left: 19.05%;
   width: 1.32%;
   border: 0.05vw solid #080908;
@@ -828,7 +829,7 @@ button {
 .about-svg-photo {
   position: absolute;
   z-index: 3;
-  top: 10.5%;
+  top: 8.89%;
   left: 6.8%;
   display: grid;
   width: 25.8%;
@@ -865,16 +866,16 @@ button {
   box-shadow: 0 0.12vw 0.16vw rgba(0, 0, 0, 0.22), inset 0 0.06vw 0.05vw rgba(255, 255, 255, 0.55);
 }
 
-.about-svg-collar-1 { top: 46.8%; left: 18.45%; }
-.about-svg-collar-2 { top: 59.4%; left: 18.45%; }
-.about-svg-collar-3 { top: 68.7%; left: 18.45%; }
-.about-svg-collar-4 { top: 82.6%; left: 18.45%; }
-.about-svg-collar-5 { top: 93.2%; left: 18.45%; }
+.about-svg-collar-1 { top: 39.63%; left: 18.45%; }
+.about-svg-collar-2 { top: 54.46%; left: 18.45%; }
+.about-svg-collar-3 { top: 65.4%; left: 18.45%; }
+.about-svg-collar-4 { top: 81.77%; left: 18.45%; }
+.about-svg-collar-5 { top: 94.23%; left: 18.45%; }
 
 .about-svg-cone {
   position: absolute;
   z-index: 5;
-  bottom: 1.6%;
+  bottom: 1.36%;
   left: 7.2%;
   display: block;
   width: 17.8%;

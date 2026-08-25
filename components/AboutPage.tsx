@@ -8,17 +8,20 @@ export function AboutPage() {
       </Link>
 
       <div className="about-svg-canvas">
-        <img
+        <object
           className="about-svg-artwork"
-          src="/about/about-page-text.svg"
-          alt="Gemini Kong 关于我页面文字排版"
-        />
+          data="/about/about-page-text.svg?v=20260825-2"
+          type="image/svg+xml"
+          aria-label="Gemini Kong 关于我页面文字排版"
+        >
+          Gemini Kong 关于我页面文字排版
+        </object>
 
         <aside className="about-svg-installation" aria-label="个人照片路牌装置">
           <span className="about-svg-pole" aria-hidden="true" />
 
           <div className="about-svg-photo">
-            <img src="/about/photo.png" alt="Gemini Kong 个人照片" />
+            <img src="/about/photo.jpg?v=20260825" alt="Gemini Kong 个人照片" />
           </div>
           <div className="about-svg-collars" aria-hidden="true">
             <span className="about-svg-collar about-svg-collar-1" />
