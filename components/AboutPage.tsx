@@ -10,7 +10,7 @@ export function AboutPage() {
       <div className="about-svg-canvas">
         <object
           className="about-svg-artwork"
-          data="/about/about-page-text.svg?v=20260825-2"
+          data="/about/about-page-text.svg?v=20260825-3"
           type="image/svg+xml"
           aria-label="Gemini Kong 关于我页面文字排版"
         >
